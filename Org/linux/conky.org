@@ -1,0 +1,36 @@
+这是一个著名的conky配置，放在这儿免得以后弄丢了。在网上看到的别人的，很明显那人也是基于别人的修改的。总之它的源头好像是个外国人的配置...
+
+这是效果图：
+
+这是用于笔记本的，分辨率是1280x800：
+
+[[]]
+
+对应的壁纸：
+
+[[]]
+
+下面是用于台式机的，分辨率是1680x1050：
+
+[[]]
+
+对应的壁纸:
+
+[[]]
+
+如果是其他分辨率，自己修改吧。
+#+TITLE:     发张 conky
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2011-11-30 三
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP: http://www.cnblogs.com/Open_Source/
+#+LINK_HOME: http://www.cnblogs.com/Open_Source/
+

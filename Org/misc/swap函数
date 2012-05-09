@@ -1,0 +1,29 @@
+一个C语言swap函数，表示不解
+2011-3-25 16:55
+提问者： willのyou | 浏览次数：977次
+
+#include<stdio.h>
+ void swap(int *a,int *b)
+ { int *t;
+ t=a; a=b; b=t;
+ }
+ main()
+ { int i=3,j=5,*p=&i,*q=&j;
+ swap(p,q); printf("%d %d\n",*p,*q);
+ }
+
+结果是3 5
+我觉得p和q换了地址，应该是5 3呀
+
+我来帮他解答
+2011-3-25 16:57
+满意回答
+
+你只是在swap里交换了送进来的两个指针的参数，这样并不能真正的交换值。
+
+swap应该修改为：
+void swap(int *a,int *b)
+ { 
+  int t;
+  t=*a; *a=*b; *b=t;
+ }

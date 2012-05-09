@@ -1,0 +1,73 @@
+最近算法作业经常需要排序。偶是一个很懒的人，于是一直用C++的sort进行排序～～～不少同志对此心存疑虑，所以今天就写一写sort的用法。
+声明：此用法是从某大牛的程序中看到的，其实偶只是拿来用，不知所以然，飘走~~~~~
+
+MSDN中的定义：
+
+template<class RanIt>
+    void sort(RanIt first, RanIt last); //--> 1）
+template<class RanIt, class Pred>
+    void sort(RanIt first, RanIt last, Pred pr); //--> 2）
+
+
+头文件：
+#include <algorithm>
+using namespace std;
+
+1.默认的sort函数是按升序排。对应于1）
+sort(a,a+n);   //两个参数分别为待排序数组的首地址和尾地址
+2.可以自己写一个cmp函数，按特定意图进行排序。对应于2）
+例如：
+int cmp( const int &a, const int &b ){
+    if( a > b )
+       return 1;
+    else
+       return 0;
+}
+sort(a,a+n,cmp);
+是对数组a降序排序
+又如：
+int cmp( const POINT &a, const POINT &b ){
+    if( a.x < b.x )
+       return 1;
+    else
+       if( a.x == b.x ){
+          if( a.y < b.y )
+             return 1;
+          else
+             return 0;
+        }
+       else
+          return 0;
+}
+sort(a,a+n,cmp);
+是先按x升序排序，若x值相等则按y升序排
+
+
+
+与此类似的还有C中的qsort，以下同附上qsort的使用方法：
+
+#include <stdlib.h>
+
+         格式 qsort(array_name,data_number,sizeof(data_type),compare_function_name)       (void*)bsearch (pointer_to_key_word,array_name,find_number,
+
+sizeof(data_type),compare_function_name)
+
+         e.g.
+
+         int Cmp(const void*a,const void *b)
+
+{
+
+                  int*pa=(int*)a,*pb=(int*)b;
+
+                  if(*pa>*pb) return 1;
+
+             else if (*pa==*pb)    return 0;
+
+else   return -1;
+
+}
+
+qsort(data,N,sizeof(int),Cmp);        // 对int型数组进行快速排序（非降序排列）
+
+p=(int*)bsearch(&a,data,n,sizeof(int),Cmp);

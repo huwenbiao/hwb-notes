@@ -1,0 +1,69 @@
+* graphivz
+#+begin_src dot :file some_filename1.png :cmdline -Kdot -Tpng
+  digraph G {
+    size="8,6"
+    ratio=expand
+    edge [dir=both]
+    plcnet [shape=box, label="PLC Network"]
+    subgraph cluster_wrapline {
+      label="Wrapline Control System"
+      color=purple
+      subgraph {
+      rank=same
+      exec
+      sharedmem [style=filled, fillcolor=lightgrey, shape=box]
+      }
+      edge[style=dotted, dir=none]
+      exec -> opserver
+      exec -> db
+      plc -> exec
+      edge [style=line, dir=both]
+      exec -> sharedmem
+      sharedmem -> db
+      plc -> sharedmem
+      sharedmem -> opserver
+    }
+    plcnet -> plc [constraint=false]
+    millwide [shape=box, label="Millwide System"]
+    db -> millwide
+  
+    subgraph cluster_opclients {
+      color=blue
+      label="Operator Clients"
+      rankdir=LR
+      labelloc=b
+      node[label=client]
+      opserver -> client1
+      opserver -> client2
+      opserver -> client3
+    }
+  }
+#+end_src
+
+* ditaa
+#+begin_src ditaa :file some_filename.png :cmdline -r -s 0.8
+    +-----------+        +---------+  
+    |    PLC    |        |         |                
+    |  Network  +<------>+   PLC   +<---=---------+ 
+    |    cRED   |        |  c707   |              | 
+    +-----------+        +----+----+              | 
+                              ^                   | 
+                              |                   | 
+                              |  +----------------|-----------------+
+                              |  |                |                 |
+                              v  v                v                 v
+      +----------+       +----+--+--+      +-------+---+      +-----+-----+       Windows clients
+      |          |       |          |      |           |      |           |      +----+      +----+
+      | Database +<----->+  Shared  +<---->+ Executive +<-=-->+ Operator  +<---->|cYEL| . . .|cYEL|
+      |   c707   |       |  Memory  |      |   c707    |      | Server    |      |    |      |    |
+      +--+----+--+       |{d} cGRE  |      +------+----+      |   c707    |      +----+      +----+
+         ^    ^          +----------+             ^           +-------+---+
+         |    |                                   |                        
+         |    +--------=--------------------------+                    
+         v                                                             
++--------+--------+                                                         
+|                 |                                                         
+| Millwide System |            -------- Data ---------                      
+| cBLU            |            --=----- Signals ---=--                      
++-----------------+                                                       
+#+end_src

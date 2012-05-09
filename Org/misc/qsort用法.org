@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct  
+{
+        int p, q;
+} stu;
+
+int stu_cmp (const void* aa, const void* bb) 
+{
+        stu *a = (stu*)aa, *b = (stu*)bb;
+        
+        if (a->q - b->q)
+                return a->q - b->q;
+        return a->p - b->p;
+}
+
+int main () 
+{
+        int N;
+        stu S[110];
+        int i;
+        while (scanf ("%d", &N) != EOF) {
+                
+        
+                for (i = 0; i < N; i++) {
+                        scanf ("%d%d", &S[i].p, &S[i].q);
+                }
+                qsort (S, N, sizeof (stu), stu_cmp);
+                for (i = 0; i < N; i++)
+                        printf ("%d %d\n", S[i].p, S[i].q);
+        }
+        
+        return 0;
+}
+

@@ -1,0 +1,53 @@
+可能你已经注意到了，我们的函数describe-location从多个角度来看似乎都有些笨拙。首先，为何还要将场景和地图作为参数传给它，而不直接访问我们的全局变量呢？这是因为Lisper喜欢以函数编程风格来写代码。（说明下，这和你在大学所学的“过程编程”或“结构化编程”没有一点儿关系的...）用这种风格是为了写出满足以下规则的函数：\\
+1) 只访问传进来的以及本地创建的变量（所以不读全局变量）。
+2) 决不改变已经赋了值的变量（所以不会犯增加了变量以及类似的错误）。
+3) 除了返回值，绝不和外界沟通（所以不会写文件，不会给用户输出信息）。
+\\
+你可能会怀疑真按照这种野蛮的规定来写代码，还能写出有用的代码吗...答案是是，关键是你要习惯这种风格！为什么人们要这么麻烦来遵守这些规定呢？一个重要的原因是：这种风格的代码使你的程序具有 /透明性/ 。对于给定的代码，无论在哪儿调用它，只要传入的参数相同，它才能返回相同的结果，做同样的事情。这可以减少程序错误，从而提高程序员的效率。\\
+当然了，总会有一些函数是不具有这种 /函数化/ 风格的。否则你就不能与用户以及外面的世界交流了。这本教程后面的的大部分函数都 _不_ 遵守上面的规则。
+
+  
+
+
+-----
+#+begin_html
+<center>
+#+end_html
+<< [[file:Casting%20SPELs%20in%20Lisp.html][begin]] < [[file:Casting%20SPELs%20in%20Lisp%203.html][previous]] - [[file:Casting%20SPELs%20in%20Lisp%205.html][next]] > end >> 
+#+begin_html
+</center>
+#+end_html
+
+
+
+#+TITLE:     函数编程风格
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2011-12-03 六
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#下面定义代码和输出的样式
+#+begin_html
+  <style type="text/css">
+    .src-elisp{
+    font-family: Monospace ;
+    color: darkblue;
+    font-size:120%;
+    font-weight:bold;
+    }
+    .example{
+    font-family: Monospace ;
+    color:darkgreen;
+    font-size:120%;
+    }
+  }
+  </style>
+#+end_html

@@ -1,0 +1,264 @@
+#+TITLE:软件笔记
+* 说明
+  这里是使用 linux 过程中记的一些东西，内容比较杂，希望对他人有所帮助。对于使用非 linux 系统的用户基本上是没用的。
+* Shell命令无法补全：
+  好像是安装了pango*什么的就不能返回登录界面了，而且不能返回补全了。我将一些程序删除之后，能退回到登录界面但补全问题仍未解决，后来发现将 /etc/bash.bashrc 中的 # enable bash completion in interactive shells 下面的三句注释去掉。这时彩色还是没有。又有了另一个方法，将下面的东西写进家目录下的.bashrc中：
+
+#+begin_src sh
+  ##########################################################################
+  # ~/.bashrc: executed by bash(1) for non-login shells.
+  # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+  # for examples
+  
+  # If not running interactively, don't do anything
+    [ -z "$PS1" ] && return
+  
+  # don't put duplicate lines in the history. See bash(1) for more options
+  # ... or force ignoredups and ignorespace
+    HISTCONTROL=ignoredups:ignorespace
+  
+  # append to the history file, don't overwrite it
+    shopt -s histappend
+  
+  # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+    HISTSIZE=1000
+    HISTFILESIZE=2000
+  
+  # check the window size after each command and, if necessary,
+  # update the values of LINES and COLUMNS.
+    shopt -s checkwinsize
+  
+  # make less more friendly for non-text input files, see lesspipe(1)
+    [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+  
+  # set variable identifying the chroot you work in (used in the prompt below)
+    if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+                  fi
+  
+  # set a fancy prompt (non-color, unless we know we "want" color)
+                  case "$TERM" in
+                  xterm-color) color_prompt=yes;;
+                  esac
+  
+  # uncomment for a colored prompt, if the terminal has the capability; turned
+  # off by default to not distract the user: the focus in a terminal window
+  # should be on the output of commands, not on the prompt
+  #force_color_prompt=yes
+  
+                  if [ -n "$force_color_prompt" ]; then
+                  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+  # We have color support; assume it's compliant with Ecma-48
+  # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+  # a case would tend to support setf rather than setaf.)
+                  color_prompt=yes
+                  else
+                  color_prompt=
+                  fi
+                  fi
+  
+                  if [ "$color_prompt" = yes ]; then
+                  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+                  else
+                  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+                  fi
+                  unset color_prompt force_color_prompt
+  
+  # If this is an xterm set the title to user@host:dir
+                  case "$TERM" in
+                  xterm*|rxvt*)
+                  PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+                  ;;
+                  *)
+                  ;;
+                  esac
+  
+  # enable color support of ls and also add handy aliases
+                  if [ -x /usr/bin/dircolors ]; then
+                  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+                  alias ls='ls --color=auto'
+  #alias dir='dir --color=auto'
+  #alias vdir='vdir --color=auto'
+  
+                  alias grep='grep --color=auto'
+                  alias fgrep='fgrep --color=auto'
+                  alias egrep='egrep --color=auto'
+                  fi
+  
+  # some more ls aliases
+                  alias ll='ls -alF'
+                  alias la='ls -A'
+                  alias l='ls -CF'
+  
+  # Alias definitions.
+  # You may want to put all your additions into a separate file like
+  # ~/.bash_aliases, instead of adding them here directly.
+  # See /usr/share/doc/bash-doc/examples in the bash-doc package.
+  
+                  if [ -f ~/.bash_aliases ]; then
+                  . ~/.bash_aliases
+                  fi
+  
+  # enable programmable completion features (you don't need to enable
+  # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+  # sources /etc/bash.bashrc).
+                  if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+                  . /etc/bash_completion
+                  fi
+  ##########################################################################
+#+end_src
+
+* bmpanel2 (bmpanel) 不能获取桌面名字
+  在FVWM下bmpanel2不能获取桌面名字。经调试是在widget-desktops.c文件中的函数 ~update_desktops~ 中这句
+#+begin_src c
+  names = name = x_get_prop_data(c, c->root, 
+                         c->atoms[XATOM_NET_DESKTOP_NAMES],
+                         c->atoms[XATOM_UTF8_STRING], 0);
+#+end_src
+发生了问题。解决办法，真接写入自己的桌面名字。如下：
+#+begin_src c
+  //因为在FVWM下获取桌面名称有问题，直接写入名称
+  //
+  //names = name = x_get_prop_data(c, c->root, 
+  //c->atoms[XATOM_NET_DESKTOP_NAMES],
+  //c->atoms[XATOM_UTF8_STRING], 0);
+  char name_tmp [50] = "Network\0Main\0Multimedia\0Develop\0";
+  names = malloc(50*8);
+  for (i = 0; i < 50; i++) {
+    names[i]=name_tmp[i];
+   }
+  name = names;
+#+end_src
+
+* tilda
+  一个不错的终端，可以用快捷键调出，隐藏。方便随时使用命令行。
+* mplayer播放mkv
+:  mplayer  -aid 1 -alang chi *.mkv
+ http://zhuaxia.com/item/439758360
+* nautilus右击菜单里的压缩和解压文件的软件是 file-roller
+* 查看本机汉字字体
+: fc-list :lang=zh-cn|sed s/:.*//
+* 查看按键编码
+  xev
+* 使用wireshark
+  要用Root权限
+* 使用plymouth
+: sudo update-alternatives --config default.plymouth
+: sudo update-initramfs -u
+* 放置xsessions的地方
+/usr/share/xsessions
+/usr/local/share/xsessions
+* rxvt
+** 更新 .Xresources
+#+begin_src sh
+  xrdb ~/.Xresources
+#+end_src
+** rxvt中文输入问题
+   :  URxvt.inputMethod:fcitx
+** urxvt 不能更新配置
+   这是一个很奇怪的问题，当将配置写入 .Xresources中时，rxvt 可以更新成功，但是 urxvt 还是默认模样。将配置写入 .Xdefaults 就行了。后来发现是配置时 看配置是 Rxvt.... 还是 URxvt.... 。
+* 在.fvwm口不能出现名为 config的文件夹
+* color
+  gcolor2
+* 让FvwmPager不显示WindowListSkip风格的窗口
+  :  FvwmPager-Desker:UseSkipList
+* 用Knuth的.fvwmrc不能正常工作
+  发现他将shell改为了tcsh，而我没有安装，所以后面打开的程序都无法正常打开。
+* 磁盘实用工具
+  安装包是 gnome-disk-utility，启动命令是 palimpsest。
+* 正大的网盘客户端EverBox
+  安装的目录是~/.wine/drive_c/users/用户名/Local Settings/Application Data/EverBox。在cron中设置每周六同步。
+* dpkg-reconfigure gdm
+* 一个闹钟软件
+  alarm-clock，可以事件提示。功能很强大。
+* 关于Fvwm中开机启动程序
+** 用Wait让一个程序启动完成再启动后面的程序
+** Wait不能用于等待fcitx，可能是fcitx设计不规范。
+** fcitx要先于emacs启动，否则emacs里不能用fcitx输入。
+** 等待火狐时要用Wait Firefox
+* gmrun 配置文件
+  用fvwm设置gmrun的启动位置总是不正确，后来发现它有自己的配置文件/etc/gmrunrc。
+* fvwm-menu-desktop
+  一直在想如果 Fvwm 下面能建立跟 Gnome 下面一样的菜单有多好，但手工无疑太麻烦，而 fvwm-crystal 和 fvwm-themes 里面的菜单有太多没用的东西，也试过让 Fvwm 和 Gnome 环境一直工作，但有一些问题，而且不够简洁。以前似乎也听说过 fvwm-menu-desktop 和 fvwm-menu-directory 这两个脚本，一直没有试过。今天发现可以用 fvwm-menu-desktop 建立和 Gnome 下一模一样的菜单。动态建立可能会有一点慢，并且我机器上的软件已经很齐备，基本上不会再安装什么软件了。于是用 fvwm-menu-desktop 脚本建立一个菜单导入到一个文件中，再在 .fvwm2rc 中读入这个文件，就行了。
+#+begin_src sh
+  fvwm-menu-desktop > Programe-Menu
+#+end_src
+将文件 Programe-Menu 放到 .fvwm 中，并在 .fvwm2rc 中读入。
+#+begin_src sh
+  Read Programe-Menu
+#+end_src
+它建立了一个菜单 FvwmMenu 。跟 Gnome 下面一样用 Alt+F1 调出。
+#+begin_src sh
+  Key F1 A M Menu FvwmMenu Nop
+#+end_src
+* 在 Fvwm 中每次用 Windowlist 选择一个窗口时鼠标都会跑到左上角，很不方便，修改到窗口中间。
+  #+begin_src sh
+    AddToFunc WindowListFunc
+    + I WarpToWindow 50 50    
+  #+end_src
+* 查看本地字体
+#+begin_src sh
+  xlsfont
+#+end_src
+  结果：
+#+begin_example
+  -adobe-times-bold-i-normal--10-100-75-75-p-57-iso8859-1
+  -adobe-times-bold-i-normal--10-100-75-75-p-57-iso8859-1
+  -adobe-times-bold-i-normal--11-80-100-100-p-57-iso10646-1
+  -adobe-times-bold-i-normal--11-80-100-100-p-57-iso10646-1
+#+end_example
+* 保护视力的软件 workrave
+  这个软件每一段时间之后就会提醒你休息一会。
+* 锁定屏幕 xlock
+  非常不错，在 Fvwm 下很好用。
+* tor 连不上网
+  用桥也连不上网，网上有人说是桥的输入顺序应该是从下往上。但我试过之后，在 tor 网络地图里那个地图下面有显示有连接打开，但是左边并没有中继列出，tor的状态也不是已连接。于是将桥全部删除（我估计只要不选“我的JSP阻挡对 Tor 网络的连接”就行了），再重新启动 tor 就好了。
+* 合并视频
+  本来是用 wine 的格式工厂合并的，两个文件用了两个小时，合成之后却不能播放，不知道是什么原因。后来发现 Linux 上应有开源的东西：mencoder。将 cd1.avi 和 cd2.avi 合并：
+#+begin_src sh
+  mencoder -oac copy -ovc copy -idx -o output.avi cd1.avi cd2.avi 
+#+end_src
+* pmp 视频文件
+  下了个pmp视频文件，不能播放。想转换成其他格式，网上找了n久，都不行。还有人写了个分离器，说是要先将视频音频分出来再合并，后来有人说是暴风影音可以观看，当然linux下是没有这个软件的，但在虚拟机是安了下，发现文件可以播放但画面却是倒的，后来发现格式工场可以直播转换，至少我将它转换成wmv格式是可以的，没想到折腾了n久，可以这么容易地解决。
+* fcitx 五笔拼音不能使用
+  不知为什么五笔拼音不能用了，解决方法是将整个 fcitx 的配置文件夹删除，再重启 fcitx。
+* crontab中使用notify-send要在前面加上env DISPLAY=:0.0 。例如： 
+#+srcname
+#+begin_src sh
+env DISPLAY=:0.0 notify-send "该睡觉了，洗洗睡吧。五分钟后关机。"
+#+end_src
+* zenity可以显示GTK+对话框，使用参数，功能很多。
+* pidgin 不能使用QQ2010
+  即使将新的 ~libqq.so~ 拷到 ~/usr/lib/purple-2/~ 也不能用，这是因为还有一个地址 ~/usr/local/lib/purple-2/~ 也是放 ~libqq.so~ 的地方且优先级更高，要将 ~libqq.so~ 文件拷到这个地方才行。
+* bibshelf
+  一个管理图书的软件，很简单，不是用来管理电子书的，是用来管理你所购买和阅读的图书的。
+* alexandria
+  同上，但更复杂些
+
+* 图像除去物体
+  gimp需要插件resynthesizer。选中要除去的物体，再“滤镜”->“增强”->“smart remove selection...”。
+* 学习英语软件
+  anki记忆软件和artha词典。anki这个软件有些源时没有，将源改成中国的源或者官方源。
+* 小企鹅输入法背景黑边问题
+  可以通过设置DelayStart延迟几秒启动fcitx，在支持混成的窗口管理器和面板启动之后再启动fcitx。也就是修改~/.config/fcitx/config里的DelayStart的值。
+* gdm启动fvwm
+  编译安装的 fvwm ，gdm 启动项里不会自动加上。要手动增加，方法是在 /usr/share/xsessions/ 里面创建文件 fvwm.desktop ，内容如下：
+#+begin_src sh
+  [Desktop Entry]
+  Encoding=UTF-8
+  Name=FVWM
+  Comment=Start FVWM2 Session
+  Exec=/usr/local/bin/fvwm
+  Icon=
+  Type=Application
+#+end_src
+* fvwm 下面的任务栏和状态栏
+  fbpanel 同时有任务栏和状态栏，还有一些其他东西，如主菜单和启动器。trayer 是一个程序托盘。
+* 参考文献管理软件
+  jobref：管理BibTex数据库的图形界面前端。可以管理、编辑 .bib 文件，还可以搜索文献。
+* 电子书管理软件 calibre
+  - 可以管理本地书
+  - 可以软件图书格式
+  - 可以设定阅读设备（功能跟苹果的 iTunes 类似）
+  - 可以订阅、下载杂志新闻等
+  

@@ -1,0 +1,149 @@
+#+TITLE: Just For Fun
+#+STARTUP: hidestars
+* 介绍
+  如果你是找一本关于 /Linus/ 传记的书，那么很抱歉。
+  这里记录一些在原位处理数据的算法。
+
+  有很多问题如果不计空间花费本来是很容易的，但考虑到数据量（n）可能很大，以至于用 2n 的空间都嫌太多，这时在原位处理数据就很必要。但这时算法就会相对复杂，甚至很难理解，但有时也相当有趣。最早关注这些算法是读 /Knuth/ 的 /The Art of Computer Programming/ （ /Volume 1/Fundamental Alogrithms/ ）。实际上更早的时候就接触过，只是当时不太在意。因为 /Knuth/ 在谈到将一个置换翻转过来时，为了更有趣（ /just for fun/ ），就又加了一个限制条件：不能再增加内存需求。于是 /just for fun/ ，我也收集一些这样的算法。但这样的算法可能太多，我只收集具有以下特点的：
+  + _用 2n 的空间可以很容易的解决_
+  + _用 n 的空间也可以解决，但相对复杂或者很有意思。_
+
+* 背包问题
+  这个是在的 =dd_engi= ( /Tianyi Cui/ )的 /《背包九讲》/ 中接触到的，里面讲的 _01 背包_ 和 _完全背包_ 就是这类算法。
+
+** 01 背包
+   *问题：*
+#+begin_quote
+: 有N件物品和一个容量为V的背包。第i件物品的费用是c[i]，价值是w[i]。求解将哪些物品装入背包可使价值总和最大。
+#+end_quote
+
+   *算法：*
+#+begin_quote
+: for i=1..N
+: 
+:     for v=V..0
+: 
+:         f[v]=max{f[v],f[v-c[i]]+w[i]};  ¶ 
+#+end_quote
+** 完全背包
+   *问题：*
+#+begin_quote
+: 有N种物品和一个容量为V的背包，每种物品都有无限件可用。第i种物品的费用是c[i]，价值是w[i]。求解将哪些物品装入背包可使这些物品的费用总和不超过背包容量，且价值总和最大。
+#+end_quote
+
+   *算法：*
+#+begin_quote
+: for i=1..N
+: 
+:     for v=0..V
+: 
+:         f[v]=max{f[v],f[v-c[i]]+w[i]}  ¶
+#+end_quote
+   详细介绍看 /《背包九讲》/ 吧。
+
+* 置换求逆
+  这就是前面提到的 /Knuth/ 讨论的问题。 ~转换 (3 4 6 2 5 1)~ 表示将 (1 2 3 4 5 6) 中每一位数字转换成 (3 4 6 2 5 1) 中的对应位 。问题是如何求它的逆（即 ~转换(6 4 1 2 5 3)~ ）。当然如果用 2n 的空间就很简单。用数组 X 表示前面的置换，只要对于每个 i，令 Y[X[i]]<- i，Y 即所求。但问题是如何在原位（X）上处理得到 Y。
+
+  *问题：*
+#+begin_quote
+: 在原位求一个转换的逆。
+#+end_quote
+  
+  /Knuth/ 给了两个算法：
+  - *算法 1* [fn:1]
+#+begin_quote
+: I1. [Initialize.] Set m <- n, j <- -1.
+:
+: I2. [Next element.] Set i <- X[m]. If i < 0, go to step I5 (the element has already ben processed).
+:
+: I3. [Invert one.] (At this point j < 0 and i = X[m]. If m is not the largest element of its cycle, the original permutation had X[-j] = m.) Set X[m] <- j, j <- -m, m <- i, i <- X[m].
+:
+: I4. [End of cycle?] If i > 0, go back to I3 (the cycle has not ended); otherwise set i <- j. (In the latter case, the original permutation had X[-j] = m, and m is largest in cycle.)
+:
+: I5. [Store final value.] Set X[m] <- -i. (originally X[-i] was equal to m.)
+:
+: I6. [Loop on m.] Decrease m by 1. If m > 0, go back to I2; otherwise the algorithm terminates.  ¶
+#+end_quote
+
+  - *算法 2* [fn:2]
+#+begin_quote
+: J1. [Negate all.] Set X[k] <- -X[k], for 1 <= k <= n. Also set m <- n.
+:
+: J2. [Initialize j.] Set j <- m.
+:
+: J3. [Find negative entry.] Set i <- X[j]. If i > 0, set j <- i and repeat this setp.
+:
+: J4. [Invert.] Set X[j] <- X[-i], X[-i] <- m.
+:
+: J5. [Loop on m.] Decrease m by 1; if m > 0, go back to J2. Otherwise the algorithm terminates.  ¶
+#+end_quote
+
+* 重排记录
+  这个是在 _表插入排序_ 之后，根据 _表插入排序_ 作的标记将数据排成有序状态。一个记录的数据结构如下：
+#+begin_quote
+:   typedef struct 
+:   {
+:     RcdType rc; // 记录项
+:     int next;   // 指针项
+:   }  Node;
+#+end_quote
+图示：
+#+caption: 记录结构
+#+begin_ditaa node.png -o -E -S
+:    +------+ 
+:    | rc   | 
+:    +------+ 
+:    | next | 
+:    +------+ 
+#+end_ditaa
+下面就是一个 _表插入排序_ 之后的状态。其中最小的记录是 ~R[6]~ 。次小记录是 ~R[R[6].next]~ （即 ~R[7]~ ） ，余依次类推。
+
+#+caption: 表排序之后的状态
+#+begin_ditaa image1.png -o -E -S
+:            1    2    3    4    5    6    7    8
+: +--------+----+----+----+----+----+----+----+----+
+: | MAXINT | 49 | 38 | 65 | 97 | 76 | 13 | 27 | 49 |
+: +--------+----+----+----+----+----+----+----+----+
+: |      6 |  8 |  1 |  5 |  0 |  4 |  7 |  2 | 3  |
+: +--------+----+----+----+----+----+----+----+----+
+#+end_ditaa  
+
+  * *问题：* [fn:3]
+#+begin_quote
+: 如何在原位处理，使得数据变成有序状态，如图：
+#+end_quote
+
+#+begin_ditaa image2.png -o -E -S
+:            1    2    3    4    5    6    7    8
+: +--------+----+----+----+----+----+----+----+----+
+: | MAXINT | 13 | 27 | 38 | 49 | 49 | 65 | 76 | 97 |
+: +--------+----+----+----+----+----+----+----+----+
+: |      - |  - |  - |  - |  - |  - |  - |  - | -  |
+: +--------+----+----+----+----+----+----+----+----+
+#+end_ditaa
+
+   * *算法：*
+
+#+begin_quote
+:   p = R[0].next;                           // p 指示第一个记录的当前位置
+:   for ( i = 1; i < length; ++i )           // R[1...i-1] 中记录已按关键字有序排列
+:    {
+:      while ( p < i ) p = R[p].next;        // 找到第 i 个记录，并用 p 指示其在 R 中的当前位置
+:      q = R[p].next;                        // q 指示尚未调整的表尾
+:   
+:      if( p != i)                
+:      {
+:        R[p] <--> R[i];                     // 交换记录，使第 i 个记录到位
+:        R[i].next = p;                      // 指向被移走的记录，使得以后可由  循环找回
+:      }
+:      p=q;                                  // p 指示尚未调整的表尾。为找第 i+1 个记录作准备
+:    }
+#+end_quote     
+
+* Footnotes
+
+[fn:1] Due to Bing-Chao Huang.
+
+[fn:2] Due to J. Boothroyd.
+
+[fn:3] 这个问题是在严蔚敏 吴伟民 的《数据结构》中遇到的。

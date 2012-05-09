@@ -1,0 +1,85 @@
+为了进一步了解form，让我们来写一些form，给我们的游戏世界创造一些数据。首先，游戏应该有一些物品让玩家捡起使用——这样定义物品：
+
+#+begin_src elisp
+(setq objects '(whiskey-bottle bucket frog chain))
+#+end_src
+
+OK,让我们来剖析下这行什么意思：由于Lisp解释器是以代码模式开始并把它当成一个form开处理，第一个符号，setq，必须是一个命令。这里，setq给变量赋值：变量是objects，给它赋的值是一个由四个物品组成的list。现在，由于这个list是数据（即，我们不想让编译器调用名为whiskey-bottle的函数），当读到这个list时要将编译器转换到数据模式。这个list前面的单引号就是告诉编译器该转换了：\\
+[[~/img/game-objects.jpg]]\\
+你可能奇怪为什么这个命令是setq。它确实跟给变量“setting”值有关，但你会发现Lisp中其他的很多命令都有很诡异的名字，要知道Lisp是个很古老的语言了。这也有好处，这些诡异的命令名字只为Lisp所独有，避免了与其他语言中的相同命令名字相混淆。setq还有很多其他强大的功能，这本教程里没能用到。\\
+我们已经为我们的世界定义了一些物品，现在让我们更进一步，为这个世界定义一张地图。下面的图片是我们的世界的样子：\\
+[[~/img/game-world.jpg]]\\
+在这个小游戏中有三个场所：带有卧室和顶楼的小屋，以及一个花园。我们再定义一个变量map，来描绘这个迷你世界：
+
+#+begin_src elisp
+  (setq map '((living-room (you are in the living room of a wizards house - 
+                                there is a wizard snoring loudly on the couch -)
+                           (west door garden)
+                           (upstairs stairway attic))
+              (garden (you are in a beautiful garden - 
+                           there is a well in front of you -)
+                      (east door living-room))
+              (attic (you are in the attic of the wizards house - 
+                          there is a giant welding torch in the corner -)
+                     (downstairs stairway living-room))))    
+#+end_src
+
+这幅地图包含了三个场景的全部重要信息：场景的名字（即卧室、花园和顶楼），对我们所能看到的场景的相关描述（保存在大list中的它自己的list中），以及其通自/通往的其他场景的路径的相关信息。这个变量所包含的信息量是很丰富的，它给出了我们所需要的全部信息，而又不失简洁。Lisper喜欢这种短小精悍的代码，我们一眼就可以看出它的意思。\\
+现在我们已经有了一张地图和一些物品。下面再创建一个变量用来指明物品在地图上的位置：\\
+#+begin_src elisp
+  (setq object-locations '((whiskey-bottle living-room)
+                           (bucket living-room)
+                           (chain garden)
+                           (frog garden)))
+#+end_src
+现在把每个物品都和一个场景联系起来了。像这样的句子是很常见的，在Lisp中称为“关联列表”（“association lists”）。一个关联列表是一系列list组成的list，在内部的list中第一个元素是“键”（“key”），它和一些其他的数据相关联。我们的map变量也是一个关联列表——它的三个键分别是living-room，garden和attic。\\
+我们已经定义了我们的世界以及其中的物品，剩下的就是描述玩家所处的位置了：\\
+#+begin_src elisp
+  (setq location 'living-room)
+#+end_src 
+下面我们再写一些游戏中的操作命令：\\
+[[~/img/wizard-drinking.jpg]]
+
+-----
+
+#+begin_html
+<center>
+#+end_html
+<< [[file:Casting%20SPELs%20in%20Lisp.html][begin]] <  [[file:Casting%20SPELs%20in%20Lisp%201.html][previous]]- [[file:Casting%20SPELs%20in%20Lisp%203.html][next]] > end >> 
+#+begin_html
+</center>
+#+end_html
+
+
+		     
+#+TITLE:     为我们的游戏世界定义数据
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2011-11-30 三
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   Casting SPELs in Lisp.html
+#+LINK_HOME: http://www.cnblogs.com/Open_Source/
+#下面定义代码和输出的样式
+#+begin_html
+  <style type="text/css">
+    .src-elisp{
+    font-family: Monospace ;
+    color: darkblue;
+    font-size:120%;
+    font-weight:bold;
+    }
+    .example{
+    font-family: Monospace ;
+    color:darkgreen;
+    font-size:120%;
+    }
+  }
+  </style>
+#+end_html

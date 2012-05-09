@@ -1,0 +1,3 @@
+* 这个不是linc上学习的
+  gcc编译cpp。网站：http://blog.csdn.net/michael1112/article/details/6548373
+  

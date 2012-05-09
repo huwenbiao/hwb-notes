@@ -1,0 +1,16 @@
+#+STARTUP: overview
+#+TAGS: algorithm(a) compiler(c) EMACS(e) life(l) game(g) math(m) study(s) published(p)
+#+STARTUP: hidestars
+* 工具学习
+** DONE ditaa							      :EMACS:
+** DONE keywiz							      :EMACS:
+** DONE rect-mark.el						      :EMACS:
+* 理论知识
+** DONE 幻方（taocp 162 页）			 :algorithm:math:published:
+** TODO 编译原理（中文版） 37页 42		       :compiler:published:
+** TODO 本末倒置的数学发现
+** TODO [[~/note/Org/algorithm/local.org][本地（原位）处理数据的算法]]		      :algorithm:published:
+* 科学技术
+* 生活琐事
+** TODO [[file:../readingNotes/how to choose a book.org][关于选书]]					   :life:published:
+** TODO hwb-notes 项目

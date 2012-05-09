@@ -1,0 +1,337 @@
+#+STARTUP: overview
+#+STARTUP: hidestars
+* 一些快捷键
+** 帮助系统
+|--------+------------------------------|
+| 快捷键 | 意义                         |
+|--------+------------------------------|
+| C-h  f | 查看某个函数的文档。         |
+| C-h  v | 查看某个变量的文档。         |
+| C-h  a | 使用正则表达式来查找命令。   |
+| C-h  k | 描述我接下来的键入动作。     |
+| C-h  l | 显示最近的１００个键入动作。 |
+| C-h  m | 描述当前的模式。             |
+| C-h  i | 查看 info 文档。             |
+|--------+------------------------------|
+
+** 矩形操作
+|---------+--------------|
+| 快捷键  | 意义         |
+|---------+--------------|
+| C-x r k | 删除矩形区域 |
+| C-x r c | 清空矩形区域 |
+|---------+--------------|
+
+** 文本格式操作
+|---------+--------------------------------------------|
+| 快捷键  | 意义                                       |
+|---------+--------------------------------------------|
+| M-o M-s | 将当前行居中                               |
+|---------+--------------------------------------------|
+
+** M-s 开头的操作
+|---------+--------------------------------------------|
+| 快捷键  | 意义                                       |
+|---------+--------------------------------------------|
+| M-s o   | 列出符合正则表达式的所有行                 |
+| M-s h l | 在当前缓冲区高亮符合与此正则表达式的所有行 |
+| M-s h r | 高亮符合正则表达式的字符                   |
+| M-s h u | 取消正则匹配表达式的高亮                   |
+| M-i     | 插入空格并移动文本到下处TAB处              |
+|---------+--------------------------------------------|
+
+** 提高效率
+*** 书签
+|-----------------+----------------|
+| 快捷键          | 意义           |
+|-----------------+----------------|
+| C-x r m         | 设置一个标签   |
+| C-x r l         | 列出所有的标签 |
+| bookmark-save   | 保存标签       |
+| bookmark-delete | 删除标签       |
+|-----------------+----------------|
+
+**** Bookmark 的命令键
+|--------+--------|
+| 快捷键 | 意义   |
+|--------+--------|
+| o      | 打开   |
+| d      | 删除   |
+| x      | 执行   |
+| r      | 重命名 |
+| q      | 退出   |
+|--------+--------|
+
+** 其他
+| 快捷键                 | 意义                           |
+|------------------------+--------------------------------|
+| C-x 4 0                | 关闭当前缓冲区                 |
+| C-/                    | Undo，不用再 C-x u 那么麻烦了  |
+| 菜单键（Alt和Ctr之间） | 相当于 M-x                     |
+| C-o                    | 在光标后面增加一个换行         |
+| C-j                    | 到表格的下一行或者增加一个新行 |
+| C-x =                  | 查看光标处字符的信息 |
+| C-M-S-v                | 将其他缓冲区向上滚动           |
+
+* 输入特殊字符
+  C-x 8 C-h 可以查看有哪些特殊字符。
+* 快捷键冲突问题
+  补全 M-TAB 和窗口处理器冲突，可以用 ESC-TAB 或者 C-M-i 代替。
+
+* 有趣的东西
+** M-x zone 一个 Emacs 屏保
+* 将来可能用到的东西
+** ditaa
+
+#+begin_ditaa screen.png -o -r 
+
+      +-----------+        +---------+
+      |    PLC    |        |         |
+      |  Network  +<------>+   PLC   +<---=---------+
+      |    cRED   |        |  c707   |              |
+      +-----------+        +----+----+              |
+                                ^                   |
+                                |                   |
+                                |  +----------------|-----------------+
+                                |  |                |                 |
+                                v  v                v                 v
+        +----------+       +----+--+--+      +-------+---+      +-----+-----+       Windows clients
+        |          |       |          |      |           |      |           |      +----+      +----+
+        | Database +<----->+  Shared  +<---->+ Executive +<-=-->+ Operator  +<---->|cYEL| . . .|cYEL|
+        |   c707   |       |  Memory  |      |   c707    |      | Server    |      |    |      |    |
+        +--+----+--+       |{d} cGRE  |      +------+----+      |   c707    |      +----+      +----+
+           ^    ^          +----------+             ^           +-------+---+
+           |    |                                   |
+           |    +--------=--------------------------+
+           v
+  +--------+--------+
+  |                 |
+  | Millwide System |            -------- Data ---------
+  | cBLU            |            --=----- Signals ---=--
+  +-----------------+
+#+end_ditaa
+
+
+
+#+begin_ditaa asciiexample.png -o -r 
+     +----------+      +----------+        +----------+        +----------+
+     | cPNK     | edit |  cRED    | input  |  cGRE    |compile | cPNK     |
+     |refined   |<-----+  h.cpp   +------> | compliler+------->|Executable|
+     |       {s}|      |          |        | linker   |        |   File   |
+     |          |      |  {io}    |        |          |        | {s}      |
+     +----+-----+      +----+-----+        +----------+        +----------+
+                            |
+                            |input
+                            v
+                       +----------+
+                       | cGRE     |
+                       | doxygen  |
+                       |          |
+                       |          |
+                       +----+-----+
+                            |process
+                            |
+                            v
+                       +----------+
+                       |  cPNK    |
+                       | Doxgen   |
+                       | Document |
+                       |   {d}    |
+                       +----------+
+#+end_ditaa
+
+#+begin_ditaa test.png -o -r 
+             +---------------+
+             |  c777         |
+             |  Analysis     |
+             +------+--------+
+                    |		      +-----------------+------------------+
+             +------v--------+	      |   cRED RED      |  cBLU BLU        |
+             |  cBLU         | 	      +-----------------+------------------+
+             |  Design       |	      |   cGRE GRE      |  cPNK PNK        |
+             +------+--------+	      +-----------------+------------------+
+                    |		      |   cBLK BLK      |  cYEL YEL        |
+             +------v--------+	      +-----------------+------------------+
+             |        cGRE   |
+             |  Programming  |
+             +------+--------+
+  
+             +---------------+
+             |          c777 |		 +-----------------+
+             |      Analysis |		 |  cBLU           |
+             +------+--------+		 | 这儿是蓝色           |
+                    |			 |      +----------+
+             +------v--------+		 |      | cPNK     |
+             |        cBLU   |		 |      |  粉红色     |
+             |        Design |		 |      |          |
+             +-------+-------+		 +------+----------+
+                     |
+             +-------v-------+
+             |  cGRE         |
+             | Programming   |
+             +---------------+
+#+end_ditaa
+
+#+begin_ditaa tu.png -o -r
+    +--------+   +-------+    +-------+
+    |        | --+ ditaa +--> |       |
+    |  Text  |   +-------+    |diagram|
+    |Document|   |!magic!|    |       |
+    |     {d}|   |       |    |       |
+    +---+----+   +-------+    +-------+
+        :                         ^
+        |       Lots of work      |
+        +-------------------------+
+#+end_ditaa
+
+#+begin_ditaa nae.png -o -r 
+:         +-------------+-------+       +-------------+-------+       +-------------+-------+
+:         |   cBLU      |       |       |   cBLU      |       |       |   cBLU      |       |
+:         |             | cRED  | edit  |             |cGRE   | noth  |             |cGRE   | compile
+:         |    BLU      |       +------>|    BLU      |       +------>|             |       +--------^
+:         |             | GRE   |       |             | GRE   |       | BLU         | GRE   |        |
+:         |             |       |       |             |       |       |             |       |        |
+:         +-------------+-------+       +-------------+-------+       +-------------+-------+        |
+:                            ^                                                                       |
+:                            |                                                                       |
+:                            |                                                                       |
+:           *---------*      |                         +--------------+                              |
+:           |  cPNK   |      |                         |     cRED     |   end                        |
+:           |         |      |                         |    RED       |<-----------------------------+
+:           |  COLOR  +--=---*                         |              |
+:           |         |                                +--------------+
+:           *---------*   
+#+end_ditaa 
+
+** PlantUML
+   在[[http://doc.norang.ca/org-mode.html][这里]]发现的。
+#+begin_src plantuml :file plantUML.png
+title Example Sequence Diagram
+activate Client
+Client -> Server: Session Initiation
+note right: Client requests new session
+activate Server
+Client <-- Server: Authorization Request
+note left: Server requires authentication
+Client -> Server: Authorization Response
+note right: Client provides authentication details
+Server --> Client: Session Token
+note left: Session established
+deactivate Server
+Client -> Client: Saves token
+deactivate Client
+#+end_src
+#+begin_src plantuml :file plantUML1.png
+title Example Activity Diagram
+note right: Example Function
+(*)--> "Step 1"
+--> "Step 2"
+-> "Step 3"
+--> "Step 4"
+--> === STARTLOOP ===
+note top: For each element in the array
+if "Are we done?" then
+  -> [no] "Do this"
+  -> "Do that"
+  note bottom: Important note\ngoes here
+  -up-> "Increment counters"
+  --> === STARTLOOP ===
+else
+  --> [yes] === ENDLOOP ===
+endif
+--> "Last Step"
+--> (*)
+#+end_src
+#+begin_src plantuml :file plantUML2.png
+LabUser --> (Runs Simulation)
+LabUser --> (Analyses Results)
+#+end_src
+#+begin_src plantuml :file plantUML3.png
+Object1 <|-- Object2
+Object1: someVar
+Object1: execute()
+Object2: getState()
+Object2: setState()
+Object2: state
+#+end_src
+#+begin_src plantuml :file plantUML4.png
+[*] --> Start
+Start -> State2
+State2 -> State3
+note right of State3: Notes can be\nattached to states
+State2 --> State4
+State4 -> Finish
+State3 --> Finish
+Finish --> [*]
+#+end_src
+
+** graphviz
+#+begin_src dot :file some_filename.png :cmdline -Kdot -Tpng
+  digraph G {
+    size="8,6"
+    ratio=expand
+    edge [dir=both]
+    plcnet [shape=box, label="PLC Network"]
+    subgraph cluster_wrapline {
+      label="Wrapline Control System"
+      color=purple
+      subgraph {
+      rank=same
+      exec
+      sharedmem [style=filled, fillcolor=lightgrey, shape=box]
+      }
+      edge[style=dotted, dir=none]
+      exec -> opserver
+      exec -> db
+      plc -> exec
+      edge [style=line, dir=both]
+      exec -> sharedmem
+      sharedmem -> db
+      plc -> sharedmem
+      sharedmem -> opserver
+    }
+    plcnet -> plc [constraint=false]
+    millwide [shape=box, label="Millwide System"]
+    db -> millwide
+  
+    subgraph cluster_opclients {
+      color=blue
+      label="Operator Clients"
+      rankdir=LR
+      labelloc=b
+      node[label=client]
+      opserver -> client1
+      opserver -> client2
+      opserver -> client3
+    }
+  }
+
+#+end_src
+
+** color-theme
+几个不错的主题： 
+       - Bharadwaj Slate
+       - Deep Blue
+由于 Org 的表格显示深蓝色，不容易看清，我在些基础上作了自己的主题。分别是 hwb-theme-from-deep-blue.el 和 hwb-theme-from-bharadwaj-slate.el。
+
+* 杂项（备忘）
+** 一些位置
+*** ditaa 的位置
+    改名为 ditaa.jar 放在了 ~/.emacs.d/java/ 中。
+在.emacs中加上：
+#+begin_src elisp
+  (setq org-ditaa-jar-path "~/.emacs.d/java/ditaa.jar")
+#+end_src    
+** 配置中的 S 和 s
+   S 表示 shift，s 表示 super。
+
+** Emacs 中使用宏
+| C-x ( | 打开宏记录                              |
+| C-x ) | 记录完毕                                |
+| C-x e | 执行宏，下面只要按 e 就可以重复执行了。 | 
+
+* gdb
+  重定向输入输出：
+#+begin_src sh
+start < input > output
+#+end_src

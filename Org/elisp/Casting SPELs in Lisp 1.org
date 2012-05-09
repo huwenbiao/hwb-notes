@@ -1,0 +1,46 @@
+每种计算机语言都是由语法和语义组成的。语法是语言要遵守的基本框架，这样Emacs Lisp解释器才知道你的程序都是说些什么。它用来说明这是一个函数，那是一个变量，等等。而语义就“任意”一些，它规定在程序的不同位置你可以使用哪些不同的命令以及可以查看哪些变量。Lisp的第一个特性就是它具有所有主流语言中最简单的语法。\\
+Lisp语法规定所有传给Emacs Lisp解释器的文字必须排成list的形式，而list可以嵌套到任意层。圆括号用来标记list的开关和结尾：\\
+[[~/img/lisp-list.jpg]]\\
+另外Emacs Lisp解释器读代码时有两种模式： /代码/ 模式和 /数据/ 模式。当处于数据模式时，你可以将任意数据放到list里。而解释器初始为代码模式——在代码模式，你的list必须为form类型：\\
+[[~/img/lisp-form.jpg]]\\
+form也是一种list，它必须以解释器可以理解的字开头——通常是一个函数名。这时，解释器会把其他的元素作为参数传给函数，当它读这些参数时，除非特别指定要转换为数据模式，否则也是默认为代码模式的。\\
+
+-----
+#+begin_html
+<center>
+#+end_html
+<< [[file:Casting%20SPELs%20in%20Lisp.html][begin]] < [[file:Casting%20SPELs%20in%20Lisp.html][previous]] - [[file:Casting%20SPELs%20in%20Lisp%202.html][next]] > end >> 
+#+begin_html
+</center>
+#+end_html
+
+#+TITLE:     语法和语义
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2011-11-30 三
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   Casting SPELs in Lisp.html
+#+LINK_HOME: http://www.cnblogs.com/Open_Source/
+#+begin_html
+  <style type="text/css">
+    .src-elisp{
+    font-family: Monospace ;
+    color: darkblue;
+    font-size:120%;
+    font-weight:bold;
+    }
+    .example{
+    font-family: Monospace ;
+    color:darkgreen;
+    font-size:120%;
+    }
+  }
+  </style>
+#+end_html

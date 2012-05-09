@@ -1,0 +1,113 @@
+最近由于需要学习一些C语言知识，在图书馆看到了这本书。由于我只关注 C 的一些语法知识，所以基本上都是浏览，但感觉这本书很不错，特别适合初学C语言的读者。因为书中不仅是讲C，还讲软件开发的思想。（它的英文原名是 Problem Solving and Program Design in C）更重要的是书中对于代码风格特别重视，很一小节都有关于本节内容的相关风格说明。（书中的风格有点像GNU）另外第节都有常见错误分析。下面是一些笔记（下面的内容对你没用）：
+
+* 输入输出
+  * double
+    - scanf   %lf
+    - printf  %f
+
+  * 输出格式化
+    - int     %md
+    - double  %m.nd
+    - 字符串   %ms  （m 大于 0 时右对齐，m 小于 0 时左对齐）
+  * %e 科学计数法输出
+  * tip
+    - printf 中加 "\n" 可以立即输出，对于高度很有用
+    - scanf 返回值是读取的值的数目
+  * 文件操作
+    * 文件操作的例子
+ #+begin_src c
+   FILE *inp = fopen("b:input.dat", "r");
+   FILE *outp = fopne("d:out.dat", "w");
+   fprintf(outp, "%lf", mile);
+   fclose(inp);
+   fclose(outp);
+ #+end_src
+
+* 关于库（头文件）
+   * 范围定义
+     - limits.h  =INT_MAX=
+     - float.h   =DBL_MIN=, =DBL_MAX=
+* 数据类型
+   * 枚举类型
+     #+begin_src c
+       typedef enum {
+	       Monday, Tuesday, ... , Sunday
+       } day_t;
+     #+end_src
+   * 字符串常量数组
+     - 方法一
+       #+begin_src c
+         char month[12][10] = {"January", "Febrary", "March", "April", "may", "june", "july", "August", "September", "October", "November", "December"};
+       #+end_src
+     - 方法二
+       #+begin_src c
+         char month[12] = {"January", "Febrary", "March", "April", "may", "june", "july", "August", "September", "October", "November", "December"};
+       #+end_src
+  这两种声明中 12 都是可选的。
+* 语法
+   * 形参数组
+ #+begin_src c
+   int fill_array (const int list[],
+		int n,
+		int in_value)
+ #+end_src
+   等价于：
+ #+begin_src c
+   void fill_array (int *list,
+		    int n,
+		    int in_value)
+ #+end_src
+   * 当数组当做输入参数，要求不能修改时：
+ #+begin_src c
+   int get_max (const int list[],
+		int n)
+ #+end_src
+   * 多维数组作参数，只可省略第一维的大小：
+ #+begin_src c
+   void process_matrix (int in[][4],
+			int out[][4],
+			int nrows)
+ #+end_src
+   当然也可不省略：
+ #+begin_src c
+   int filled (char ttt_brd[3][5])
+ #+end_src
+   * C 语言中函数返回类型不能是数组。
+   * 
+* 其他
+   * tips
+     * 字符串排序可以只排指针
+
+ #+begin_ditaa sort_pointer.png
+ : 
+ :           +---------+                 +------------------+
+ :           |         +-------------+ +>|    tulip\0       |
+ :           +---------+        +----+-+ +------------------+
+ :           |         +--------+----+-->|    marigold\0    |
+ :           +---------+        |    |   +------------------+
+ :           |         +--------+----+-->|    petunie\0     |
+ :           +---------+        |    |   +------------------+
+ :           |         +--------+----+-->|    rose\0        |
+ :           +---------+        |    |   +------------------+
+ :           |         +--------+    --->|    daisy\0       |
+ :           +---------+                 +------------------+
+ :            alphap                          original
+ : 
+ #+end_ditaa
+
+
+#+TITLE:     C 语言详解.org
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-04-12 四
+#+DESCRIPTION: 这是准备研究生复试时学习的东西
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:

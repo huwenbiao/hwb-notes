@@ -1,0 +1,13 @@
+* new
+$$
+\sum
+$$
+$$2\uparrow\uparrow k 
+\mathrel{\mathop=^{\rm def}} 
+2^{2^{\cdot^{\cdot^{\cdot^2}}}} 
+\vbox{\hbox{$\Big\}\scriptstyle k$}\kern0pt}.$$
+$$2\uparrow\uparrow k 
+\mathrel{\mathop=^{\rm def}} 
+2^{2^{\cdot^{\cdot^{\cdot^2}}}} 
+\vbox{\hbox{$\Big\}\scriptstyle k$}\kern0pt}.$$
+

@@ -1,0 +1,153 @@
+#+TITLE:     Org 相关笔记
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-04-12 四
+#+DESCRIPTION: 这里记录使用 org 过程中遇到的问题
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:
+
+* 解决org css样式的问题
+  用完整路径
+  #+begin_src lisp
+   :style "<link rel=\"stylesheet\" href=\"/home/huwenbiao/Wiki/Publish/style/emacs.css\" type=\"text/css\"/>"
+  #+end_src
+* 让导出的html内含图片
+  不加描述部分。或者描述部分写成缩略图的地址，这样就可以显示缩略图，点击打开原图。详见org手册。至于一些标题等属性可以用手册里的方法加上。
+* org 发布时间戳
+  本来认为org只发布修改过的文件是它对比了org文件和导出文件的时间戳。后来我把导出文件删除，又重新发布。发现都跳过了，并没有重新导出文件，可见它并没有对比org文件和导出文件的时间戳。后来在家目录下发现了一个目录.org-timestamps。原来所有的东西都在这里放着。想不改变org文件而重新导出html等文件可以把这个目录删除，然后现重新发布。
+* 如果要写一些容易被“误解”的代码，如org链接的源代码。刚可以当成代码来发布
+#+begin_src ascii
+,#+begin_src ascii
+[[link][description]]  或者  [[link]]
+,#+end_src
+#+end_src
+结果：
+#+begin_src ascii
+[[link][description]]  或者  [[link]]
+#+end_src
+* 字体显示格式
+  如粗体，第一个‘*’前面要有空格，第二个‘*’后面要有空格，‘*’和要加粗的文字之间不能有空格。如：
+#+begin_src org
+  ,*加粗*
+#+end_src
+
+* 一行中含有Org语法的字符串
+  见简明手册的11章。
+
+* org自动折行
+ #+begin_src elisp
+   ;自动换行
+   (add-hook 'org-mode-hook
+             (lambda () (setq truncate-lines nil)))
+ #+end_src
+#+begin_src elisp
+  ;手动折行
+  (global-set-key [f12] 'toggle-truncate-lines)
+#+end_src
+* 输入时间代码
+  对于 <2005-10-01 Tue>的代码，可以分成两部分：
+#+begin_example
+  =<2005-10-01=  
+  =Tue>=
+#+end_example
+
+效果： =<2005-10-01=  
+=Tue>=
+
+* 文章的标题
+  如果有
+#+begin_src org
+  ,#+TITLE: 这是标题
+#+end_src
+那么标题由上面一行指定。 +否则如果第一个一级标题前面有文字，那么其中的第一行文字作为标题+ （其实这是一个 bug ，因为很多时候我们想在前面写一些文章简介性质的内容，现在这个问题已经没有了）；否则org文件名作为标题。 =C-c C-e t= 可以插入题目，以及其他相关的控制信息。
+* Org中 LaTeX 片段的预览
+  设置变量 org-export-with-LaTeX-fragments。
+#+begin_src elisp
+  (setq org-export-with-LaTeX-fragments t)
+#+end_src
+| C-c C-x C-l | 预览 |
+| C-c C-c     | 清除 |
+
+* Org 中画树形图
+  用LaTeX的包 synttree。下面是示例：
+#+begin_src tex
+  \documentclass{article}
+  \usepackage{synttree}
+  \begin{document}
+  \synttree[+[*[a] [b]][-[c] [d][e][f]][/[3[3]]]]
+  \end{document}
+#+end_src
+* 在博客园发布文章时仍然使用它提供的代码功能：
+#+begin_src sh org
+  ,#+begin_html
+    <div class="cnblogs_Highlighter">
+    <pre class="brush:cpp">
+    int main()
+    {
+      return 0;
+    }
+    </pre>
+    </div>
+  ,#+end_html
+#+end_src
+效果如下：
+#+begin_html
+  <div class="cnblogs_Highlighter">
+  <pre class="brush:cpp">
+  int main()
+  {
+    return 0;
+  }
+  </pre>
+  </div>
+#+end_html  
+* Org导出html指定代码的样式表
+  在文件中加入下面几行：
+
+#+begin_quote
+: #下面定义代码和输出的样式
+: #+begin_html
+:   <style type="text/css">
+:     .src-elisp{
+:     font-family: Monospace ;
+:     color: darkblue;
+:     font-size:120%;
+:     font-weight:bold;
+:     }
+:     .example{
+:     font-family: Monospace ;
+:     color:darkgreen;
+:     font-size:120%;
+:     }
+:   }
+:   </style>
+  : #+end_html
+#+end_quote
+这段代码对elisp代码和example的输出样式作了改变，但有时会有问题，比如输出以下代码时就不能全是蓝色字体，而是彩色的，目前不知道怎么解决：
+#+begin_src elisp
+  (require 'cl)
+#+end_src
+* 要导出的org-mode代码
+#+begin_src org :exports src
+  ,#+begin_src org :exports src
+  ,#+begin_src plantuml :file somefile.png
+  ,  <context of PlantUML source goes here>
+  ,#+end_src
+  ,#+end_src
+#+end_src
+* Org 无法生成目录
+  我是在2012年初发现这个问题的，也不知道从哪一版本开始 org-publish-project-alist 的控制变量 auto-index 改成了 auto-sitemap，于是在配置文件中作出相应的修改就行了。
+* 其他备忘
+   1) 在时间上用 S+up/down/left/right 可以修改时间。
+   2) 函数 org-agenda-file-to-front 用来将本文件加入到 agenda 文件列表中，快捷键是 C-c [。函数 org-remove-file 用来将当前文件从 agenda 列表中删除，快捷键是 C-c ]。agenda 列表信息在 .emacs 文件可以看到。
+   3) 在标题上 S+right/left 切换 TODO 和 DONE；S+UP/DOWN 切换优先级。另外 C-c , ，也可以设置优先级。
+   4) 用 C-c C-s 插入的时间是在标题的下面；而 C-c . 插入的时间是在光标处。
+   5) 导出html文章不显示目录，toc 选项设置为 nil

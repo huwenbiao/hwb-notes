@@ -1,0 +1,103 @@
+[[~/img/casting-spels-emacs.jpg]]
+
+如果你用过Emacs，就会发现要想完全发挥这个神圣编辑器的威力，就需要学习一些Emacs Lisp编程。而每个学过Lisp的人都会告诉你它与其他的语言非常不同。它在很多方面都与众不同——这本漫画书将带你发现Lisp的独特设计是如何让它如此强大的！\\
+[[~/img/lisp-is-different.jpg]]\\
+ 
+这个教程里的一些代码用
+#+begin_src elisp
+  这种颜色和字体
+#+end_src
+来书写...只要把这些代码拷贝到Emacs的*scratch*缓冲区中你就可以完成一个 *你自己的游戏* ！
+
+#+begin_quote
+*问： 从哪里可以获得Emacs？*
+
+*答：* 你可以从它的主页[[http://www.gnu.org/software/emacs/][GNU Emacs page]]上找到可以运行在除烤箱以外的任何平台上的Emacs版本。根据你的烤箱具体模型，它可能也能正常运行...\\
+[[~/img/emacs-on-toaster.jpg]]
+#+end_quote
+
+
+#+begin_quote
+*问： 到底怎么回事？这个编辑器太奇怪了！*
+
+*答：* 是的，是有点奇怪，而我们喜欢它这个样子！Emacs以它自己的方式工作，并且有它自己的键组合，这可以和你熟悉的编辑器很不相同...\\
+*不用担心！* 当你用过一段时间后就会适应它的工作方式，并且感觉它运行完美，反倒是其它的编辑器很古怪...如果你对Emacs环境不熟，可以先看下Emacs [[http://www.gnu.org/software/emacs/tour/][tutorial]]，然后可以再详细研究Emacs [[http://www.gnu.org/software/emacs/manual/index.html][manual]]。
+#+end_quote
+
+
+#+begin_quote
+
+
+*问：Emacs Lisp和其他的Lisp语言有什么不同？*
+
+*答：* Lisp是一个有多种方言的语言家族。最常见的方言是[[http://www.lisp.org/table/references.htm#ansi][ANSI Common Lisp]]。这个手册中的Emacs Lisp代码基本上和本手册的[[http://lisperati.com/casting.html][Common Lisp 版本]]相同。这两种方言有很大区别，但是在本手册中并没表现出来。
+
+#+end_quote
+
+#+begin_quote
+*问：* 另外，我怎样才能让程序在Emacs中运行？
+
+*答：* 把代码拷贝到Emacs的scratch缓冲区（用命令C-x b *scratch*来打开），将光标定位到最后，用C-x C-e来执行。
+
+[[~/img/emacs-screenshot.png]]
+
+这个方法也可以用来执行游戏里的操作——程序在Emacs窗口底部的输出区域输出相应文字来响应。如果你出错，Emacs会给出错误信息，这时你可能会用到命令M-x top-level... 它可以清空错误信息。
+
+如果你想让它看起来更像一个冒险游戏...有一个用真正的游戏模式来玩这个游戏的方法，就是使用命令M-x ielm，这样你会进入Elisp语言模式，通过输入命令就可以直接看到结果，就像真的冒险游戏一样！
+
+最后，Emacs会将输出区域里的信息截断，可以在*scratch*缓冲区里运行这个命令阻止它：
+
+#+begin_src elisp
+  (setq eval-expression-print-length nil)
+#+end_src
+
+最最后，这本教程用到了Common Lisp的库，根据你的elisp版本不同，可能还要再输入一条命令——为了保险起见，最好运行一下：
+
+#+begin_src elisp
+  (require 'cl)
+#+end_src
+
+#+end_quote
+
+-----
+
+#+begin_html
+<center>
+#+end_html
+[[file:Casting%20SPELs%20in%20Lisp%201.html][next]] > end >> 
+#+begin_html
+</center>
+#+end_html
+
+#+TITLE:     Casting SPELs in Lisp
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2011-11-29 二
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   http://www.cnblogs.com/Open_Source/
+#+LINK_HOME: http://www.cnblogs.com/Open_Source/
+#下面定义代码和输出的样式
+#+begin_html
+  <style type="text/css">
+    .src-elisp{
+    font-family: Monospace ;
+    color: darkblue;
+    font-size:120%;
+    font-weight:bold;
+    }
+    .example{
+    font-family: Monospace ;
+    color:darkgreen;
+    font-size:120%;
+    }
+  }
+  </style>
+#+end_html
+

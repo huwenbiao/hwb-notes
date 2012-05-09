@@ -1,0 +1,268 @@
+#+TITLE: fvwm-themes 的应用
+* 废话
+  在使用fvwm-themes时遇到了一些问题，现在大都已经搞定，做下记录。这不是配置教程，如果想看教程，这儿有一个王垠的：[[http://docs.huihoo.com/homepage/shredderyin/fvwm_frame.html][FVWM简明使用教]] 。本文的读者是刚用fvwm的菜乌。
+* 安装
+  安装fvwm和fvwm-themes,fvwm-themes-extra
+#+srcname: 安装fvwm
+#+begin_src sh
+sudo apt-get install fvwm
+sudo apt-get install fvwm-themes
+sudo apt-get install fvwm-themes-extra
+#+end_src
+如果源里没有到官网去下载。但这时的菜单很不好看，没有图标，安装wm-icons
+#+srcname: 安装wm-icons
+#+begin_src sh
+sudo apt-get install wm-icons
+#+end_src
+
+* 如何使用fvwm-themes
+** 启动fvwm-themes
+   在“桌面“单击，弹出"Root Menu"，再"Quit Fvwm"->"Restart Other"->"fvwm-themes-start"。这时就启动了fvwm-themes。这时在你的家目录下应该会有一个.fvwm目录，里面有一些你现在使用的fvwm-themes主题配置文件。
+** 如何配置主题
+   "Root Menu"->"Theme Management"里面有很多主题，其中Current是正在使用的主题。选中一个主题，选择"All"使用这个主题。选择它的一个部件就使用它的这个部件的配置。这样你就可以用多个主题的部件搭配成一个新的主题。比如我的就是Minimal的windowlook，CDE的menustyle和colors等构成的。
+当然也可以在Current主题里直接设置想要的配置。等配置令你满意之后，这时你可以在.fvwm里面新建一个文件.fvwm2rc，加上一句Read themes-rc-2。其中Read就如C/C++里的include，java里的import和c#里的Using，它
+是引用themes-rc-2里的配置。（其实themes-rc-2是在你配置时系统自动生成的相应配置文件，里也有好多Read语句）这时保存退出，以后再进入系统就是默认启动fvwm-themes的主题了，至于.fvwm2rc文件，你可以到网上找个别人的，参照别人的
+配置，往里面加入自已相要的东西，使其逐渐完善。下面是我的.fvwm2rc，很简单：
+#+srcname .fvwm2rc
+#+begin_src sh
+DestroyFunc InitFunction
+AddToFunc	InitFunction
++ I Exec exec xscreensave -no-splash
+
+DestroyFunc StartFunction
+AddToFunc   StartFunction
++ I Module FvwmAnimate
++ I Exec exec fcitx
+
+DestroyFunc ExitFunction
+AddToFunc   ExitFunction
++ I All (fcitx) Close
++ I All (xscreensaver) Close
+
+Read themes-rc-2
+Read hwb.stroke
+Read hwb.bind
+Style * NoTitle
+,#Style * !Borders
+
+,#加截桌面
+Exec exec fvwm-root ~/.fvwm/images/fvwm-tiger-tail.xpm
+
+,##禁用这四个快捷键，因为与Emacs冲突
+Key Left	A	SM	-
+Key Right	A	SM  	-
+Key Up  	A	SM	-
+Key Down	A	SM	-
+
+,*FvwmAnimate: Delay 25
+,*FvwmAnimate: Effect Random
+,*FvwmAnimate: Width 3
+#+end_src
+* 汉字显示问题
+  按照上面的方法配置好后，这时汉字是不能正常显示的，打开.fvwm中themes-rc-2，里面有一行
+#+src_name: font
+#+begin_src c
+Read "/usr/share/fvwm/themes/multichoice/fonts/default"
+#+end_src
+将这句注释掉，就好了。当然也可以将default改成目录/usr/share/fvwm/themes/multichoice/fonts/下的其他配置，如gb2312等。当然也可以将此句注释掉后，在.fvwm2rc里自己定义字体。
+* 手势绑定
+  其实火狐有个手势插件，好像是叫firegesture，可以自定义手势，很不错。幸运的是fvwm下也能用手势。到[[http://etla.net/libstroke/][libstroke的官网]]去下载专门为提供的那个包，安装。其实源里也有个libstroke包，但不是专门为fvwm准备的，不建议安装。
+手势的使用要求Stroke模块运行，可以在"Root Menu"->"Theme Management"->Current->Settings->Stroke里Enable。当然也可以在.fvwm2rc里打开。手势的定义可以在.fvwm2rc里，也可以另建一个文件，在.fvwm2rc里Read一下。
+下面是我的绑定，其中4指的是Super键（上面有ms的logo）：
+#+srcname: hwb.stroke
+#+begin_src sh
+Mouse 3 R N StrokeFunc DrawMotion
+Mouse 3 A M StrokeFunc DrawMotion
+Mouse 3 W 4 StrokeFunc DrawMotion
+Mouse 3 W C StrokeFunc DrawMotion
+##启动程序
+# A - from the left
+Stroke N456 	0 R N 	Exec exec thunar
+Stroke N456 	0 A M 	Exec exec thunar
+
+# A - from the right
+Stroke N654	0 R N	Exec exec gnome-terminal
+Stroke N654	0 A M	Exec exec gnome-terminal
+
+# A | from the top
+Stroke N852	0 R N	FuncFvwmEditor
+Stroke N852	0 A M	FuncFvwmEditor
+
+# A | from the bottom
+Stroke N258     0 R N	FuncFvwmProcess
+Stroke N258     0 A M	FuncFvwmProcess
+
+# A f from the top right
+Stroke N98521 	0 R N 	Exec exec firefox
+Stroke N98521 	0 A M 	Exec exec firefox
+
+# A H 
+Stroke N741456963 0 R N	FuncFvwmHelp
+Stroke N741456963 0 A M	FuncFvwmHelp
+
+# A C from the top right
+Stroke N9874123 0 R N Exec exec gcalctool
+Stroke N9874123 0 A M Exec exec gcalctool
+
+# A clockwise box from the top left
+stroke N78963214 0 R N FuncFvwmQuitVerify
+stroke N789632147 0 R N FuncFvwmQuitVerify
+
+stroke N78963214 0 A M FuncFvwmQuitVerify
+stroke N789632147 0 A M FuncFvwmQuitVerify
+
+# A +
+stroke N9514753	0 A M	Exec xkill
+
+##窗口操作
+# A \ from the bottom right
+Stroke N357 	0 R N	Iconify
+Stroke N32547	0 R N	Iconify
+Stroke N36587	0 R N	Iconify
+
+Stroke N357 	0 A M	Iconify
+Stroke N32547	0 A M	Iconify
+Stroke N36587	0 A M	Iconify
+
+# A \ from the top left
+Stroke N753	0 R N	All (CurrentPage,Iconic) Iconify
+Stroke N78563	0 R N	All (CurrentPage,Iconic) Iconify
+Stroke N74523	0 R N	All (CurrentPage,Iconic) Iconify
+
+Stroke N753	0 A M	All (CurrentPage,Iconic) Iconify
+Stroke N78563	0 A M	All (CurrentPage,Iconic) Iconify
+Stroke N74523	0 A M	All (CurrentPage,Iconic) Iconify
+
+# A / from the top right
+stroke N951	0 R N	All (CurrentPage,!Fvwm*B*,!Iconic) Iconify
+stroke N98541	0 R N	All (CurrentPage,!Fvwm*B*,!Iconic) Iconify
+stroke N96521	0 R N	All (CurrentPage,!Fvwm*B*,!Iconic) Iconify
+
+stroke N951	0 A M	All (CurrentPage,!Fvwm*B*,!Iconic) Iconify
+stroke N98541	0 A M	All (CurrentPage,!Fvwm*B*,!Iconic) Iconify
+stroke N96521	0 A M	All (CurrentPage,!Fvwm*B*,!Iconic) Iconify
+
+# A / from the bottom left
+Stroke N159	0 R N	Maximize
+Stroke N14589	0 R N	Maximize
+Stroke N12569	0 R N	Maximize
+
+Stroke N159	0 A M	Maximize
+Stroke N14589	0 A M	Maximize
+Stroke N12569	0 A M	Maximize
+
+# A -| from the bottom right
+Stroke N36987	0 R N	Close
+Stroke N36987	0 A M	Close
+
+#A |-| (an arch) from the bottom left
+Stroke N1478963	0 R N	All (CurrentPage,!Fvwm*B*) Close
+Stroke N1478963	0 A M	All (CurrentPage,!Fvwm*B*) Close
+
+# 关机
+Stroke N98741236 0 R N	Exec exec gksu -m "想关机？是要密码滴：" halt
+Stroke N98741236 0 A M	Exec exec gksu -m "想关机？是要密码滴：" halt
+Stroke N987412369 0 R N	Exec exec gksu -m "想关机？是要密码滴：" halt
+Stroke N987412369 0 A M	Exec exec gksu -m "想关机？是要密码滴：" halt
+
+## 窗口的移动（本页）
+# Move to the top
+Stroke  N258	  0 W 4	AnimatedMove keep 0p
+
+# Move to the bottom
+Stroke	N852	  0 W 4	AnimatedMove keep -0p
+
+# Move to the left
+Stroke	N654	  0 W 4	AnimatedMove 0p keep
+
+# Move to the right
+Stroke	N456	  0 W 4	AnimatedMove -0p keep
+
+# Move to the center
+Stroke	N45654	  0 W 4	Pick PipeRead "echo AnimatedMove `expr \\( $[vp.width] - $[w.width] \\) / 2`p \
+		      		      	                 `expr \\( $[vp.height] - $[w.height] \\) / 2`p"
+Stroke	N65456	  0 W 4	Pick PipeRead "echo AnimatedMove `expr \\( $[vp.width] - $[w.width] \\) / 2`p \
+	                                                 `expr \\( $[vp.height] - $[w.height] \\) / 2`p"
+Stroke	N25852	  0 W 4 Pick PipeRead "echo AnimatedMove `expr \\( $[vp.width] - $[w.width] \\) / 2`p \
+		      		      	                 `expr \\( $[vp.height] - $[w.height] \\) / 2`p"
+Stroke	N85258	  0 W 4	Pick PipeRead "echo AnimatedMove `expr \\( $[vp.width] - $[w.width] \\) / 2`p \
+		      		      	                 `expr \\( $[vp.height] - $[w.height] \\) / 2`p"
+
+# Move to the top left
+Stroke	N357	  0 W 4	AnimatedMove 0p 0pAnimatedMove 0p 0p
+Stroke	N36587	  0 W 4	AnimatedMove 0p 0p
+Stroke	N32547	  0 W 4	AnimatedMove 0p 0p
+
+# Move to the top right
+Stroke	N159	  0 W 4	AnimatedMove -0p 0p
+Stroke	N14589	  0 W 4	AnimatedMove -0p 0p
+Stroke	N12569	  0 W 4	AnimatedMove -0p 0p
+
+# Move to the bottom left
+Stroke	N951	  0 W 4	AnimatedMove 0p	-0p
+Stroke	N98541	  0 W 4	AnimatedMove 0p	-0p
+Stroke	N96521	  0 W 4	AnimatedMove 0p	-0p
+
+# Move to the bottom right
+Stroke	N753	  0 W 4	AnimatedMove -0p -0p
+Stroke	N78563	  0 W 4	AnimatedMove -0p -0p
+Stroke	N74523	  0 W 4	AnimatedMove -0p -0p
+
+
+## 窗口的移动（跨页）
+
+Stroke  N654  0	 W C 	MoveToPage  -1p +0p
+Stroke	N456  0	 W C	MoveToPage  +1p +0p
+Stroke	N258  0	 W C	MoveToPage  +0p -1p
+Stroke	N852  0	 W C	MoveToPage  +0p +1p
+#+end_src
+
+* 快捷键绑定
+  快捷键的绑定我有两个原则：
+  + 不与Emacs冲突，因此大多都是用Super来绑定
+  + 相同的功能尽量与手势所用的键相同，其中让窗口上下移动用的hjkl与vi的键相同
+下面是配置：
+#+srcname hwb.bind
+#+begin_src sh
+Key t A	4	Exec exec gnome-terminal
+Key f A	4	Exec exec firefox
+Key e A 4 	FuncFvwmEditor
+
+Key d A	4	All (CurrentPage,!Fvwm*B*,!Iconic) Iconify
+Key i A	4	Iconify True
+Key m A	4	Maximize
+Key space A 4	Exec exec gmrun -g 380 330
+Key d A	4   	All (CurrentPage,!Fvwm*B*,!Iconic) Iconify
+
+Key h W 4   	AnimatedMove 0p	keep
+Key j W 4   	AnimatedMove keep -0p
+Key k W	4	AnimatedMove keep 0p
+Key l W 4   	AnimatedMove -0p keep
+
+Key left   W C 	MoveToPage  -1p +0p
+Key right  W C	MoveToPage  +1p +0p
+Key up	   W C	MoveToPage  +0p -1p
+Key down   W C	MoveToPage  +0p +1p
+#+end_src
+* 其他
+** 想修改配置
+   当你配置好后，再次修改时，是不起作用的。我不知道是不是有更好的方法，我的方法是先将.fvwm目录移走，Restart Fvwm，这样就又成配置前的状态。等配置好后，再将我的配置文件（.fvwm2rc，hwb.bing和hwb.stroke）移过来。
+** 想更改壁纸
+   如果为了更改壁纸就重新配置一次，那真是太无语了。其实你可以在.themes-rc-2里将读入background的那句去掉，（可能不去掉也行），在.fvwm2rc里加上：
+#+srcname background
+#+begin_src sh
+Exec exec fvwm-root /home/huwenbiao/.fvwm/images/fvwm-tiger-tail.xpm
+#+end_src
+这里我是让它加载主目录下.fvwm/images/里的名为fvwm-tiger-tail.xpm（这也是fvwm-themes主题里的图片）的图片。如果你想加载其他格式的图片，可以用其他软件来加载，王垠的教程里就有一个。
+** 为什么配置没起作用
+   如果系统的行为不是你设置的那样，仔细检查一下themes-rc-2这个文件，看它都是引用了哪些设置，有没有与你的冲突的。比如上面的例子，字体有问题就到这个文件里去找关键字”font”或者”Font”，发现它用了"/usr/share/fvwm/themes/multichoice/fonts/default"，这样到相应目录下，看到还有一些其他文件，我们就可以将default改成其他文件试下，或将它注释掉，自己设置。
+** 光标聚焦问题
+   可能你更喜欢gnome下的聚焦方式，可以"Root Menu"->"Configuration"->"Global Feel GUI"里设置，那里还能设置一些其他的东西。
+** 如何启动程序
+   可能你喜欢gnome下的Alt+F2或gnome-do或synapse启动程序，当然后两个也可以用，但是与fvwm的风格不搭配，我用的是gmrun，另外grun跟它差不多，可以选择一个，然后再给它定义一个快捷键。比如我的是Super+Space。
+** Fvwm是如何确定有哪些窗口按钮的
+   这个令我郁闷了一阵了，后来发现当定义了一个按钮的相关动作后，按钮就会显示出来，如果不不定义相关动作，即使给出它的样式，也不会显示出来。
+* 相应资源
+  [[http://docs.huihoo.com/homepage/shredderyin/fvwm_frame.html][王垠的教程]]
+
+  [[file:/usr/share/fvwm/][fvwm-theme的目录]]

@@ -1,0 +1,237 @@
+#+TAGS: EASY(e) COMM(c) OFFICE(o) READING(r) URGENT(u) FUTURE(f) WAIT(w) MEMO(m) SOMEDAY/MAYBE COURSE BUY(b)
+* 学习
+** [#A] 考研
+*** 报名信息
+**** 报名号：410289625
+**** 用户名：huwenbiao1989
+**** 密码：huwenbiao
+**** 邮箱：huwenbiao1989@gmail.com
+**** 打印文件：[[/home/huwenbiao/考研/PDF_410289625.pdf][PDF_410289625]]
+*** DONE 专业课综合题目						       :EASY:
+    SCHEDULED: <2011-09-05 一>
+*** DONE 数学
+    SCHEDULED: <2011-09-25 日> DEADLINE: <2011-09-25 日>
+*** DONE 数据结构
+    DEADLINE: <2011-09-25 日>
+*** DONE 组成原理
+    DEADLINE: <2011-09-25 日>
+*** TODO 英语真题
+    SCHEDULED: <2011-10-03 一 +3d> DEADLINE: <2011-10-06 四>
+    - State "DONE"       from "TODO"       [2011-10-07 五 22:42]
+    - State "DONE"       from "TODO"       [2011-10-04 二 14:16]
+    - State "DONE"       from "TODO"       [2011-10-04 二 14:16]
+    - State "DONE"       from "TODO"       [2011-09-23 五 14:12]
+    - State "DONE"       from "TODO"       [2011-09-22 四 22:14]
+    - State "DONE"       from "TODO"       [2011-09-18 日 08:06]
+    - State "DONE"       from "TODO"       [2011-09-14 三 23:30]
+    - State "DONE"       from "TODO"       [2011-09-09 五 22:24]
+    :PROPERTIES:
+    :LAST_REPEAT: [2011-10-07 五 22:42]
+    :END:
+*** 复习英语直题
+    SCHEDULED: <2011-10-06 四 +2d> DEADLINE: <2011-10-26 三>
+*** 英语阅读（一个单元）
+    SCHEDULED: <2011-10-06 四 +2d>
+*** DONE 线代辅导讲义							:BUY:
+    SCHEDULED: <2011-10-01 六>
+*** DONE 440题								:BUY:
+    SCHEDULED: <2011-10-01 六>
+*** DONE 李永乐版数学考研历年真题					:BUY:
+    SCHEDULED: <2011-10-01 六>
+*** DONE 全国硕士研究生入学统一考试:思想政治理论考试大纲解析		:BUY:
+    SCHEDULED: <2011-10-01 六>
+*** DONE 风中劲草考研政治核心考点					:BUY:
+    SCHEDULED: <2011-10-01 六>
+*** DONE 政治习题							:BUY:
+    SCHEDULED: <2011-10-01 六>
+*** DONE 李永乐版基础过关660题						:BUY:
+    SCHEDULED: <2011-10-01 六>
+** 公开课
+*** TODO [#A] 线性代数 [4/16]
+    SCHEDULED: <2011-09-15 四 +2d> DEADLINE: <2011-09-30 五>
+    - State "DONE"       from "TODO"       [2011-09-21 三 14:09]
+    - State "DONE"       from "TODO"       [2011-09-13 二 22:33]
+    - State "DONE"       from "TODO"       [2011-09-10 六 09:05]
+    - State "DONE"       from "TODO"       [2011-09-10 六 09:04]
+    :PROPERTIES:
+    :LAST_REPEAT: [2011-09-21 三 14:09]
+    :END:
+    1) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec01.mp4][第01集]]
+    2) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec02.mp4][第02集]]
+    3) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec03.mp4][第03集]]
+    4) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec04.mp4][第04集]]
+    5) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec05.mp4][第05集]]
+    6) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec06.mp4][第06集]]
+    7) [X] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec07.mp4][第07集]]
+    8) [X] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec08.mp4][第08集]]
+    9) [X] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec09.mp4][第09集]]
+    10) [X] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec10.mp4][第10集]]
+    11) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec11.mp4][第11集]]
+    12) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec12.mp4][第12集]]
+    13) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec13.mp4][第13集]]
+    14) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec14.mp4][第14集]]
+    15) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec15.mp4][第15集]]
+    16) [ ] [[/home/huwenbiao/Videos/线性代数/oCourseMITxianxingdaishuLec16.mp4][第16集]]
+*** [#C] 算法导论						     :FUTURE:
+*** 博弈论							     :FUTURE:
+** 课程表							     :COURSE:
+*** TODO Web系统与技术 （ 上午 后两节 6102 ）
+    SCHEDULED: <2011-10-24 一 +1w>
+    - State "DONE"       from "TODO"       [2011-10-19 三 08:18]
+    - State "DONE"       from "TODO"       [2011-10-10 一 13:35]
+    - State "DONE"       from "TODO"       [2011-10-04 二 14:16]
+    - State "DONE"       from "TODO"       [2011-09-26 一 13:48]
+    - State "DONE"       from "TODO"       [2011-09-19 一 12:32]
+    - State "DONE"       from "TODO"       [2011-09-13 二 12:01]
+    - State "DONE"       from "TODO"       [2011-09-06 二 12:29]
+    :PROPERTIES:
+    :LAST_REPEAT: [2011-10-19 三 08:18]
+    :END:
+*** TODO Web系统与技术实验 （ 下午 后两节 603 ）
+    SCHEDULED: <2011-10-17 一 +1w>
+    - State "DONE"       from "TODO"       [2011-10-11 二 14:08]
+    - State "DONE"       from "TODO"       [2011-10-04 二 14:16]
+    - State "DONE"       from "TODO"       [2011-09-26 一 13:48]
+    - State "DONE"       from "TODO"       [2011-09-19 一 22:55]
+    - State "DONE"       from "TODO"       [2011-09-13 二 12:01]
+    :PROPERTIES:
+    :LAST_REPEAT: [2011-10-11 二 14:08]
+    :END:
+*** TODO 多媒体技术 （ 下午 前三节 6303 ）
+    SCHEDULED: <2011-10-25 二 +1w>
+    - State "DONE"       from "TODO"       [2011-10-24 一 00:13]
+    - State "DONE"       from "TODO"       [2011-10-11 二 14:07]
+    - State "DONE"       from "TODO"       [2011-10-04 二 14:16]
+    - State "DONE"       from "TODO"       [2011-09-28 三 23:35]
+    - State "DONE"       from "TODO"       [2011-09-20 二 22:17]
+    - State "DONE"       from "TODO"       [2011-09-14 三 08:32]
+    - State "DONE"       from "TODO"       [2011-09-06 二 20:47]
+    :PROPERTIES:
+    :LAST_REPEAT: [2011-10-24 一 00:13]
+    :END:
+*** TODO 人工智能 （ 下午 前三节 6302 ）
+    SCHEDULED: <2011-10-26 三 +1w>
+    - State "DONE"       from "TODO"       [2011-10-24 一 00:14]
+    - State "DONE"       from "TODO"       [2011-10-15 六 17:47]
+    - State "DONE"       from "TODO"       [2011-10-06 四 13:52]
+    - State "DONE"       from "TODO"       [2011-09-28 三 23:35]
+    - State "DONE"       from "TODO"       [2011-09-21 三 22:27]
+    - State "DONE"       from "TODO"       [2011-09-14 三 14:30]
+    - State "DONE"       from "TODO"       [2011-09-07 三 18:58]
+    :PROPERTIES:
+    :LAST_REPEAT: [2011-10-24 一 00:14]
+    :END:
+*** TODO Web系统与技术 （ 上午 前两节 6304 ）
+    SCHEDULED: <2011-10-27 四 +1w>
+    - State "DONE"       from "TODO"       [2011-10-24 一 00:14]
+    - State "DONE"       from "TODO"       [2011-10-19 三 08:18]
+    - State "DONE"       from "TODO"       [2011-10-06 四 13:52]
+    - State "DONE"       from "TODO"       [2011-09-29 四 14:58]
+    - State "DONE"       from "TODO"       [2011-09-22 四 14:24]
+    - State "DONE"       from "TODO"       [2011-09-15 四 13:48]
+    - State "DONE"       from "TODO"       [2011-09-08 四 12:47]
+    :PROPERTIES:
+    :LAST_REPEAT: [2011-10-24 一 00:14]
+    :END:
+*** DONE 人工智能讲课 （3.3节）
+    SCHEDULED: <2011-09-24 六>
+* 爱好
+** 文章
+*** 写一篇关于现在 fvwm 的文章				      :SOMEDAY/MAYBE:
+*** 写一篇关于 firefox 的文章				      :SOMEDAY/MAYBE:
+** 工具
+*** org 中如何打开链接
+*** 我将w3m.el中对emacs23的判断改了。				       :MEMO:
+*** 学习 Emacs 的宏记录						       :EASY:
+*** DONE 学习 GTD						       :EASY:
+    SCHEDULED: <2011-09-03 六> DEADLINE: <2011-09-06 二>
+*** org2blog						      :SOMEDAY/MAYBE:
+    https://github.com/punchagan/org2blog
+*** 学习 Elisp							     :FUTURE:
+*** 学习 Asy							     :FUTURE:
+*** Emacs 下一个错误快捷键 					       :EASY:
+*** 学习 FvwmTabs ，希望可以不再使用 Alt+Tab。[[http://www.fvwm.org/documentation/manpages/unstable/FvwmTabs.php][地址]] 		       :EASY:
+*** 使标签对齐的快捷键						       :EASY:
+*** libreoffice 安装						       :EASY:
+** 算法
+*** ACM
+**** DONE 上海赛区
+     SCHEDULED: <2011-09-10 六>
+**** DONE 成都赛区
+     SCHEDULED: <2011-09-11 日>
+**** DONE 北京赛区
+     SCHEDULED: <2011-09-18 日>
+**** DONE 福州赛区
+     SCHEDULED: <2011-10-07 五>
+* 生活
+** 学习生活
+*** DONE 普通话下载报名数据并交费
+    SCHEDULED: <2011-10-08 六> DEADLINE: <2011-10-08 六>
+*** DONE 图书馆还书 数理哲学导论
+    SCHEDULED: <2011-09-20 二> DEADLINE: <2011-09-30 五>
+*** TODO 考研考试时间长度，					       :EASY:
+*** DONE 考研报考常识						       :EASY:
+** 其他琐事
+*** DONE 整理下磁盘						       :EASY:
+    SCHEDULED: <2011-09-10 六>
+*** tmp 文件夹							       :EASY:
+*** lightdm
+    一个登录处理器。
+* 娱乐								       :EASY:
+** 游戏
+*** 雷电
+** 电影
+** 音乐
+*** 邓丽君 夜来香
+** 电视
+*** 雄霸上海滩						 :EASY:SOMEDAY/MAYBE:
+*** 上海滩						 :EASY:SOMEDAY/MAYBE:
+* 常规周期事务
+** TODO 同步文章 <2011-10-14 五 +5d>
+   - State "DONE"       from "TODO"       [2011-10-19 三 08:18]
+   - State "DONE"       from "TODO"       [2011-10-04 二 14:17]
+   - State "DONE"       from "TODO"       [2011-09-29 四 13:57]
+   - State "DONE"       from "TODO"       [2011-09-24 六 13:34]
+   - State "DONE"       from "TODO"       [2011-09-19 一 12:34]
+   - State "DONE"       from "TODO"       [2011-09-14 三 13:29]
+   - State "DONE"       from "TODO"       [2011-09-09 五 22:23]
+   - State "DONE"       from "TODO"       [2011-09-09 五 22:23]
+   :PROPERTIES:
+   :LAST_REPEAT: [2011-10-19 三 08:18]
+   :END:
+* 读书
+** [#A] [1/6] 程序设计艺术					    :READING:
+*** DONE Linear Lists
+    DEADLINE: <2011-09-10 六> SCHEDULED: <2011-09-04 日>
+*** TODO Tree [3/5]
+**** DONE 2.3.1
+     SCHEDULED: <2011-09-10 六> DEADLINE: <2011-09-14 三>
+**** DONE 3.3.2
+     SCHEDULED: <2011-09-14 三> DEADLINE: <2011-09-17 六>
+**** DONE 2.3.3
+     SCHEDULED: <2011-09-17 六> DEADLINE: <2011-09-20 二>
+**** TODO 2.3.4
+***** DONE 2.3.4.1
+      SCHEDULED: <2011-09-20 二> DEADLINE: <2011-09-22 四>
+***** DONE 2.3.4.2
+      SCHEDULED: <2011-09-22 四> DEADLINE: <2011-09-24 六>
+***** DONE 2.3.4.3
+      SCHEDULED: <2011-09-24 六> DEADLINE: <2011-09-28 三>
+***** DONE 2.3.4.4
+      SCHEDULED: <2011-09-28 三> DEADLINE: <2011-10-02 日>
+***** DONE 2.3.4.5
+      SCHEDULED: <2011-10-02 日> DEADLINE: <2011-10-04 二>
+***** DONE 2.3.4.6
+      SCHEDULED: <2011-10-04 二> DEADLINE: <2011-10-05 三>
+**** TODO 2.3.5
+     SCHEDULED: <2011-10-05 三> DEADLINE: <2011-10-09 日>
+*** TODO Multilinked Structures
+    SCHEDULED: <2011-10-09 日> DEADLINE: <2011-10-12 三>
+*** TODO Dynamic Storage Allocation
+    SCHEDULED: <2011-10-12 三> DEADLINE: <2011-10-17 一>
+*** TODO History and Bibiography
+    SCHEDULED: <2011-10-17 一> DEADLINE: <2011-10-20 四>
+*** TODO 写一篇总结
+    SCHEDULED: <2011-10-20 四> DEADLINE: <2011-10-25 二>
+
+** 学习组合数学					       :FUTURE:SOMEDAY/MAYBE:

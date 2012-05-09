@@ -1,0 +1,20 @@
+* 宏是有问题的
+  --the art of unix programming
+* 一个技巧
+  下面是fvwm代码里的一段
+#+begin_src c
+#ifdef HAVE_GETPWUID
+	if (home_dir == NULL)
+	{
+		struct passwd* pw = getpwuid(getuid());
+		if (pw != NULL)
+		{
+			home_dir = safestrdup(pw->pw_dir);
+		}
+	}
+#endif
+	if (home_dir == NULL)
+	{
+		home_dir = "/"; /* give up and use root dir */
+	}
+#+end_src

@@ -1,0 +1,48 @@
+* 说明
+  同步文件是网盘的任务，可惜好的网盘都被和谐了，国内的网盘大都不支持linux。只好用google的代码托管了。如果有不想让别人看到的文件，如私有代码，别用这个方法。
+* 在google code开一个项目
+  把该填的都填上。版本控制系统选哪个都行。（最近又支持 Git 了，不过我用这个没成功，不要选它。）
+* 建立本地目录
+#+begin_src sh
+  git svn clone --username zhangsan@gmail.com -s https://file-backup.googlecode.com/svn note
+#+end_src
+  其中file-backup是项目名称，zhangsan@gmail.com是google账号，note是我要建立的本地同步目录。这时就在本地建立一个note目录。进入目录。
+#+begin_src sh
+  cd note
+  git branch -a
+#+end_src
+  显示：
+#+begin_src ascii
+  * master
+  remotes/trunk
+#+end_src
+  初始化成功。
+* 将一些文件拷过来
+  如果有要备份的文件，拷过来，当然，如果没有，就没必要了。
+#+begin_src sh
+  cp -r Wiki/* .
+#+end_src
+* 首次同步
+#+begin_src sh
+  git add .
+  git commit -a
+#+end_src
+  自动启动一个编辑器，让你输入一些说明。输入一些描述内容，保存。
+#+begin_src sh
+  git svn dcommit
+#+end_src
+  要你输入密码，密码可以在你的项目source里找到。（最新的不再以明文给出，而是要打开一个链接，在新链接里生成。可能无法直接打开，不是网络问题，更不是 Google 的技术问题，国情问题，翻吧。）
+* 用emacs管理
+  安装一些git包，如git源代码里就有git.el。可以方便管理，但这里用emacs进行的提交更新并没有提交到google服务器。只是在本地更新了。什么时候想更新到服务器，进入note目录，用命令：
+#+begin_src sh
+git svn dcommit
+#+end_src
+* 提示
+  在Emacs中用git-status模式管理提交更新时，输入描述信息后，按两个C-c提交更新。
+* 参考文档
+
+  http://google-opensource.blogspot.com/2008/05/develop-with-git-on-google-code-project.html \\
+  http://linuxtoy.org/archives/google-code-git.html \\
+  http://regex.me/thread-248-1-1.html \\
+  http://alexott.net/en/writings/emacs-vcs/EmacsGit.html \\
+  

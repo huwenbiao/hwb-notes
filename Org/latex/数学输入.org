@@ -1,0 +1,6 @@
+* 常见错误
+** 提示 ~\mathbb~ 有错
+   就加入包amsfonts的引入：
+#+begin_src latex
+  \usepackage{amsfonts}
+#+end_src

@@ -1,0 +1,92 @@
+这篙文章记录我遇到的一些有意思的代码。有些代码本身可能有些问题，比如编程风格不好，有些临界情况没有判断等。但这并不重要，重要的是它们很“有趣”，如果真严肃地对它们进行分析批判那就没有意思了，但为了降低它们的副而影响，这里会对这些缺点稍微提一下。
+* 交换a和b的值
+#+begin_src c
+  a^=b^=a^=b;
+#+end_src
+  据说这是汇编时期遗留下来的技巧。另外说明下，如果是用 gcc 进程编译，并且 a 和 b 分别是同一个数组里的两元素的话可能会出问题（当然也可能新版的 gcc 已经解决了这个问题）。
+
+* Duff's device
+#+begin_src c
+  send(to, from, count)
+  register short *to, *from;
+  register count;
+  {
+          register n = (count + 7) / 8;
+          switch(count % 8) {
+          case 0:      do {    *to = *from++;
+          case 7:              *to = *from++;
+          case 6:              *to = *from++;
+          case 5:              *to = *from++;
+          case 4:              *to = *from++;
+          case 3:              *to = *from++;
+          case 2:              *to = *from++;
+          case 1:              *to = *from++;
+                  } while(--n > 0);
+          }
+  }
+#+end_src
+
+这是它的维基页面：[[http://en.wikipedia.org/wiki/Duff%27s_device]]。
+
+它对应的一般代码是：
+#+begin_src c
+  do {                          /* count > 0 assumed */
+      *to = *from++;            /* Note that the 'to' pointer is NOT incremented */
+  } while(--count > 0);
+#+end_src
+
+很明显前者判断语句执行得更少，因此效率也更高。 
+
+* 打印自己的代码
+网上找的：
+#+begin_src c
+  int main()
+  {
+    char *p ="#include <stdio.h>%c int main(){char *p=%c%s%c; printf(p, 10, 34, p, 34);}";
+    printf(p, 10, 34, p, 34);
+  }
+#+end_src
+James Hu 的：
+#+begin_src c
+  #define q(k)main(){return!puts(#k"\nq("#k")");}
+  q(#define q(k)main(){return!puts(#k"\nq("#k")");})
+#+end_src
+
+* 奇迹
+#+begin_src java
+  try
+  {
+          if (you.believe(it) == true || you.believe(it) == false)    //不管你信不信
+          {
+                  I.believe(it);                                      //反正我是信了
+          }
+  }
+  catch (Exception ex)
+  {
+          throw new Exception("It's a miracle!");                     //这是一个奇迹
+  }
+  finally
+  {
+          it.justHappened();                                          //它就是发生了
+  } 
+#+end_src
+  现在大家都知道这段代码，不知道十年之后还有几个人记得。另外代码的风格有问题，还有就是you.believe(it)可能有副作用，也就是说if里面的值可能为假。当然这不是重要的，重要的是这段代码很“有趣”。
+
+
+
+
+#+TITLE:     一些有意思的代码
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-04-12 四
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:
