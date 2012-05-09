@@ -1,0 +1,42 @@
+#+TITLE:     强大的github
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-05-09 10:24
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:
+
+由于某些原因（很可能是GFW的缘故），google code总是不能正常使用，前段时间还时不时地能上传更新，但最近是完全不能使用了，只得换个托管。突发奇想，想支持下国产。发现有个gitcafe，但要邀请码。还是使用了github，之前一直想用它，但它的速度真的很慢，尤其是白天。但今天还是成功地申请了帐号，并且很容易地成功了，整个过程比使用google code容易多了（可能是已经使用过一段google code的缘故:D）。
+
+* 申请账号
+这个很简单。
+* 建库
+  也很简单
+* 配置
+配置很简单，当你建一个库之后，会有一个简单的教程。别忘记设置ssh。
+* 惊奇
+  * 干净
+    github的界面很清新，感觉很干净。
+  * 动画效果
+    打开文件夹时会有动画效果。
+  * 识别多种格式文件
+    比如对于css文件，可以语法高亮。
+  更让人惊奇的事是它竟然识别org文件！！！！！看截图：
+#+CAPTION: github中的org文件
+#+ATTR_HTML: width=800
+  [[file:github.png]]
+
+  下面是在google code上的正常显示：
+#+CAPTION: google code中的org文件
+#+ATTR_HTML: width=800
+  [[file:googlecode.png]]
+
+  不用说了，对于其他的常见格式的文件，它也一定完美支持。于是只感觉相见恨晚。
