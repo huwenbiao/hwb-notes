@@ -3,11 +3,11 @@
   :group 'emacs)
 (defun cnblogs-init () ;; todo: 以后要改成nil
   "初始化各变量"
-  (defcustom cnblogs-server-url "http://www.cnblogs.com/open_source/services/metaweblog.aspx"
+  (defcustom cnblogs-server-url nil
     "MetaWeblog访问地址"
     :group 'cnblogs
     :type 'string)
-  (defcustom cnblogs-blog-id "Open_Source"
+  (defcustom cnblogs-blog-id nil
     "博客ID"
     :group 'cnblogs
     :type 'string)
@@ -123,11 +123,11 @@
 (defun cnblogs-setup-blog ()
   (interactive)
   (setq cnblogs-blog-id
-	(read-string "输入你的博客ID：" nil nil "open_source"))
+	(read-string "输入你的博客ID：" nil nil))
   (setq cnblogs-user-name
-	(read-string "输入你的用户名：" nil nil "huwenbiao"))
+	(read-string "输入你的用户名：" nil nil))
   (setq cnblogs-user-passwd
-	(read-passwd "输入你的密码：" nil "huwenbiao"))
+	(read-passwd "输入你的密码：" nil ))
   (setq cnblogs-server-url
 	(concat "http://www.cnblogs.com/"
 		cnblogs-blog-id
@@ -168,23 +168,25 @@
 	  (eq categories-string ""))
       nil
     (let ((idx1
-	   (string-match "[^ \t]+"
+	   (string-match "[^　 \t]+"    ;圆角半角空格
 			 categories-string)))
       (if (not idx1)
 	  nil
-	(setq categories-string
+	(setq categories-string　　　　　 ;圆角半角空格
 	      (substring categories-string idx1))
 	(let ((idx2 
-	       (string-match "[ \t]+"
+	       (string-match "[　 \t]+"
 			     categories-string)))
 	  (if idx2
-	      (cons 
-	       (substring categories-string 
-			  0
-			  idx2)
-	       (cnblogs-categories-string-to-list (substring categories-string
-							     idx2)))
-	    (cons categories-string  nil)))))))
+	      (cons (concat "[随笔分类]"
+			    (substring categories-string 
+				       0
+				       idx2))
+		    (cnblogs-categories-string-to-list (substring categories-string
+								  idx2)))
+	    (cons (concat "[随笔分类]"
+			  categories-string)
+		  nil)))))))
 
 (defun cnblogs-insert-template-head ()
   "插入头模板"
@@ -263,7 +265,7 @@
 			  (cnblogs-fetch-field "KEYWORDS"))))
 		    (or
 		     categories-list
-		     '("未分类"))))
+		     '("[随笔分类]未分类"))))
 
 	    ;; dateCreated
 	    (cons "dateCreated"
@@ -302,7 +304,7 @@
 		       (cnblogs-fetch-field "KEYWORDS"))))
 		 (or
 		  categories-list
-		  '("未分类"))))
+		  '("[随笔分类]未分类"))))
 
 	 
 	 ;; dateCreated
