@@ -1,9 +1,27 @@
+#+TITLE:     测试模板
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     hwb@Fed
+#+DATE:      2012-07-16 一
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:
+
+非常长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长的一句话。
+
 * 代码块等
-** cnblog代码功能
+** 代码功能
    能选择语言。
 ** 自定义的带icon的代码、引用、输入、输出块等。
 ** 模仿终端窗口
-* 其他cnblogs网页编辑器功能。
+* 其他网页编辑器功能。
 * 博客发布管理功能
 ** 发布
 ** 更新
@@ -23,5 +41,3 @@
 ** bug修正
 ** 新加功能建议
 ** 版本管理控制
-
-

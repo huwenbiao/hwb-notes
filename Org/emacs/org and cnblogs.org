@@ -1,0 +1,41 @@
+#+TITLE:     解决Org和博客园模板的冲突问题
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-07-16 Mon
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  zh_CN
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:
+
+自从使用了博客园的 ~Minyx2_Lite~ 模板，使用Org导出的文章都出现了问题：中间有一大片空白。
+
+[[file:organdcnblogs.png]]
+
+这里因为org导出的html文件中正文的div id默认是“content”，可能模板中也定义了这么一个div，于是出现了问题。
+org-mode的div id是可以自己定制的，版本7.7之前是由变量org-export-html-content-div表示的。现在的7.8.11版本由org-export-html-divs定义。虽说前者已经废除，但org-html.el中的代码是这样的：
+#+begin_src elisp
+  (insert (format "\n<div id=\"%s\">"
+                  ;; FIXME org-export-html-content-div is obsolete since 7.7
+                  (or org-export-html-content-div
+                      (nth 1 org-export-html-divs)))
+          ;; FIXME this should go in the preamble but is here so
+          ;; that org-infojs can still find it
+          "\n<h1 class=\"title\">" title "</h1>\n"))
+#+end_src
+可见是优先查看org-export-html-content-div的值，再查看export-export-html-divs中的值。所以只用在.emacs中修改 org-export-html-content-div 的值就行了，但考虑到以后版本可能去掉这个变量。我们先将它的值设为nil，让org-export-html-divs起作用。然后再修改 org-export-html-divs 的值。
+ 1) 修改 org-export-html-content-div
+
+    #+begin_src elisp
+      (setq org-export-html-content-div nil)
+    #+end_src
+
+ 2) 修改 org-export-html-divs
+
+    我通过customize修改的，不再给出代码。

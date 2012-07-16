@@ -1,0 +1,147 @@
+
+((("dateCreated" :datetime (20484 17556)) ("description" . "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
+               \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">
+<head>
+<title>解决Org和博客园模板的冲突问题</title>
+
+
+
+
+
+
+
+<style type=\"text/css\">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type=\"text/javascript\">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = \"code-highlighted\";
+     elem.className   = \"code-highlighted\";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id=\"preamble\">
+
+</div>
+
+<div id=\"org-content\">
+<h1 class=\"title\">解决Org和博客园模板的冲突问题</h1>
+
+<p>自从使用了博客园的 <code>Minyx2_Lite</code> 模板，使用Org导出的文章都出现了问题：中间有一大片空白。
+</p>
+<p>
+<img src=\"http://images.cnblogs.com/cnblogs_com/Open_Source/201207/201207161643221961.png\"  alt=\"http://images.cnblogs.com/cnblogs_com/Open_Source/201207/201207161643258840.png\" />
+</p>
+<p>
+这里因为org导出的html文件中正文的div id默认是“content”，可能模板中也定义了这么一个div，于是出现了问题。
+org-mode的div id是可以自己定制的，版本7.7之前是由变量org-export-html-content-div表示的。现在的7.8.11版本由org-export-html-divs定义。虽说前者已经废除，但org-html.el中的代码是这样的：
+</p>
+
+
+<pre class=\"src src-elisp\">(insert (format <span style=\"color: #8b2252;\">\"\\n&lt;div id=\\\"%s\\\"&gt;\"</span>
+                <span style=\"color: #b22222;\">;; </span><span style=\"color: #b22222;\">FIXME org-export-html-content-div is obsolete since 7.7</span>
+                (or org-export-html-content-div
+                    (nth 1 org-export-html-divs)))
+        <span style=\"color: #b22222;\">;; </span><span style=\"color: #b22222;\">FIXME this should go in the preamble but is here so</span>
+        <span style=\"color: #b22222;\">;; </span><span style=\"color: #b22222;\">that org-infojs can still find it</span>
+        <span style=\"color: #8b2252;\">\"\\n&lt;h1 class=\\\"title\\\"&gt;\"</span> title <span style=\"color: #8b2252;\">\"&lt;/h1&gt;\\n\"</span>))
+</pre>
+
+<p>
+可见是优先查看org-export-html-content-div的值，再查看export-export-html-divs中的值。所以只用在.emacs中修改 org-export-html-content-div 的值就行了，但考虑到以后版本可能去掉这个变量。我们先将它的值设为nil，让org-export-html-divs起作用。然后再修改 org-export-html-divs 的值。
+</p><ol>
+<li>修改 org-export-html-content-div
+
+
+
+
+<pre class=\"src src-elisp\">(setq org-export-html-content-div nil)
+</pre>
+
+</li>
+<li>修改 org-export-html-divs
+
+<p>
+    我通过customize修改的，不再给出代码。
+</p></li>
+</ol>
+
+</div>
+
+<div id=\"postamble\">
+<p class=\"date\">Date: 2012-07-16 Mon</p>
+<p class=\"author\">Author: hwb</p>
+<p class=\"creator\">Org version 7.8.11 with Emacs version 24</p>
+<a href=\"http://validator.w3.org/check?uri=referer\">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>
+") ("title" . "解决Org和博客园模板的冲突问题") ("enclosure" ("length" . 0)) ("link" . "http://www.cnblogs.com/Open_Source/archive/2012/07/16/2593837.html") ("permalink" . "http://www.cnblogs.com/Open_Source/archive/2012/07/16/2593837.html") ("postid" . 2593837) ("source") ("mt_keywords")))
