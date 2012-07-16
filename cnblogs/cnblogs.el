@@ -11,11 +11,11 @@
     "博客ID"
     :group 'cnblogs
     :type 'string)
-  (defcustom cnblogs-user-name "huwenbiao"
+  (defcustom cnblogs-user-name nil
     "登录用户名"
     :group 'cnblogs
     :type 'string)
-  (defcustom cnblogs-user-passwd "huwenbiao"
+  (defcustom cnblogs-user-passwd nil
     "用户密码"
     :group 'cnblogs
     :type 'string)
