@@ -3,7 +3,7 @@
 #+EMAIL:     hwb@Fed
 #+DATE:      2012-07-16 一
 #+DESCRIPTION:
-#+KEYWORDS:
+#+KEYWORDS: 其他　Emacs   Linux应用
 #+LANGUAGE:  en
 #+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
