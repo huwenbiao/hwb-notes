@@ -1120,15 +1120,6 @@ The Babel site on Worg
   ,more text 
   ,* Another top level headline
 #+end_src
-#+begin_src org
-  ,* Top level headline
-  ,  * Second level
-  ,    * 3rd level
-  ,      some text
-  ,    * 3rd level
-  ,      more text
-  ,* Another top level headline
-#+end_src
 
    如果你用的 Emacs 23.1.50.3 和 Org 6.29 的更高版本，这种视图可以用 org-indent-mode 模式动态地实现，它会在每行前面加上一些前导空格。你可以通过设置变量 org-startup-indented 为所有的文件打开 org-indent-mode 模式，或者用
 #+begin_src org
