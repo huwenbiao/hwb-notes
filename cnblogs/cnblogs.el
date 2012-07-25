@@ -39,67 +39,67 @@
     "分类列表")
   (defvar cnblogs-manager-window nil
     "博客管理窗口")
-  (setq  test-post  `(("title" . "test of my blog client") 
+  (setq  test-post  `(("title" . "博文题目") 
 		      ("dateCreated" :datetime (20423 52590))
 		      ("categories"  "categories" "[随笔分类]Emacs" "[随笔分类]Linux应用")
-		      ("description" . "分类测试")))
+		      ("description" . "博文正文。")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;Menu;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (defvar menu-bar-cnblogs-menu
+  (defvar cnblogs-mode-map
     (make-sparse-keymap "Cnblogs")
     "cnblogs博客客户端菜单")
 
-  (define-key menu-bar-cnblogs-menu [tags-getUsersBlogs]
+  (define-key cnblogs-mode-map [tags-getUsersBlogs]
     '(menu-item "用户信息" cnblogs-get-users-blogs
 		:help "获取用户的博客信息"))
 
-  (define-key menu-bar-cnblogs-menu [tags-getRecentPosts]
+  (define-key cnblogs-mode-map [tags-getRecentPosts]
     '(menu-item "获取最近发布" cnblogs-get-recent-posts
 		:help "获取最近发布的N篇博客"))
 
-  (define-key menu-bar-cnblogs-menu [tags-getCategories]
+  (define-key cnblogs-mode-map [tags-getCategories]
     '(menu-item "获取（更新）分类" cnblogs-get-categories
 		:help "获取并更新本地博客分类"))
 
-  (define-key menu-bar-cnblogs-menu [tags-getPost]
+  (define-key cnblogs-mode-map [tags-getPost]
     '(menu-item "获取博客" cnblogs-get-post
 		:help "获取并更新本地指定的博客"))
-  (define-key menu-bar-cnblogs-menu [separator-cnblogs-tags]
+  (define-key cnblogs-mode-map [separator-cnblogs-tags]
     '(menu-item "--"))
 
-  (define-key menu-bar-cnblogs-menu [tags-editPost]
+  (define-key cnblogs-mode-map [tags-editPost]
     '(menu-item "更新" cnblogs-edit-post
 		:help "更新已发布的博客"))
 
-  (define-key menu-bar-cnblogs-menu [tags-deletePost]
+  (define-key cnblogs-mode-map [tags-deletePost]
     '(menu-item "删除" cnblogs-delete-post
 		:help "将当前缓冲区对应的博客删除"))
 
-  (define-key menu-bar-cnblogs-menu [tags-saveDraft]
+  (define-key cnblogs-mode-map [tags-saveDraft]
     '(menu-item "存稿" cnblogs-save-draft
 		:help "将草稿保存到服务器，但状态为“未发布”"))
 
-  (define-key menu-bar-cnblogs-menu [tags-newPost]
+  (define-key cnblogs-mode-map [tags-newPost]
     '(menu-item "发布" cnblogs-new-post
 		:help "发布当前缓冲区"))
 
-  (define-key global-map [C-S-mouse-1]
-    menu-bar-cnblogs-menu)
+  (define-key cnblogs-mode-map [C-S-mouse-1]
+    cnblogs-mode-map)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;KeyMap;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (global-set-key (kbd "\C-c c p") 'cnblogs-new-post)
-  (global-set-key (kbd "\C-c c s") 'cnblogs-save-draft)
-  (global-set-key (kbd "\C-c c d") 'cnblogs-delete-post)
-  (global-set-key (kbd "\C-c c e") 'cnblogs-edit-post)
-  (global-set-key (kbd "\C-c c g") 'cnblogs-get-post)
-  (global-set-key (kbd "\C-c c c") 'cnblogs-get-categories)
-  (global-set-key (kbd "\C-c c r") 'cnblogs-get-recent-posts)
-  (global-set-key (kbd "\C-c c u") 'cnblogs-get-users-blogs)
+  (define-key cnblogs-mode-map (kbd "\C-c c p") 'cnblogs-new-post)
+  (define-key cnblogs-mode-map (kbd "\C-c c s") 'cnblogs-save-draft)
+  (define-key cnblogs-mode-map (kbd "\C-c c d") 'cnblogs-delete-post)
+  (define-key cnblogs-mode-map (kbd "\C-c c e") 'cnblogs-edit-post)
+  (define-key cnblogs-mode-map (kbd "\C-c c g") 'cnblogs-get-post)
+  (define-key cnblogs-mode-map (kbd "\C-c c c") 'cnblogs-get-categories)
+  (define-key cnblogs-mode-map (kbd "\C-c c r") 'cnblogs-get-recent-posts)
+  (define-key cnblogs-mode-map (kbd "\C-c c u") 'cnblogs-get-users-blogs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;LoadData;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   )
-(cnblogs-init)
+;(cnblogs-init)
 
 
 (defun cnblogs-save-entry-list () 
