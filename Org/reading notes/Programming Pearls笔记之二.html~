@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+<head>
+<title>Programming Pearls笔记之二</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="Programming Pearls笔记之二"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-07-25 三"/>
+<meta name="author" content="Hu Wenbiao"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="org-content">
+<h1 class="title">Programming Pearls笔记之二</h1>
+
+<p>　　这里是编程珠玑（Programming Pearls）第二部分（中间五个专栏）的笔记．
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 效率和正确性</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<ul>
+<li>问题
+
+<blockquote>
+
+<pre class="example">
+有句话说＂效率是第二位的，结果是第一位的－－如果结果都错了，再快又有何用＂．这种观点正确吗？
+</pre>
+
+
+</blockquote>
+
+
+</li>
+<li>解答
+
+<p>    
+    　　当错误不是太严重以至于影响结果的时候时间更重要．比如对于一些大型系统，与其修改１０个ｂｕｇ，人们往往更愿意将速度提高１０倍．
+</p></li>
+</ul>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 最大子序列和</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<ul>
+<li>问题
+
+<p>    
+    　　这是一道ＯＪ题目，没想到在这里见到了它．或许这就是这个题目的出处？
+</p><blockquote>
+
+<pre class="example">
+对于一组整数，求连续最大子序列和．    
+</pre>
+
+
+</blockquote>
+
+
+</li>
+</ul>
+
+
+
+
+<ul>
+<li>Ｏ（ｎ＾２）解法
+
+<p>    
+    　　这种时间复杂的算法很好设计．这里给出一个比较有启发性的．
+</p>
+
+
+
+<pre class="src src-c">cumarr[-1]=0
+<span style="color: #a020f0;">for</span> i = [0, n)
+    cumarr[i] = cumarr[i-1] + x[i]
+maxsofar = 0
+<span style="color: #a020f0;">for</span> i = [0, n)
+    <span style="color: #a020f0;">for</span> j = [i, n)
+        sum = cumarr[j] - cumarr[i-1]
+        <span style="color: #b22222;">/* </span><span style="color: #b22222;">sum is sum of x[i..j] </span><span style="color: #b22222;">*/</span>
+        maxsofar = max(maxsofar, sum)
+</pre>
+
+
+<p>    
+    　　这里用到了累加求和，很有用处（比如下面的问题 <a href="#sec-3">累加数组</a> 就能用到）．但这里的求和很盲目，对所有的都求，因此并没有能降低时间复杂度．我们知道如果ｘ［ｉ．．ｊ］是最大子序列和，这就说明对于任意的ｋ（ｉ≤ｋ≤ｊ），ｓｕｍ［ｉ．．ｋ］≥０．否则ｓｕｍ［ｋ＋１．．ｊ］将是最大的子序列．因此我们在求和的时候可以每遇到ｃｕｍａｒｒ［ｉ－１］为负时，就不再让ｃｕｍａｒｒ［ｉ］　＝　ｃｕｍａｒｒ［ｉ－１］　＋　ｘ［ｉ］，而让ｃｕｍａｒｒ［ｉ］　＝　０．这时时间复杂度就可以降至Ｏ（ｎ）．
+</p>
+</li>
+<li>Ｏ（ｎ）解法
+
+<p>    
+    　　根据上面的思路，解法如下．
+</p>
+
+
+
+<pre class="src src-c">cumarr[-1] = 0
+maxsofa = 0
+<span style="color: #a020f0;">for</span> i = [0, n]
+    cumarr[i] = max(cumarr[i-1], 0)
+    maxsofar = max(maxsofar, cumarr[0])
+</pre>
+
+
+<p>
+    　　下面是书上给出的一个利用动态归化来推导这个算法的过程．
+</p>
+
+
+
+<div class="figure">
+<p><img src="scanalgorithm.png"  alt="scanalgorithm.png" /></p>
+<p>图一　示意图</p>
+</div>
+
+</li>
+</ul>
+
+
+
+<p>    
+    　　ｍａｘｅｎｄｉｎｇｈｅｒｅ是以当前下标为最后一个元素的最大子序列和（只有当包含当前元素值为０时可以是空序列），ｍａｘｓｏｆａｒ是从数组开始到当前下标为止的最大子序列和．假设对于当前下标ｉ－１成立．下面将这个状态推广到ｉ．对于ｉ，这时最大子序列和只有两种可能．要么还是ｍａｘｓｏｆａｒ，要么是ｍａｘｅｎｄｉｎｇｈｅｒｅ＋ｘ［ｉ］．  ｍａｘｅｎｄｉｎｇｈｅｒｅ＋［ｉ］若小于０，则从０开始，于是代码如下．
+</p>
+
+
+
+<pre class="src src-c">maxsofar = 0
+maxendinghere = 0
+<span style="color: #a020f0;">for</span> i = [0, n]
+    <span style="color: #b22222;">/* </span><span style="color: #b22222;">invariant: maxendinghere and maxsofar</span>
+<span style="color: #b22222;">       are accurate for x[0..i-1] </span><span style="color: #b22222;">*/</span>
+    maxendinghere = max(maxendinghere + x[i], 0)
+    maxsofar = max(max, maxendinghere)
+</pre>
+
+
+<p>
+  　　其实这和上面的伪代码基本是一样的．
+</p>
+<ul>
+<li>Ｏ（ｎ　ｌｏｇ　ｎ）解法
+
+<p>    
+    　　这是一个分治算法，虽然不是最优解，但可以锻炼下思维．直接给出算法．
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #228b22;">float</span> <span style="color: #0000ff;">maxsum3</span>(l, u)
+    <span style="color: #a020f0;">if</span> (l &gt; u)  <span style="color: #b22222;">/* </span><span style="color: #b22222;">zero elements </span><span style="color: #b22222;">*/</span>
+        <span style="color: #a020f0;">return</span> 0
+    <span style="color: #a020f0;">if</span> (l == u)  <span style="color: #b22222;">/* </span><span style="color: #b22222;">one elements </span><span style="color: #b22222;">*/</span>
+        <span style="color: #a020f0;">return</span> max(0, x[l])
+
+    m = (l + u) / 2
+    <span style="color: #b22222;">/* </span><span style="color: #b22222;">find max crossing to left </span><span style="color: #b22222;">*/</span>
+    lmax = sum = 0
+    <span style="color: #a020f0;">for</span> (i = m; i &gt;= l; i--)
+        sum += x[i]
+        lmax - max(lmax, sum)
+    <span style="color: #b22222;">/* </span><span style="color: #b22222;">find max crossing to right </span><span style="color: #b22222;">*/</span>
+    rmax = sum = 0
+    <span style="color: #a020f0;">for</span> i = (m, u]
+        sum += x[i]
+        rmax = max(rmax, sum)
+    <span style="color: #a020f0;">return</span> max(lmax+rmax, maxsum3(l, m), maxsum3(m+1, u))
+</pre>
+
+</li>
+</ul>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 累加数组</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<ul>
+<li>问题
+
+<blockquote>
+
+<pre class="example">
+数组ｘ［０．．ｎ－１］中的元素初始化为０，经过ｎ步下面的操作，给出最终的数组元素．其中ｌ，ｕ和ｖ是每个操作的参数（０≤ｌ≤ｕ&lt;ｎ，是整数；ｖ是实数）．
+for i = [l, u]                    ①
+    x[i] += v                     ②
+</pre>
+
+
+</blockquote>
+
+
+</li>
+<li>解答
+
+<p>    
+    　　这个问题用累加数组来解决．操作①、②对应于ｃｕｍ［ｌ］＋＝ｖ；ｃｕｍ［ｕ＋１］－＝ｖ．意思是让ｘ［ｌ．．ｎ－１］＋＝ｖ，然后再让ｘ［ｕ＋１．．ｎ－１］－＝ｖ．下面计算ｘ．
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #a020f0;">for</span> (i = 0; i &lt; n; i++)
+  x[i] = x[i-1] + cum[i];
+</pre>
+
+
+<p>
+    　　书中给出的答案是让操作①、②对应于ｃｕｍ［ｕ］＋＝ｖ；ｃｕｍ［ｌ－１］－＝ｖ．最后计算ｘ时从后往前累加计算．
+</p></li>
+</ul>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 哨兵元素</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<ul>
+<li>问题
+
+<blockquote>
+
+<pre class="example">
+利用哨兵元素求数组最大值．
+</pre>
+
+
+</blockquote>
+
+
+</li>
+<li>解答
+
+<p>
+    　　没什么知识可以学习，就觉得Ｒ．Ｇ．Ｄｒｏｍｅｙ这个解答有点儿耐人寻味．
+</p>
+
+
+<pre class="src src-c">i = 0
+<span style="color: #a020f0;">while</span> i &lt; n
+    max = x[i]
+    x[n] = max
+    i++
+    <span style="color: #a020f0;">while</span> x[i] &lt; max
+        i++
+</pre>
+
+</li>
+</ul>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 多项式计算</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<ul>
+<li>问题
+
+<blockquote>
+
+<pre class="example">
+对于下面的多项式，优化下面的算法．
+ y = a[0]
+ xi = 1
+ for i = [1, n]
+     xi = x * xi
+     y = y + a[i]*xi
+</pre>
+
+
+</blockquote>
+
+
+
+<p>    
+    <img src="ltxpng/Programming Pearls笔记之二_6cbbb4cffa9fc7574a5f7f716320ad58ba19db74.png" alt="$y = a_nx^n + a_{n-1}x^{n-1} + ... + a_1 x^1 + a_0$"/>
+</p></li>
+</ul>
+
+
+
+
+<ul>
+<li>解答
+
+<p>    
+    　　下面Ｈｏｒｎｅｒ的方法几乎可以使效率提高一倍．
+</p>
+
+
+<pre class="src src-c">y = a[n]
+  <span style="color: #a020f0;">for</span> (i = n-1; i &gt;= 0; i--)
+    y = x*y + a[i]
+</pre>
+
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-07-25 三</p>
+<p class="author">Author: Hu Wenbiao</p>
+<p class="creator">Org version 7.8.11 with Emacs version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

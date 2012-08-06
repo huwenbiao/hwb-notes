@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+<head>
+<title>Programming Pearls笔记之三</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="Programming Pearls笔记之三"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-07-28 六"/>
+<meta name="author" content="Hu Wenbiao"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="org-content">
+<h1 class="title">Programming Pearls笔记之三</h1>
+
+<p>　　这里是编程珠玑（Programming Pearls）第三部分（后五个专栏）的笔记．
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Partition</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>  
+  　　快速排序最关键的一步是Ｐａｒｔｉｔｉｏｎ，将一个元素放在正确的位置，它前面的元素都小于它，它后面的元素都不小于它．
+</p>
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Ｎｉｃｏ　Ｌｏｍｕｔｏ的方法</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p>   
+   　　对于一个值ｔ，将数组分成两部分，一部分小于ｔ，一部分大于等于ｔ．如图：
+</p>
+
+
+
+<div class="figure">
+<p><img src="Lomuto1.png"  alt="Lomuto1.png" /></p>
+<p>图一</p>
+</div>
+
+
+<p>   
+   　　相应算法为：
+</p>
+
+
+
+<pre class="src src-c">m = a-1
+<span style="color: #a020f0;">for</span> i = [a, b]
+    <span style="color: #a020f0;">if</span> x[i] &lt; t
+        swap(++m, i)
+</pre>
+
+
+<p>
+   　　将ｘ［ｌ］作为数值ｔ，如下图：
+</p>
+
+
+
+<div class="figure">
+<p><img src="Lomuto2.png"  alt="Lomuto2.png" /></p>
+<p>图二</p>
+</div>
+
+<p>
+   　　这时的ａ即ｌ＋１．ｂ即ｕ．算法终结时的状态是：
+</p>
+
+
+
+<div class="figure">
+<p><img src="Lomuto3.png"  alt="Lomuto3.png" /></p>
+<p>图三</p>
+</div>
+
+
+<p>   
+   　　最后还要交换ｘ［ｌ］和ｘ［ｍ］，状态为：
+</p>
+
+
+
+<div class="figure">
+<p><img src="Lomuto4.png"  alt="Lomuto4.png" /></p>
+<p>图四</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 一些改进</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p>   
+   　　Ｌｏｍｕｔｏ的方法有一点问题，就是当重复元素较多时效率会较差．对于ｎ个元素全部相同的极端情况，时间复杂度变为Ｏ（ｎ）．下面的方案会较好：
+</p>
+
+
+
+<div class="figure">
+<p><img src="Lomuto5.png"  alt="Lomuto5.png" /></p>
+<p>图五</p>
+</div>
+
+<p>
+   　　这时算法是：
+</p>
+
+
+
+<pre class="src src-c">t = x[l]; i = l; j = u+1
+loop
+    <span style="color: #a020f0;">do</span> i++ <span style="color: #a020f0;">while</span> i &lt;=u &amp;&amp; x[i] &lt; t
+    <span style="color: #a020f0;">do</span> j-- <span style="color: #a020f0;">while</span> x[j] &gt; t
+    <span style="color: #a020f0;">if</span> i &gt; j
+      <span style="color: #a020f0;">break</span>
+    swap(i, j)
+swap(l, j)
+</pre>
+
+
+<p>
+   　　当所有元素都相等时．这个算法会交换相等的元素，这是不必要的．但它会将数组从正中间分成两部分，所以时间复杂度是Ｏ（ｎ　ｌｏｇ　ｎ）．这也是严、吴版《数据结构》课本上给出的算法．
+</p>
+<p>
+   　　另外为了取得较好的平均时间复杂度，可以引用随机数：ｓｗａｐ（ｌ，ｒａｎｄｉｎｔ（ｌ，ｕ））．即随机将数组中的一个元素跟ｘ［ｌ］，用它作为ｔ．
+</p>
+<p>
+   　　还有就是当ｕ－ｌ较小时，快速排序效率并不好，这时可以设置一个临界值，当ｕ－ｌ小于这个值时不再进行Ｐａｒｔｉｔｉｏｎ操作而是直接返回，这样最终结果虽然不是有序的，但却是大致有序的，这时可以再用插入排序处理一遍．
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Ｒ．Ｓｅｄｇｅｗｉｃｋ的优化</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<ul>
+<li>问题
+
+<blockquote>
+
+<pre class="example">
+通过让ｘ［ｌ］作为哨兵元素，去掉Ｌｏｍｕｔｏ的算法中循环后面的那个ｓｗａｐ语句．
+</pre>
+
+
+</blockquote>
+
+
+
+<p>    
+    　　可以说这个改进没什么用处，因为只是少了一个交换语句，但这个问题很有意思．
+</p>
+</li>
+<li>解答
+
+<p>    
+    　　Ｂｏｂ　Ｓｅｄｇｅｗｉｃｋ发现可以修改Ｌｍｕｔｏ的方案，从右往左处理数组元素，这样ｘ［ｌ］就可以作为一个哨兵元素，数组状态如下：
+</p>
+
+
+
+<div class="figure">
+<p><img src="Sedgewick.png"  alt="Sedgewick.png" /></p>
+<p>图六</p>
+</div>
+
+<p>
+    　　算法伪代码是：
+</p>
+
+
+
+<pre class="src src-c">m = u+1
+<span style="color: #a020f0;">for</span> (i = u; i &gt;= l; i++)
+    <span style="color: #a020f0;">if</span> x[i] &gt;= t
+        swap(--m, i)
+</pre>
+
+
+<p>    
+    　　当算法处理完后ｘ［ｍ］＝ｔ，因此也就不用再交换了．利用这个方案Ｓｅｄｇｅｗｉｃｋ还可以省掉循环中的一个判断语句：
+</p>
+
+
+
+<pre class="src src-c">m = i = u+1
+<span style="color: #a020f0;">do</span> 
+    <span style="color: #a020f0;">while</span> x[--i] &lt; t
+        ;
+    swap(--m, i)
+ <span style="color: #a020f0;">while</span> i != l
+</pre>
+
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 第ｋ小元素</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<ul>
+<li>问题
+
+<blockquote>
+
+<pre class="example">
+查找数组ｘ［０．．ｎ－１］中第ｋ小元素，要求时间复杂度为Ｏ（ｎ），允许改变数组中元素顺序．    
+</pre>
+
+
+</blockquote>
+
+
+</li>
+<li>解答
+
+<p>
+    　　这个很简单，只是对Ｐａｒｔｉｔｉｏｎ稍作修改．Ｃ．Ａ．Ｒ．Ｈｏａｒｅ的算法：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #228b22;">void</span> <span style="color: #0000ff;">select1</span>(l, u, k)
+        <span style="color: #228b22;">pre</span> <span style="color: #a0522d;">l</span> &lt;= k &lt;= u
+        post x[l..k-1] &lt;= x[k] &lt;= x[k+1..u]
+    <span style="color: #a020f0;">if</span> l &gt;= u
+        <span style="color: #a020f0;">return</span>
+    swap(l, randint(l, u))
+    t = x[l]; i = l; j = u+1
+    loop
+        <span style="color: #a020f0;">do</span> i++; <span style="color: #a020f0;">while</span> i &lt;= u &amp;&amp; x[i] &lt; t
+        <span style="color: #a020f0;">do</span> j--; <span style="color: #a020f0;">while</span> x[j] &gt;t
+        <span style="color: #a020f0;">if</span> i &gt; j
+            <span style="color: #a020f0;">break</span>
+        temp = x[i]; x[i] = x[j]; x[j] = temp
+    swap(l, j)
+    <span style="color: #a020f0;">if</span> j &lt; k
+        select1(j+1, u, k)
+    <span style="color: #a020f0;">else</span> <span style="color: #a020f0;">if</span> j &gt; k
+        select1(l, j-1, k)
+</pre>
+
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 抽样问题</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<blockquote>
+
+<pre class="example">
+从０．．ｎ－１中等概率随机选取ｍ（ｍ＜ｎ）个并升序输出，要求不能有重复数值．  
+</pre>
+
+
+</blockquote>
+
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Ｋｎｕｔｈ的方法Ｓ</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+
+
+
+<pre class="src src-c">select = m
+remaining = n
+<span style="color: #a020f0;">for</span> i = [0, n)
+    <span style="color: #a020f0;">if</span> (bigrand() % remaining) &lt; select
+        print i
+        select--
+    remaining--   
+</pre>
+
+
+<p>   
+   　　其中的ｂｉｇｒａｎｄ（）是产生一个随机整数．
+</p>
+<p>
+   　　巧妙之处是直接升序考查，输出，不用再排序了．
+</p></div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Ｋｎｕｔｈ的方法Ｐ</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<p>   　　先将数组随机打乱，然后将前ｍ个排序．
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #a020f0;">for</span> i = [0, n)
+    swap(i, randint(i, n-1))
+sort(x, x+m)
+<span style="color: #a020f0;">for</span> i = [0, m)
+    <span style="color: #228b22;">printf</span> <span style="color: #a0522d;">x</span>[i]
+</pre>
+
+
+<p>   
+   　　Ａｓｈｌｅｙ　Ｓｈｅｐｈｅｒｄ和Ａｌｅｘ　Ｗｏｒｏｎｏｗ发现只要对前ｍ个进行打乱操作就行了：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #228b22;">void</span> <span style="color: #0000ff;">genshuf</span>(<span style="color: #228b22;">int</span> <span style="color: #a0522d;">m</span>, <span style="color: #228b22;">int</span> <span style="color: #a0522d;">n</span>)
+{
+  <span style="color: #228b22;">int</span> <span style="color: #a0522d;">i</span>, <span style="color: #a0522d;">j</span>;
+  <span style="color: #228b22;">int</span> *<span style="color: #a0522d;">x</span> = new <span style="color: #228b22;">int</span>[n];
+  <span style="color: #a020f0;">for</span> (i = 0; i &lt; n; i++)
+    x[i] = i;
+  <span style="color: #a020f0;">for</span> (i = 0; i &lt; m; i++) {
+    j = randint(i, n-1);
+    <span style="color: #228b22;">int</span> <span style="color: #a0522d;">t</span> = x[i]; x[i] = x[j]; x[j] = t;
+  }
+  sort(x, x+m);
+  <span style="color: #a020f0;">for</span> (i = 0; i &lt; m; i++)
+    cout &lt;&lt; x[i] &lt;&lt;<span style="color: #8b2252;">"\n"</span>;
+}
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> ｍ接近ｎ的情况</h3>
+<div class="outline-text-3" id="text-4-3">
+
+
+<ul>
+<li>问题
+
+<p>
+     　　当ｍ接近ｎ时，容易想到的解法是找出要舍弃的ｎ－ｍ个，然后剩下的就是要选取的．然而此处的问题是：
+</p>
+<blockquote>
+
+<pre class="example">
+当ｍ接近ｎ的时候，基于集合的方法会产生很多重复的随机数值．要求设计一种算法，即使在最坏的情况下也只需要产生ｍ个随机数．
+</pre>
+
+
+</blockquote>
+
+
+
+<p>     
+     问题中基于集合的算法如下：
+</p>
+
+
+<pre class="src src-c">initialize set S to <span style="color: #228b22;">empty</span>
+<span style="color: #a0522d;">size</span> = 0
+<span style="color: #a020f0;">while</span> size &lt; m <span style="color: #a020f0;">do</span>
+    t = bigrand() % n
+    <span style="color: #a020f0;">if</span> t is not in S
+        insert t into S
+        size++
+print the elements of S in sorted orrder
+</pre>
+
+
+</li>
+<li>解答
+
+<p>     
+     　　下面是Ｂｏｂ Ｆｌｏｙｄ的算法：
+</p>
+
+
+<pre class="src src-c"><span style="color: #228b22;">void</span> <span style="color: #0000ff;">genfloyd</span>(<span style="color: #228b22;">int</span> <span style="color: #a0522d;">m</span>, <span style="color: #228b22;">int</span> <span style="color: #a0522d;">n</span>)
+{
+     set&lt;<span style="color: #228b22;">int</span> S;
+     set&lt;<span style="color: #228b22;">int</span>&gt;::iterator i;
+     <span style="color: #a020f0;">for</span> (<span style="color: #228b22;">int</span> <span style="color: #a0522d;">j</span> = n-m; j &lt; n; j++) {
+          <span style="color: #228b22;">int</span> <span style="color: #a0522d;">t</span> = bigrand() % (j+1);
+          <span style="color: #a020f0;">if</span> (S.find(t) == S.end())
+               S.insert(t); <span style="color: #b22222;">// </span><span style="color: #b22222;">t not in S</span>
+          <span style="color: #a020f0;">else</span>
+               S.insert(j); <span style="color: #b22222;">// </span><span style="color: #b22222;">t in S</span>
+     }
+     <span style="color: #a020f0;">for</span> (i = S.begin(); i != S.end(); ++i)
+          cout &lt;&lt; *i &lt;&lt;<span style="color: #8b2252;">"\n"</span>;
+}
+
+</pre>
+
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> ｎ未知时的情况</h3>
+<div class="outline-text-3" id="text-4-4">
+
+
+<ul>
+<li>问题
+
+<blockquote>
+
+<pre class="example">
+读取一篇文章，等概率地随机输出其中的一行．     
+</pre>
+
+
+</blockquote>
+
+
+
+<p>     
+     　　这里ｎ在读完文章之前未知，ｍ＝１．
+</p>
+</li>
+<li>解答
+
+<p>     
+     　　可以先选中第一行，当读入第二行时，再以１／２的概率选中第二行，读入第三行时再以１／３的概率选中第三行．．．最后输出选中行．
+</p>
+
+
+
+<pre class="src src-c">i = 0
+<span style="color: #a020f0;">while</span> more input lines
+    with probability 1.0/++i
+        choice = this input line
+print choice
+</pre>
+
+
+<p>     
+     　　这个算法可以用数学归纳法作下不太正式的证明：选中每一行的概率都是１／ｎ．
+</p>
+<ol>
+<li>当ｎ＝１时，以１００％的概率选中第一行，满足要求．
+
+</li>
+<li>假设当ｎ＝ｋ时，满足要求．则当输入第ｋ＋１行时，选中第ｋ＋１行的概率为１／（ｋ＋１）．这一事件对于前ｋ行的影响是相同的，又因为原来（读入第ｋ＋１行之前）选中前ｋ行中任一行的概率是相同的，所以读入第ｋ＋１行之后选中前ｋ行中任一行的概率也是相同的．这时选中前ｋ行的概率是１－１／（ｋ＋１）．故选中前ｋ行任一行的概率也是１／（ｋ＋１）．所以当ｎ＝ｋ＋１时，也符合要求．
+
+</li>
+<li>综上，算法满足要求．
+</li>
+</ol>
+
+</li>
+</ul>
+
+
+
+<ul>
+<li>笔记
+
+<p>
+     　　上面的问题是ｍ＝１时的情况，当ｍ＞１时，算法如下：<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>
+</p>
+
+
+
+<pre class="src src-c">i = 0
+<span style="color: #a020f0;">while</span> more input lines
+    <span style="color: #a020f0;">if</span> i &lt; m
+        x[i++] = this input line
+    <span style="color: #a020f0;">else</span>
+        t = bigrand() % (++i)
+        <span style="color: #a020f0;">if</span> t &lt; m
+            x[t] = this input line
+<span style="color: #a020f0;">for</span> i = [0, m)
+    <span style="color: #228b22;">printf</span> <span style="color: #a0522d;">x</span>[i]
+</pre>
+
+
+<p>
+     　　根据上面的算法也可以得出<a href="#sec-4-3">ｍ接近ｎ的情况</a>的另外一个较好的解，因此ｍ比较接近ｎ，因此ｎ－ｍ较小，此时只用产生比较少的几个随机数即可：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #a020f0;">for</span> i = [0, m)
+    x[i] = i
+<span style="color: #a020f0;">for</span> i = [m, n)
+    t = bigrand() % (i+1)
+    <span style="color: #a020f0;">if</span> (t &lt; m)
+        x[t] = i
+<span style="color: #a020f0;">for</span> i = [0, m)
+<span style="color: #228b22;">print</span> <span style="color: #a0522d;">x</span>[i]
+</pre>
+
+</li>
+</ul>
+
+
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 这个问题书中没有提到，我也没有遇到过这个问题，估计Ｋｎｕｔｈ的半数值算法中会有．这个算法是我想的，如有错误，请指出．
+</p>
+
+
+
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-07-28 六</p>
+<p class="author">Author: Hu Wenbiao</p>
+<p class="creator">Org version 7.8.11 with Emacs version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

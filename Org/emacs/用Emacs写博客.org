@@ -1,0 +1,34 @@
+#+TITLE:     用Emacs写博客
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-08-06 一
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  zh
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:
+
+* 软件
+
+* 用ｏｒｇ　ｍｏｄｅ写中文的技巧
+** 段首空格
+   　　如果用英文空格是会被忽略掉的，所以要用中文全角空格，这样才能达到段首空两格的效果．
+** 对于引用
+   　　引用的显示效果跟你所用的博客园模板有关系，对于我的，默认效果如下：
+   #+begin_quote
+: 这里是默认的引用效果．   
+   #+end_quote
+   　　如果想去掉阴影，可以将引用中每行前面的冒号手动删掉．效果如下：
+   #+begin_quote
+   这里的引用手动删除了前面的冒号．   
+   #+end_quote
+
+** 自动格式化
+
+   　　跟其他的模式一样，ｏｒｇ　ｍｏｄｅ也可以自动格式化： ~C-x h~ 全选， ~C-M-\~ 格式化．

@@ -172,7 +172,7 @@
 			 categories-string)))
       (if (not idx1)
 	  nil
-	(setq categories-string¡¡¡¡¡¡¡¡¡¡ ;Ô²½Ç°ë½Ç¿Õ¸ñ
+	(setq categories-string         ;Ô²½Ç°ë½Ç¿Õ¸ñ
 	      (substring categories-string idx1))
 	(let ((idx2 
 	       (string-match "[¡¡ \t]+"
