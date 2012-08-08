@@ -1,8 +1,9 @@
 (defgroup cnblogs nil
   "博客园客户端分组"
   :group 'emacs)
-(defun cnblogs-init () ;; todo: 以后要改成nil
-  "初始化各变量"
+
+(defun cnblogs-define-variables () ;; todo: 以后要改成nil
+  "定义及初始化各变量"
   (defcustom cnblogs-server-url nil
     "MetaWeblog访问地址"
     :group 'cnblogs
@@ -19,7 +20,6 @@
     "用户密码"
     :group 'cnblogs
     :type 'string)
-
   (defcustom cnblogs-media-object-suffix-list '("jpg" "jpeg" "png" "gif" "mp4")
     "希望处理的媒体文件类型"
     :group 'cnblogs
@@ -27,18 +27,33 @@
   (defcustom cnblogs-template-head
     "#TITLE:    \n#KEYWORDS: \n#DATE:    \n"
     "博客头模板"
-    :type 'list
     :group 'cnblogs)
-  
+  :type 'list
+  (defcustom cnblogs-file-root-path "~/.cnblogs/" ;;todo:　修改为"~/.Cnblogs/"
+    "数据文件的根目录"
+    :group 'cnblogs
+    :type 'string)
+
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (defvar cnblogs-posts-in-category nil
+    "分类之后的博文，这是显示在Cnblogs-Manager缓冲区里的主要内容")
+  (defvar cnblogs-entry-list-file
+    (concat cnblogs-file-root-path "entry-list-file")
+    "博文项列表文件")
+  (defvar cnblogs-file-post-path
+    (concat cnblogs-file-root-path "post/")
+    "博文内容文件根目录，其中的博文内容文件以博文ｉｄ命名")
+  (defvar cnblogs-category-list-file 
+    (concat cnblogs-file-root-path "category-list-file")
+    "博文分类列表")
   (defvar cnblogs-blog-info nil
     "博客信息")
   (defvar cnblogs-entry-list nil
     "本地博客列表")
   (defvar cnblogs-category-list nil
     "分类列表")
-  (defvar cnblogs-manager-window nil
-    "博客管理窗口")
+  (defvar cnblogs-post-list-window nil
+    "博文列表窗口")
   (setq  test-post  `(("title" . "博文题目") 
 		      ("dateCreated" :datetime (20423 52590))
 		      ("categories"  "categories" "[随笔分类]Emacs" "[随笔分类]Linux应用")
@@ -96,14 +111,143 @@
   (define-key cnblogs-mode-map (kbd "\C-c c c") 'cnblogs-get-categories)
   (define-key cnblogs-mode-map (kbd "\C-c c r") 'cnblogs-get-recent-posts)
   (define-key cnblogs-mode-map (kbd "\C-c c u") 'cnblogs-get-users-blogs)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;LoadData;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   )
-;(cnblogs-init)
+
+(cnblogs-define-variables)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;LoadData;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun cnblogs-load-variables ()
+  "加载各变量的值";
+					;加载博文项列表
+  (with-temp-buffer
+    (insert-file-contents cnblogs-entry-list-file)
+    (setq cnblogs-entry-list
+	  (car (read-from-string (buffer-string)))))
+
+					;加载博文分类
+  (with-temp-buffer
+    (insert-file-contents cnblogs-category-list-file)
+    (setq cnblogs-category-list
+	  (car (read-from-string (buffer-string)))))
+
+					;将博文项列表中的项加入到相应的分类中去
+  (mapc (lambda (categorie)
+	  (progn
+					;先将该分类加入
+	    (push (cons categorie nil)
+		  cnblogs-posts-in-category)
+	    )
+	  
+					;将属于该分类的项加入该分类
+	  (mapc (lambda (entry)
+		  (let* ((entry-categories (nth 3 entry))
+			 (flag (member categorie entry-categories)))
+		    (and flag
+			 (push entry
+			       (cdr (assoc categorie cnblogs-posts-in-category)))))
+		  )
+		
+		cnblogs-entry-list))
+
+	cnblogs-category-list)
+  )
+
+(defun cnblogs-make-content ()
+  (let ((result ""))
+    (mapc (lambda (category)           ;分类及其中的博文
+	    (let ((posts-in-cat "")    ;属于该分类的博文
+		  (posts-cnt 0))       ;属于该分类的博文数目
+	      (mapc (lambda (entry)
+		      (progn
+			(setq posts-cnt 
+			      (1+ posts-cnt))
+			(setq posts-in-cat
+			      (concat " ┗→"
+				      (with-temp-buffer
+					(insert-image '(image :type png :file "~/tag.png"))
+					(buffer-string))
+				      (propertize (nth 1 entry)
+						  'face 'italic
+						  'mouse-face 'bold-italic
+						  'comment t
+						  'face 'highlight
+						  )
+				      "\n"
+				      posts-in-cat))))
+
+		      (cdr category))
+	      (setq result (concat
+			    (with-temp-buffer
+			      (insert-image '(image :type png :file "~/folder.png") )
+			      (buffer-string))
+			    " "
+			    (car category)
+			    " ["
+			    (int-to-string posts-cnt)
+			    "]\n"
+			    posts-in-cat
+			    result))))
+	  cnblogs-posts-in-category)
+    result)
+  )
+
+(defun cnblogs()
+  "用来启动Cnblogs-Manager"
+  (interactive)
+
+
+  (cnblogs-load-variables)
+  (delete-other-windows)
+  (setq cnbblogs-post-list-window 
+	(split-window nil 55 "left"))
+
+  
+  (set-window-buffer cnblogs-post-list-window
+		     (get-buffer-create "Cnblogs"))
+
+
+					;生成内容
+  (with-current-buffer "Cnblogs"
+    (insert (cnblogs-make-content))
+    (cnblogs-mode))
+
+
+					;返回原来的窗口
+					;todo: 这个命令未必在任何情况下都能返回原来的窗口，以后修改下
+  (next-multiframe-window)
+  )  
+
+(defun cnblogs-format-content ()
+  "格式化显示博文项及博文状态等信息"
+  
+  (setq cnbblogs-post-list-window 
+	(split-window nil 30 "left"))
+
+  
+  (set-window-buffer cnblogs-post-list-window
+		     (get-buffer-create "Cnblogs"))
+
+
+  (with-current-buffer "Cnblogs"
+    (insert "this is a test"))
+  
+
+					;返回原来的窗口
+					;todo: 这个命令未必在任何情况下都能返回原来的窗口，以后修改下
+  (next-multiframe-window)
+  
+  )
+
+(defun cnblogs-init ()
+  "Cnblogs的所有初始化工作"
+					; (cnblogs-define-variables)
+					;  (cnblogs-load-variables)
+					;  (cnblogs-format-content)
+  )
+					;(cnblogs-init)
 
 
 (defun cnblogs-save-entry-list () 
-  (with-temp-file "cnblogs-entry-list-file"
+  (with-temp-file cnblogs-entry-list-file
     (print cnblogs-entry-list
 	   (current-buffer))))
 
@@ -137,7 +281,13 @@
   (setq cnblogs-blog-info
 	(cnblogs-metaweblog-get-users-blogs))
   (if cnblogs-blog-info
-      (message "设置成功")
+      (progn
+	(customize-save-variable 'cnblogs-blog-id  cnblogs-blog-id)
+	(customize-save-variable 'cnblogs-user-name cnblogs-user-name)
+	(customize-save-variable 'cnblogs-user-passwd cnblogs-user-passwd)
+	(customize-save-variable 'cnblogs-server-url cnblogs-server-url)
+;	(customize-save-variable 'cnblogs-category-list cnblogs-category-list)
+	(message "设置成功"))
     (message "设置失败")))
 
 (defun cnblogs-fetch-field (field)
@@ -228,14 +378,14 @@
 		      (save-match-data
 			(or
 			 (and (file-exists-p media-path)
-			     (cnblogs-metaweblog-new-media-object 
-			      (cnblogs-make-media-object-file-data
-			       media-path)))
+			      (cnblogs-metaweblog-new-media-object 
+			       (cnblogs-make-media-object-file-data
+				media-path)))
 			 (and (file-exists-p (substring media-path 1))
 			      (cnblogs-metaweblog-new-media-object 
 			       (cnblogs-make-media-object-file-data (substring
 								     media-path 1))))))))
-		     
+		
 		(if media-url
 		    (progn
 		      (setq current
@@ -271,11 +421,11 @@
 	    (cons "dateCreated"
 		  (list 
 		   :datetime
-		(condition-case ()
-		    (date-to-time (cnblogs-fetch-field "DATE")) ;todo: 要转化
-		  (error (progn
-			   (message "时间格式不支持，使用默认时间:1989-05-17 00:00")
-			   (date-to-time "1989-05-17 00:00"))))))
+		   (condition-case ()
+		       (date-to-time (cnblogs-fetch-field "DATE")) ;todo: 要转化
+		     (error (progn
+			      (message "时间格式不支持，使用默认时间:1989-05-17 00:00")
+			      (date-to-time "1989-05-17 00:00"))))))
 
 	    ;; description
 	    (cons "description"
@@ -345,13 +495,23 @@
 
 (defun cnblogs-new-post ()
   (interactive)
-
-  (let ((post-id  
+  
+  (let ((post-id  ;得到博文ｉｄ
 	 (cnblogs-metaweblog-new-post (cnblogs-current-buffer-to-post)
-				      t)))
+				      t))
+					;得到博文内容
+	(post-content
+	 (cnblogs-metaweblog-get-post post-id)))
+					;生成新的博文项列表
+					;todo:这里要刷新列表
     (setq cnblogs-entry-list
-	  (cons (cnblogs-metaweblog-get-post post-id)
+	  (cons (cnblogs-make-entry post-content)
 		cnblogs-entry-list))
+					;保存博文内容，文件名为博文ｉｄ
+    (with-temp-file (concat cnblogs-file-post-path post-id)
+      (print post-content
+	     (current-buffer)))
+					;保存博文项列表
     (cnblogs-save-entry-list))
   (message "发布随笔成功！"))
 
@@ -464,7 +624,7 @@
     (print cnblogs-category-list
 	   (current-buffer))))
 
-(defun cnblogs-load-category-list ()
+(defun cnblogs-load-category-list () ;todo:去掉
   (find-file "cnblogs-category-list-file")
   (let ((entry-buf
 	 (get-buffer "cnblogs-category-list-file")))
