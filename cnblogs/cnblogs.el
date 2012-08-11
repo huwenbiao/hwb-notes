@@ -161,9 +161,11 @@
 			(setq posts-cnt 
 			      (1+ posts-cnt))
 			(setq posts-in-cat
-			      (concat " ©»¡ú"
+			      (concat ""
 				      (with-temp-buffer
-					(insert-image '(image :type png :file "~/tag.png"))
+					(insert-image '(image :type xpm :file "~/cnblogs-guide.xpm"))
+					(insert-image '(image :type xpm :file "~/cnblogs-handle.xpm"))
+					(insert-image '(image :type xpm :file "~/cnblogs-leaf.xpm"))
 					(buffer-string))
 				      (propertize (nth 1 entry)
 						  'face 'italic
@@ -177,7 +179,7 @@
 		      (cdr category))
 	      (setq result (concat
 			    (with-temp-buffer
-			      (insert-image '(image :type png :file "~/folder.png") )
+			      (insert-image '(image :type xpm :file "~/cnblogs-open.xpm") )
 			      (buffer-string))
 			    " "
 			    (car category)
