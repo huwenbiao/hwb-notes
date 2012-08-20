@@ -1,0 +1,128 @@
+ls
+cd contrib/
+ls
+vim README 
+cat README 
+dir
+ls
+cd lisp/
+ls
+cd ..
+ls
+ls odt/
+ls scripts/
+dir
+ls
+ls *
+mv /home/hwb/Pictures/org.png organdcnblogs.png 
+exit
+cd
+rm emacs 
+rm _emacs\~ 
+dir
+ls *emacs*
+ls *emacs
+ls *emacs
+pkill fir
+exit
+ls
+dir
+ls
+mv graphviz-dot-mode.el /home/hwb/.emacs.d/
+cd .emacs.d/
+ls
+mkdir others
+mv others/ misc
+mv graphviz-dot-mode.el misc/
+ls
+cd misc/
+ls
+cd hwb-notes/Org/
+ls
+cd read\ notes/
+ls
+cd ..
+cd ..
+git add .
+git -a -m "修改目录read notes 为reading notes。"
+git commit -a -m "修改目录read notes 为reading notes。"
+ls
+cd Org/
+ls
+cd reading\ notes/
+ls
+mv Programming\ Pearls笔记之一   Programming\ Pearls笔记之一.org
+exit
+man mew
+quit
+ls
+ls *.el
+mkdir backup
+cp *.el backup/
+ls backup/
+exit
+convert -resize 30 tag.png tag.png
+cc a.c
+cc -g a.c
+rm a.org a.c makefile 
+cd cedet-1.1/
+ls
+vim INSTALL 
+ls
+ls
+ls
+make EMACS=emacs
+Wrote /home/hwb/cedet-1.1/tests/cit-android.elcls
+ls
+cd semantic/
+ls
+cd ..
+ls
+dir
+ls
+cd ..
+mv cedet-1.1/ .emacs.d/
+cd .emacs.d/
+ls
+mv cedet-1.1/ misc/
+cd .emacs.d/misc/cedet-1.1/
+ls
+make install-info 
+makemake
+make
+make all 
+mv /home/hwb/ecb-2.40/ /home/hwb/.emacs.d/misc/
+cd .emacs.d/misc/ecb-2.40/
+ls
+make
+quit
+exit
+ls
+w3m Programming\ Pearls笔记之三.html
+firefox  Programming\ Pearls笔记之三.html
+exit
+ls
+dir
+ls
+dir
+ls
+dir
+ls
+dir
+ls
+ls
+dir
+dir
+ls
+ls
+clean-binary-files
+clear
+ls
+dir
+dir
+ls
+cd ..
+ls
+cd ..
+ls
+dir

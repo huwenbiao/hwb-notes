@@ -1,0 +1,13 @@
+		       cmew and smew in Haskell
+
+* Installation
+
+- Install the Haskell Platform
+	http://hackage.haskell.org/platform/
+
+- Compile
+
+    % cabal install
+
+  "cmew" and "smew" will be installed to "~/.cabal/bin".
+  Note that this may displays warnings. Please ignore them.
