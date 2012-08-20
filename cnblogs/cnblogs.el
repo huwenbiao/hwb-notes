@@ -1,3 +1,7 @@
+;;; entry type
+;;
+;; (id title postid categories src-file state)
+
 (defgroup cnblogs nil
   "博客园客户端分组"
   :group 'emacs)
