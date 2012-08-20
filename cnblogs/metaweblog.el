@@ -1,4 +1,3 @@
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; metaWeblog.newPost
 (defun cnblogs-metaweblog-new-post (post publishp)

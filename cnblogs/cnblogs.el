@@ -2,7 +2,7 @@
   "博客园客户端分组"
   :group 'emacs)
 
-(defun cnblogs-define-variables () ;; todo: 以后要改成nil
+(defun cnblogs-define-variables () ;; todo: 变量以后要改成nil
   "定义及初始化各变量"
   (defcustom cnblogs-server-url nil
     "MetaWeblog访问地址"
@@ -29,7 +29,7 @@
     "博客头模板"
     :group 'cnblogs)
   :type 'list
-  (defcustom cnblogs-file-root-path "~/.cnblogs/" ;;todo:　修改为"~/.Cnblogs/"
+  (defcustom cnblogs-file-root-path "~/.Cnblogs/"
     "数据文件的根目录"
     :group 'cnblogs
     :type 'string)
@@ -43,6 +43,8 @@
   (defvar cnblogs-file-post-path
     (concat cnblogs-file-root-path "post/")
     "博文内容文件根目录，其中的博文内容文件以博文ｉｄ命名")
+  (defvar cnblogs-category-list nil
+    "博文分类列表")
   (defvar cnblogs-category-list-file 
     (concat cnblogs-file-root-path "category-list-file")
     "博文分类列表")
@@ -113,22 +115,14 @@
   (define-key cnblogs-mode-map (kbd "\C-c c u") 'cnblogs-get-users-blogs)
   )
 
-(cnblogs-define-variables)
+					;(cnblogs-define-variables)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;LoadData;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun cnblogs-load-variables ()
   "加载各变量的值";
 					;加载博文项列表
-  (with-temp-buffer
-    (insert-file-contents cnblogs-entry-list-file)
-    (setq cnblogs-entry-list
-	  (car (read-from-string (buffer-string)))))
-
+  (cnblogs-load-entry-list)
 					;加载博文分类
-  (with-temp-buffer
-    (insert-file-contents cnblogs-category-list-file)
-    (setq cnblogs-category-list
-	  (car (read-from-string (buffer-string)))))
-
+  (cnblogs-load-category-list)
 					;将博文项列表中的项加入到相应的分类中去
   (mapc (lambda (categorie)
 	  (progn
@@ -151,119 +145,39 @@
 	cnblogs-category-list)
   )
 
-(defun cnblogs-make-content ()
-  (let ((result ""))
-    (mapc (lambda (category)           ;分类及其中的博文
-	    (let ((posts-in-cat "")    ;属于该分类的博文
-		  (posts-cnt 0))       ;属于该分类的博文数目
-	      (mapc (lambda (entry)
-		      (progn
-			(setq posts-cnt 
-			      (1+ posts-cnt))
-			(setq posts-in-cat
-			      (concat ""
-				      (with-temp-buffer
-					(insert-image '(image :type xpm :file "~/cnblogs-guide.xpm"))
-					(insert-image '(image :type xpm :file "~/cnblogs-handle.xpm"))
-					(insert-image '(image :type xpm :file "~/cnblogs-leaf.xpm"))
-					(buffer-string))
-				      (propertize (nth 1 entry)
-						  'face 'italic
-						  'mouse-face 'bold-italic
-						  'comment t
-						  'face 'highlight
-						  )
-				      "\n"
-				      posts-in-cat))))
-
-		      (cdr category))
-	      (setq result (concat
-			    (with-temp-buffer
-			      (insert-image '(image :type xpm :file "~/cnblogs-open.xpm") )
-			      (buffer-string))
-			    " "
-			    (car category)
-			    " ["
-			    (int-to-string posts-cnt)
-			    "]\n"
-			    posts-in-cat
-			    result))))
-	  cnblogs-posts-in-category)
-    result)
-  )
-
-(defun cnblogs()
-  "用来启动Cnblogs-Manager"
-  (interactive)
-
-
-  (cnblogs-load-variables)
-  (delete-other-windows)
-  (setq cnbblogs-post-list-window 
-	(split-window nil 55 "left"))
-
-  
-  (set-window-buffer cnblogs-post-list-window
-		     (get-buffer-create "Cnblogs"))
-
-
-					;生成内容
-  (with-current-buffer "Cnblogs"
-    (insert (cnblogs-make-content))
-    (cnblogs-mode))
-
-
-					;返回原来的窗口
-					;todo: 这个命令未必在任何情况下都能返回原来的窗口，以后修改下
-  (next-multiframe-window)
-  )  
-
-(defun cnblogs-format-content ()
-  "格式化显示博文项及博文状态等信息"
-  
-  (setq cnbblogs-post-list-window 
-	(split-window nil 30 "left"))
-
-  
-  (set-window-buffer cnblogs-post-list-window
-		     (get-buffer-create "Cnblogs"))
-
-
-  (with-current-buffer "Cnblogs"
-    (insert "this is a test"))
-  
-
-					;返回原来的窗口
-					;todo: 这个命令未必在任何情况下都能返回原来的窗口，以后修改下
-  (next-multiframe-window)
-  
-  )
-
-(defun cnblogs-init ()
-  "Cnblogs的所有初始化工作"
-					; (cnblogs-define-variables)
-					;  (cnblogs-load-variables)
-					;  (cnblogs-format-content)
-  )
-					;(cnblogs-init)
-
+;(cnblogs-load-entry-list) ;; todo: 放在初始化中，但就将定义函数放在前面
+(defun cnblogs-load-entry-list ()
+  (setq cnblogs-entry-list
+	(condition-case ()
+	    (with-temp-buffer
+	      (insert-file-contents cnblogs-entry-list-file)
+	      (car (read-from-string (buffer-string))))
+	  (error nil))))
 
 (defun cnblogs-save-entry-list () 
   (with-temp-file cnblogs-entry-list-file
     (print cnblogs-entry-list
 	   (current-buffer))))
 
-(defun cnblogs-load-entry-list ()
-  (find-file "cnblogs-entry-list-file")
-  (let ((entry-buf
-	 (get-buffer "cnblogs-entry-list-file")))
-    (setq cnblogs-entry-list 
-	  (condition-case ()
-	      (read entry-buf)
-	    (error nil)))
-    (kill-buffer entry-buf)))
 
-(cnblogs-load-entry-list) ;; todo: 放在初始化中，但就将定义函数放在前面
+(defun cnblogs-load-category-list ()
+  (setq cnblogs-category-list
+	(condition-case ()
+	    (with-temp-buffer
+	      (insert-file-contents cnblogs-category-list-file)
+	      (car (read-from-string (buffer-string))))
+	  (error nil))))
+
+(defun cnblogs-save-category-list ()
+					;先将分类格式简化，只留取名字
+  (setq cnblogs-category-list
+	(mapcar (lambda (category)
+		  (cdr (assoc "description" category))
+		  )
+		cnblogs-category-list))
+  (with-temp-file cnblogs-category-list-file
+    (print cnblogs-category-list
+	   (current-buffer))))
 
 
 (defun cnblogs-setup-blog ()
@@ -288,7 +202,10 @@
 	(customize-save-variable 'cnblogs-user-name cnblogs-user-name)
 	(customize-save-variable 'cnblogs-user-passwd cnblogs-user-passwd)
 	(customize-save-variable 'cnblogs-server-url cnblogs-server-url)
-;	(customize-save-variable 'cnblogs-category-list cnblogs-category-list)
+	;; 如果没有.Cnblogs目录，则新建这个目录
+	(or (file-directory-p "~/.Cnblogs")
+	    (make-directory "~/.Cnblogs"))
+	(cnblogs-save-category-list)
 	(message "设置成功"))
     (message "设置失败")))
 
@@ -351,7 +268,7 @@
   "根据给出的文件路径返回相应的FileData，文件不存在返回nil"
   (and (file-exists-p media-path)
        (list
-	;; name
+	;;media-path name
 	(cons "name" 
 	      (file-name-nondirectory media-path))
 	
@@ -607,34 +524,21 @@
 	(message "获取成功！")
       (message "获取失败"))))
 
-
+;; 获取并保存分类
 (defun cnblogs-get-categories ()
   (interactive)
   (setq cnblogs-category-list
-	(or 
-	 (condition-case ()
-	     (cnblogs-metaweblog-get-categories)
-	   (error nil))
-	 cnblogs-category-list))
-  (cnblogs-save-category-list)
-  (message "获取分类成功！"))
+	(condition-case ()
+	    (cnblogs-metaweblog-get-categories)
+	  (error nil)))
+  (if cnblogs-category-list
+      (progn
+	(cnblogs-save-category-list)
+	(message "获取分类成功！"))
+    (message "获取分类失败")))
 
 
 
-(defun cnblogs-save-category-list () 
-  (with-temp-file "cnblogs-category-list-file"
-    (print cnblogs-category-list
-	   (current-buffer))))
-
-(defun cnblogs-load-category-list () ;todo:去掉
-  (find-file "cnblogs-category-list-file")
-  (let ((entry-buf
-	 (get-buffer "cnblogs-category-list-file")))
-    (setq cnblogs-entry-list 
-	  (condition-case ()
-	      (read entry-buf)
-	    (error nil)))
-    (kill-buffer entry-buf)))
 
 (defun cnblogs-get-recent-posts ()
   (interactive)
@@ -667,3 +571,26 @@
 		(cnblogs-metaweblog-get-users-blogs)
 	      (message "获取用户博客信息成功！"))
 	  (error cnblogs-blog-info))))
+
+
+
+
+
+;; 下面是关于minor mode的内容
+(defun cnblogs-init ()
+  "Cnblogs的所有初始化工作"
+  (cnblogs-define-variables)
+  (cnblogs-load-variables)
+  )
+
+(cnblogs-init)
+
+(define-key cnblogs-mode-map [menu-bar menu-bar-cnblogs-menu]
+  (cons "Cnblogs" cnblogs-mode-map))
+
+(define-minor-mode cnblogs-minor-mode
+  "cnblogs-minor-mode"
+  :init-value nil
+  :lighter " Cnblogs"
+  :keymap cnblogs-mode-map
+  :group Cnblogs)
