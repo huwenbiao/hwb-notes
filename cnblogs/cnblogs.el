@@ -3,107 +3,107 @@
 ;; (id title postid categories src-file state)
 
 (defgroup cnblogs nil
-  "²©¿ÍÔ°¿Í»§¶Ë·Ö×é"
+  "åšå®¢å›­å®¢æˆ·ç«¯åˆ†ç»„"
   :group 'emacs)
 
-(defun cnblogs-define-variables () ;; todo: ±äÁ¿ÒÔºóÒª¸Ä³Énil
-  "¶¨Òå¼°³õÊ¼»¯¸÷±äÁ¿"
+(defun cnblogs-define-variables () ;; todo: å˜é‡ä»¥åè¦æ”¹æˆnil
+  "å®šä¹‰åŠåˆå§‹åŒ–å„å˜é‡"
   (defcustom cnblogs-server-url nil
-    "MetaWeblog·ÃÎÊµØÖ·"
+    "MetaWeblogè®¿é—®åœ°å€"
     :group 'cnblogs
     :type 'string)
   (defcustom cnblogs-blog-id nil
-    "²©¿ÍID"
+    "åšå®¢ID"
     :group 'cnblogs
     :type 'string)
   (defcustom cnblogs-user-name nil
-    "µÇÂ¼ÓÃ»§Ãû"
+    "ç™»å½•ç”¨æˆ·å"
     :group 'cnblogs
     :type 'string)
   (defcustom cnblogs-user-passwd nil
-    "ÓÃ»§ÃÜÂë"
+    "ç”¨æˆ·å¯†ç "
     :group 'cnblogs
     :type 'string)
   (defcustom cnblogs-media-object-suffix-list '("jpg" "jpeg" "png" "gif" "mp4")
-    "Ï£Íû´¦ÀíµÄÃ½ÌåÎÄ¼şÀàĞÍ"
+    "å¸Œæœ›å¤„ç†çš„åª’ä½“æ–‡ä»¶ç±»å‹"
     :group 'cnblogs
     :type 'list)
   (defcustom cnblogs-template-head
     "#TITLE:    \n#KEYWORDS: \n#DATE:    \n"
-    "²©¿ÍÍ·Ä£°å"
+    "åšå®¢å¤´æ¨¡æ¿"
     :group 'cnblogs)
   :type 'list
   (defcustom cnblogs-file-root-path "~/.Cnblogs/"
-    "Êı¾İÎÄ¼şµÄ¸ùÄ¿Â¼"
+    "æ•°æ®æ–‡ä»¶çš„æ ¹ç›®å½•"
     :group 'cnblogs
     :type 'string)
 
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (defvar cnblogs-posts-in-category nil
-    "·ÖÀàÖ®ºóµÄ²©ÎÄ£¬ÕâÊÇÏÔÊ¾ÔÚCnblogs-Manager»º³åÇøÀïµÄÖ÷ÒªÄÚÈİ")
+    "åˆ†ç±»ä¹‹åçš„åšæ–‡ï¼Œè¿™æ˜¯æ˜¾ç¤ºåœ¨Cnblogs-Managerç¼“å†²åŒºé‡Œçš„ä¸»è¦å†…å®¹")
   (defvar cnblogs-entry-list-file
     (concat cnblogs-file-root-path "entry-list-file")
-    "²©ÎÄÏîÁĞ±íÎÄ¼ş")
+    "åšæ–‡é¡¹åˆ—è¡¨æ–‡ä»¶")
   (defvar cnblogs-file-post-path
     (concat cnblogs-file-root-path "post/")
-    "²©ÎÄÄÚÈİÎÄ¼ş¸ùÄ¿Â¼£¬ÆäÖĞµÄ²©ÎÄÄÚÈİÎÄ¼şÒÔ²©ÎÄ£é£äÃüÃû")
+    "åšæ–‡å†…å®¹æ–‡ä»¶æ ¹ç›®å½•ï¼Œå…¶ä¸­çš„åšæ–‡å†…å®¹æ–‡ä»¶ä»¥åšæ–‡ï½‰ï½„å‘½å")
   (defvar cnblogs-category-list nil
-    "²©ÎÄ·ÖÀàÁĞ±í")
+    "åšæ–‡åˆ†ç±»åˆ—è¡¨")
   (defvar cnblogs-category-list-file 
     (concat cnblogs-file-root-path "category-list-file")
-    "²©ÎÄ·ÖÀàÁĞ±í")
+    "åšæ–‡åˆ†ç±»åˆ—è¡¨")
   (defvar cnblogs-blog-info nil
-    "²©¿ÍĞÅÏ¢")
+    "åšå®¢ä¿¡æ¯")
   (defvar cnblogs-entry-list nil
-    "±¾µØ²©¿ÍÁĞ±í")
+    "æœ¬åœ°åšå®¢åˆ—è¡¨")
   (defvar cnblogs-category-list nil
-    "·ÖÀàÁĞ±í")
+    "åˆ†ç±»åˆ—è¡¨")
   (defvar cnblogs-post-list-window nil
-    "²©ÎÄÁĞ±í´°¿Ú")
-  (setq  test-post  `(("title" . "²©ÎÄÌâÄ¿") 
+    "åšæ–‡åˆ—è¡¨çª—å£")
+  (setq  test-post  `(("title" . "åšæ–‡é¢˜ç›®") 
 		      ("dateCreated" :datetime (20423 52590))
-		      ("categories"  "categories" "[Ëæ±Ê·ÖÀà]Emacs" "[Ëæ±Ê·ÖÀà]LinuxÓ¦ÓÃ")
-		      ("description" . "²©ÎÄÕıÎÄ¡£")))
+		      ("categories"  "categories" "[éšç¬”åˆ†ç±»]Emacs" "[éšç¬”åˆ†ç±»]Linuxåº”ç”¨")
+		      ("description" . "åšæ–‡æ­£æ–‡ã€‚")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;Menu;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defvar cnblogs-mode-map
     (make-sparse-keymap "Cnblogs")
-    "cnblogs²©¿Í¿Í»§¶Ë²Ëµ¥")
+    "cnblogsåšå®¢å®¢æˆ·ç«¯èœå•")
 
   (define-key cnblogs-mode-map [tags-getUsersBlogs]
-    '(menu-item "ÓÃ»§ĞÅÏ¢" cnblogs-get-users-blogs
-		:help "»ñÈ¡ÓÃ»§µÄ²©¿ÍĞÅÏ¢"))
+    '(menu-item "ç”¨æˆ·ä¿¡æ¯" cnblogs-get-users-blogs
+		:help "è·å–ç”¨æˆ·çš„åšå®¢ä¿¡æ¯"))
 
   (define-key cnblogs-mode-map [tags-getRecentPosts]
-    '(menu-item "»ñÈ¡×î½ü·¢²¼" cnblogs-get-recent-posts
-		:help "»ñÈ¡×î½ü·¢²¼µÄNÆª²©¿Í"))
+    '(menu-item "è·å–æœ€è¿‘å‘å¸ƒ" cnblogs-get-recent-posts
+		:help "è·å–æœ€è¿‘å‘å¸ƒçš„Nç¯‡åšå®¢"))
 
   (define-key cnblogs-mode-map [tags-getCategories]
-    '(menu-item "»ñÈ¡£¨¸üĞÂ£©·ÖÀà" cnblogs-get-categories
-		:help "»ñÈ¡²¢¸üĞÂ±¾µØ²©¿Í·ÖÀà"))
+    '(menu-item "è·å–ï¼ˆæ›´æ–°ï¼‰åˆ†ç±»" cnblogs-get-categories
+		:help "è·å–å¹¶æ›´æ–°æœ¬åœ°åšå®¢åˆ†ç±»"))
 
   (define-key cnblogs-mode-map [tags-getPost]
-    '(menu-item "»ñÈ¡²©¿Í" cnblogs-get-post
-		:help "»ñÈ¡²¢¸üĞÂ±¾µØÖ¸¶¨µÄ²©¿Í"))
+    '(menu-item "è·å–åšå®¢" cnblogs-get-post
+		:help "è·å–å¹¶æ›´æ–°æœ¬åœ°æŒ‡å®šçš„åšå®¢"))
   (define-key cnblogs-mode-map [separator-cnblogs-tags]
     '(menu-item "--"))
 
   (define-key cnblogs-mode-map [tags-editPost]
-    '(menu-item "¸üĞÂ" cnblogs-edit-post
-		:help "¸üĞÂÒÑ·¢²¼µÄ²©¿Í"))
+    '(menu-item "æ›´æ–°" cnblogs-edit-post
+		:help "æ›´æ–°å·²å‘å¸ƒçš„åšå®¢"))
 
   (define-key cnblogs-mode-map [tags-deletePost]
-    '(menu-item "É¾³ı" cnblogs-delete-post
-		:help "½«µ±Ç°»º³åÇø¶ÔÓ¦µÄ²©¿ÍÉ¾³ı"))
+    '(menu-item "åˆ é™¤" cnblogs-delete-post
+		:help "å°†å½“å‰ç¼“å†²åŒºå¯¹åº”çš„åšå®¢åˆ é™¤"))
 
   (define-key cnblogs-mode-map [tags-saveDraft]
-    '(menu-item "´æ¸å" cnblogs-save-draft
-		:help "½«²İ¸å±£´æµ½·şÎñÆ÷£¬µ«×´Ì¬Îª¡°Î´·¢²¼¡±"))
+    '(menu-item "å­˜ç¨¿" cnblogs-save-draft
+		:help "å°†è‰ç¨¿ä¿å­˜åˆ°æœåŠ¡å™¨ï¼Œä½†çŠ¶æ€ä¸ºâ€œæœªå‘å¸ƒâ€"))
 
   (define-key cnblogs-mode-map [tags-newPost]
-    '(menu-item "·¢²¼" cnblogs-new-post
-		:help "·¢²¼µ±Ç°»º³åÇø"))
+    '(menu-item "å‘å¸ƒ" cnblogs-new-post
+		:help "å‘å¸ƒå½“å‰ç¼“å†²åŒº"))
 
   (define-key cnblogs-mode-map [C-S-mouse-1]
     cnblogs-mode-map)
@@ -122,20 +122,20 @@
 					;(cnblogs-define-variables)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;LoadData;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun cnblogs-load-variables ()
-  "¼ÓÔØ¸÷±äÁ¿µÄÖµ";
-					;¼ÓÔØ²©ÎÄÏîÁĞ±í
+  "åŠ è½½å„å˜é‡çš„å€¼";
+					;åŠ è½½åšæ–‡é¡¹åˆ—è¡¨
   (cnblogs-load-entry-list)
-					;¼ÓÔØ²©ÎÄ·ÖÀà
+					;åŠ è½½åšæ–‡åˆ†ç±»
   (cnblogs-load-category-list)
-					;½«²©ÎÄÏîÁĞ±íÖĞµÄÏî¼ÓÈëµ½ÏàÓ¦µÄ·ÖÀàÖĞÈ¥
+					;å°†åšæ–‡é¡¹åˆ—è¡¨ä¸­çš„é¡¹åŠ å…¥åˆ°ç›¸åº”çš„åˆ†ç±»ä¸­å»
   (mapc (lambda (categorie)
 	  (progn
-					;ÏÈ½«¸Ã·ÖÀà¼ÓÈë
+					;å…ˆå°†è¯¥åˆ†ç±»åŠ å…¥
 	    (push (cons categorie nil)
 		  cnblogs-posts-in-category)
 	    )
 	  
-					;½«ÊôÓÚ¸Ã·ÖÀàµÄÏî¼ÓÈë¸Ã·ÖÀà
+					;å°†å±äºè¯¥åˆ†ç±»çš„é¡¹åŠ å…¥è¯¥åˆ†ç±»
 	  (mapc (lambda (entry)
 		  (let* ((entry-categories (nth 3 entry))
 			 (flag (member categorie entry-categories)))
@@ -149,7 +149,7 @@
 	cnblogs-category-list)
   )
 
-;(cnblogs-load-entry-list) ;; todo: ·ÅÔÚ³õÊ¼»¯ÖĞ£¬µ«¾Í½«¶¨Òåº¯Êı·ÅÔÚÇ°Ãæ
+;(cnblogs-load-entry-list) ;; todo: æ”¾åœ¨åˆå§‹åŒ–ä¸­ï¼Œä½†å°±å°†å®šä¹‰å‡½æ•°æ”¾åœ¨å‰é¢
 (defun cnblogs-load-entry-list ()
   (setq cnblogs-entry-list
 	(condition-case ()
@@ -173,7 +173,7 @@
 	  (error nil))))
 
 (defun cnblogs-save-category-list ()
-					;ÏÈ½«·ÖÀà¸ñÊ½¼ò»¯£¬Ö»ÁôÈ¡Ãû×Ö
+					;å…ˆå°†åˆ†ç±»æ ¼å¼ç®€åŒ–ï¼Œåªç•™å–åå­—
   (setq cnblogs-category-list
 	(mapcar (lambda (category)
 		  (cdr (assoc "description" category))
@@ -187,11 +187,11 @@
 (defun cnblogs-setup-blog ()
   (interactive)
   (setq cnblogs-blog-id
-	(read-string "ÊäÈëÄãµÄ²©¿ÍID£º" nil nil))
+	(read-string "è¾“å…¥ä½ çš„åšå®¢IDï¼š" nil nil))
   (setq cnblogs-user-name
-	(read-string "ÊäÈëÄãµÄÓÃ»§Ãû£º" nil nil))
+	(read-string "è¾“å…¥ä½ çš„ç”¨æˆ·åï¼š" nil nil))
   (setq cnblogs-user-passwd
-	(read-passwd "ÊäÈëÄãµÄÃÜÂë£º" nil ))
+	(read-passwd "è¾“å…¥ä½ çš„å¯†ç ï¼š" nil ))
   (setq cnblogs-server-url
 	(concat "http://www.cnblogs.com/"
 		cnblogs-blog-id
@@ -206,12 +206,12 @@
 	(customize-save-variable 'cnblogs-user-name cnblogs-user-name)
 	(customize-save-variable 'cnblogs-user-passwd cnblogs-user-passwd)
 	(customize-save-variable 'cnblogs-server-url cnblogs-server-url)
-	;; Èç¹ûÃ»ÓĞ.CnblogsÄ¿Â¼£¬ÔòĞÂ½¨Õâ¸öÄ¿Â¼
+	;; å¦‚æœæ²¡æœ‰.Cnblogsç›®å½•ï¼Œåˆ™æ–°å»ºè¿™ä¸ªç›®å½•
 	(or (file-directory-p "~/.Cnblogs")
 	    (make-directory "~/.Cnblogs"))
 	(cnblogs-save-category-list)
-	(message "ÉèÖÃ³É¹¦"))
-    (message "ÉèÖÃÊ§°Ü")))
+	(message "è®¾ç½®æˆåŠŸ"))
+    (message "è®¾ç½®å¤±è´¥")))
 
 (defun cnblogs-fetch-field (field)
   (let* ((regexp
@@ -236,40 +236,40 @@
 
 
 (defun cnblogs-categories-string-to-list (categories-string)
-  "½«·ÖÀà×Ö·û´®°´¿Õ°×·û·Ö³É×Ö·û´®ÁĞ±í"
+  "å°†åˆ†ç±»å­—ç¬¦ä¸²æŒ‰ç©ºç™½ç¬¦åˆ†æˆå­—ç¬¦ä¸²åˆ—è¡¨"
   (if (or (eq categories-string nil)
 	  (eq categories-string ""))
       nil
     (let ((idx1
-	   (string-match "[^¡¡ \t]+"    ;Ô²½Ç°ë½Ç¿Õ¸ñ
+	   (string-match "[^ã€€ \t]+"    ;åœ†è§’åŠè§’ç©ºæ ¼
 			 categories-string)))
       (if (not idx1)
 	  nil
-	(setq categories-string         ;Ô²½Ç°ë½Ç¿Õ¸ñ
+	(setq categories-string         ;åœ†è§’åŠè§’ç©ºæ ¼
 	      (substring categories-string idx1))
 	(let ((idx2 
-	       (string-match "[¡¡ \t]+"
+	       (string-match "[ã€€ \t]+"
 			     categories-string)))
 	  (if idx2
-	      (cons (concat "[Ëæ±Ê·ÖÀà]"
+	      (cons (concat "[éšç¬”åˆ†ç±»]"
 			    (substring categories-string 
 				       0
 				       idx2))
 		    (cnblogs-categories-string-to-list (substring categories-string
 								  idx2)))
-	    (cons (concat "[Ëæ±Ê·ÖÀà]"
+	    (cons (concat "[éšç¬”åˆ†ç±»]"
 			  categories-string)
 		  nil)))))))
 
 (defun cnblogs-insert-template-head ()
-  "²åÈëÍ·Ä£°å"
+  "æ’å…¥å¤´æ¨¡æ¿"
   (interactive)
   (save-excursion
     (goto-char (point-min))
     (insert cnblogs-template-head)))
 
-(defun cnblogs-make-media-object-file-data (media-path) ;todo: typeÒÔºó¼ÓÉÏ
-  "¸ù¾İ¸ø³öµÄÎÄ¼şÂ·¾¶·µ»ØÏàÓ¦µÄFileData£¬ÎÄ¼ş²»´æÔÚ·µ»Ønil"
+(defun cnblogs-make-media-object-file-data (media-path) ;todo: typeä»¥ååŠ ä¸Š
+  "æ ¹æ®ç»™å‡ºçš„æ–‡ä»¶è·¯å¾„è¿”å›ç›¸åº”çš„FileDataï¼Œæ–‡ä»¶ä¸å­˜åœ¨è¿”å›nil"
   (and (file-exists-p media-path)
        (list
 	;;media-path name
@@ -286,7 +286,7 @@
 
 
 (defun cnblogs-replace-media-object-location (buf-str)
-  "´¦ÀíBUF-STRÖĞµÄÃ½ÌåÎÄ¼ş£¬·µ»Ø´¦ÀíºóµÄ×Ö·û´®"
+  "å¤„ç†BUF-STRä¸­çš„åª’ä½“æ–‡ä»¶ï¼Œè¿”å›å¤„ç†åçš„å­—ç¬¦ä¸²"
   (mapc (lambda (suffix)
 	  (let ((regexp 
 		 (concat "[a-z]?[:]?[^:*\"?<>|]+."
@@ -329,7 +329,7 @@
 	    ;; title
 	    (cons "title"
 		  (or (cnblogs-fetch-field "TITLE")
-		      "ĞÂËæ±Ê"))
+		      "æ–°éšç¬”"))
 
 	    ;; categories
 	    (cons "categories"
@@ -338,16 +338,16 @@
 			  (cnblogs-fetch-field "KEYWORDS"))))
 		    (or
 		     categories-list
-		     '("[Ëæ±Ê·ÖÀà]Î´·ÖÀà"))))
+		     '("[éšç¬”åˆ†ç±»]æœªåˆ†ç±»"))))
 
 	    ;; dateCreated
 	    (cons "dateCreated"
 		  (list 
 		   :datetime
 		   (condition-case ()
-		       (date-to-time (cnblogs-fetch-field "DATE")) ;todo: Òª×ª»¯
+		       (date-to-time (cnblogs-fetch-field "DATE")) ;todo: è¦è½¬åŒ–
 		     (error (progn
-			      (message "Ê±¼ä¸ñÊ½²»Ö§³Ö£¬Ê¹ÓÃÄ¬ÈÏÊ±¼ä:1989-05-17 00:00")
+			      (message "æ—¶é—´æ ¼å¼ä¸æ”¯æŒï¼Œä½¿ç”¨é»˜è®¤æ—¶é—´:1989-05-17 00:00")
 			      (date-to-time "1989-05-17 00:00"))))))
 
 	    ;; description
@@ -361,13 +361,13 @@
 		      (kill-buffer)
 		      buf-str))))))
 
-(defun cnblogs-other-mode-buffer-to-post () ;todo: post»¹²»ÍêÈ«
+(defun cnblogs-other-mode-buffer-to-post () ;todo: postè¿˜ä¸å®Œå…¨
   (delq nil
 	(list
 	 ;; title
 	 (cons "title"
 	       (or (cnblogs-fetch-field "TITLE")
-		   "ĞÂËæ±Ê"))
+		   "æ–°éšç¬”"))
 	 
 	 
 	 ;; categories
@@ -377,7 +377,7 @@
 		       (cnblogs-fetch-field "KEYWORDS"))))
 		 (or
 		  categories-list
-		  '("[Ëæ±Ê·ÖÀà]Î´·ÖÀà"))))
+		  '("[éšç¬”åˆ†ç±»]æœªåˆ†ç±»"))))
 
 	 
 	 ;; dateCreated
@@ -385,9 +385,9 @@
 	       (list 
 		:datetime
 		(condition-case ()
-		    (date-to-time (cnblogs-fetch-field "DATE")) ;todo: Òª×ª»¯
+		    (date-to-time (cnblogs-fetch-field "DATE")) ;todo: è¦è½¬åŒ–
 		  (error (progn
-			   (message "Ê±¼ä¸ñÊ½²»Ö§³Ö£¬Ê¹ÓÃÄ¬ÈÏÊ±¼ä:1989-05-17 00:00")
+			   (message "æ—¶é—´æ ¼å¼ä¸æ”¯æŒï¼Œä½¿ç”¨é»˜è®¤æ—¶é—´:1989-05-17 00:00")
 			   (date-to-time "1989-05-17 00:00"))))))
 	 ;; description
 	 (cons "description"
@@ -419,24 +419,24 @@
 (defun cnblogs-new-post ()
   (interactive)
   
-  (let ((post-id  ;µÃµ½²©ÎÄ£é£ä
+  (let ((post-id  ;å¾—åˆ°åšæ–‡ï½‰ï½„
 	 (cnblogs-metaweblog-new-post (cnblogs-current-buffer-to-post)
 				      t))
-					;µÃµ½²©ÎÄÄÚÈİ
+					;å¾—åˆ°åšæ–‡å†…å®¹
 	(post-content
 	 (cnblogs-metaweblog-get-post post-id)))
-					;Éú³ÉĞÂµÄ²©ÎÄÏîÁĞ±í
-					;todo:ÕâÀïÒªË¢ĞÂÁĞ±í
+					;ç”Ÿæˆæ–°çš„åšæ–‡é¡¹åˆ—è¡¨
+					;todo:è¿™é‡Œè¦åˆ·æ–°åˆ—è¡¨
     (setq cnblogs-entry-list
 	  (cons (cnblogs-make-entry post-content)
 		cnblogs-entry-list))
-					;±£´æ²©ÎÄÄÚÈİ£¬ÎÄ¼şÃûÎª²©ÎÄ£é£ä
+					;ä¿å­˜åšæ–‡å†…å®¹ï¼Œæ–‡ä»¶åä¸ºåšæ–‡ï½‰ï½„
     (with-temp-file (concat cnblogs-file-post-path post-id)
       (print post-content
 	     (current-buffer)))
-					;±£´æ²©ÎÄÏîÁĞ±í
+					;ä¿å­˜åšæ–‡é¡¹åˆ—è¡¨
     (cnblogs-save-entry-list))
-  (message "·¢²¼Ëæ±Ê³É¹¦£¡"))
+  (message "å‘å¸ƒéšç¬”æˆåŠŸï¼"))
 
 
 
@@ -450,10 +450,10 @@
 	   (cnblogs-metaweblog-get-post post-id)
 	   cnblogs-entry-list))
     (cnblogs-save-entry-list))
-  (message "±£´æ²İ¸å³É¹¦£¡"))
+  (message "ä¿å­˜è‰ç¨¿æˆåŠŸï¼"))
 
 (defun cnblogs-delete-post-from-entry-list (blog-id) 
-  "POST-IDÊÇstringÀàĞÍ"
+  "POST-IDæ˜¯stringç±»å‹"
   (condition-case ()
       (progn
 	(setq cnblogs-entry-list
@@ -486,36 +486,36 @@
 	 (and post-id
 	      (int-to-string post-id)))))
 
-(defun cnblogs-delete-post ();todo:±¾µØ±£´æ
+(defun cnblogs-delete-post ();todo:æœ¬åœ°ä¿å­˜
   (interactive)
   (let ((blog-id
 	 (cnblogs-get-blog-id-by-title
 	  (cnblogs-fetch-field "title"))))
     (if (and blog-id
-	     (yes-or-no-p "Èç¹ûÉ¾³ı£¬±¾µØĞÅÏ¢Ò²»áÉ¾³ı¡£È·¶¨ÒªÉ¾³ıÂğ£¿")
+	     (yes-or-no-p "å¦‚æœåˆ é™¤ï¼Œæœ¬åœ°ä¿¡æ¯ä¹Ÿä¼šåˆ é™¤ã€‚ç¡®å®šè¦åˆ é™¤å—ï¼Ÿ")
 	     (cnblogs-metaweblog-delete-post blog-id t)
 	     (cnblogs-delete-post-from-entry-list blog-id))
-	(message "É¾³ı³É¹¦£¡")
-      (message "É¾³ıÊ§°Ü£¡"))))
+	(message "åˆ é™¤æˆåŠŸï¼")
+      (message "åˆ é™¤å¤±è´¥ï¼"))))
 
 
-(defun cnblogs-edit-post ();;todo:¸üĞÂ±¾µØ
+(defun cnblogs-edit-post ();;todo:æ›´æ–°æœ¬åœ°
   (interactive)
   (let ((blog-id
 	 (cnblogs-get-blog-id-by-title
 	  (cnblogs-fetch-field "title"))))
     (if (and blog-id
-	     (yes-or-no-p "È·¶¨Òª¸üĞÂÂğ£¿")
+	     (yes-or-no-p "ç¡®å®šè¦æ›´æ–°å—ï¼Ÿ")
 	     (cnblogs-metaweblog-edit-post blog-id
 					   (cnblogs-current-buffer-to-post)
 					   t))
-	(message "¸üĞÂ³É¹¦£¡")
-      (message "¸üĞÂÊ§°Ü£¡"))))
+	(message "æ›´æ–°æˆåŠŸï¼")
+      (message "æ›´æ–°å¤±è´¥ï¼"))))
 
 (defun cnblogs-get-post ()
   (interactive)
   (let* ((post-id
-	  (read-string "ÊäÈëÒª»ñÈ¡µÄËæ±ÊID£º"))
+	  (read-string "è¾“å…¥è¦è·å–çš„éšç¬”IDï¼š"))
 	 (post
 	  (condition-case ()
 	      (cnblogs-metaweblog-get-post post-id)
@@ -525,10 +525,10 @@
 	     post
 	     (setq cnblogs-entry-list
 		   (cons post cnblogs-entry-list)))
-	(message "»ñÈ¡³É¹¦£¡")
-      (message "»ñÈ¡Ê§°Ü"))))
+	(message "è·å–æˆåŠŸï¼")
+      (message "è·å–å¤±è´¥"))))
 
-;; »ñÈ¡²¢±£´æ·ÖÀà
+;; è·å–å¹¶ä¿å­˜åˆ†ç±»
 (defun cnblogs-get-categories ()
   (interactive)
   (setq cnblogs-category-list
@@ -538,21 +538,21 @@
   (if cnblogs-category-list
       (progn
 	(cnblogs-save-category-list)
-	(message "»ñÈ¡·ÖÀà³É¹¦£¡"))
-    (message "»ñÈ¡·ÖÀàÊ§°Ü")))
+	(message "è·å–åˆ†ç±»æˆåŠŸï¼"))
+    (message "è·å–åˆ†ç±»å¤±è´¥")))
 
 
 
 
 (defun cnblogs-get-recent-posts ()
   (interactive)
-  (let* ((num (read-number "ÊäÈëÒª»ñÈ¡µÄËæ±ÊÆªÊı£º"
+  (let* ((num (read-number "è¾“å…¥è¦è·å–çš„éšç¬”ç¯‡æ•°ï¼š"
 			   1))
 	 (posts (condition-case ()
 		    (cnblogs-metaweblog-get-recent-posts num)
 		  (error nil))))
     (if (not posts)
-	(message "»ñÈ¡Ê§°Ü£¡")
+	(message "è·å–å¤±è´¥ï¼")
       (progn
 	(mapc (lambda (post)
 		(let ((post-id (cdr 
@@ -565,7 +565,7 @@
 			      cnblogs-entry-list))))
 	      posts)
 	(cnblogs-save-entry-list)
-	(message "»ñÈ¡³É¹¦£¡")))))
+	(message "è·å–æˆåŠŸï¼")))))
 
 (defun cnblogs-get-users-blogs ()
   (interactive)
@@ -573,16 +573,16 @@
 	(condition-case ()
 	    (prog1
 		(cnblogs-metaweblog-get-users-blogs)
-	      (message "»ñÈ¡ÓÃ»§²©¿ÍĞÅÏ¢³É¹¦£¡"))
+	      (message "è·å–ç”¨æˆ·åšå®¢ä¿¡æ¯æˆåŠŸï¼"))
 	  (error cnblogs-blog-info))))
 
 
 
 
 
-;; ÏÂÃæÊÇ¹ØÓÚminor modeµÄÄÚÈİ
+;; ä¸‹é¢æ˜¯å…³äºminor modeçš„å†…å®¹
 (defun cnblogs-init ()
-  "CnblogsµÄËùÓĞ³õÊ¼»¯¹¤×÷"
+  "Cnblogsçš„æ‰€æœ‰åˆå§‹åŒ–å·¥ä½œ"
   (cnblogs-define-variables)
   (cnblogs-load-variables)
   )
