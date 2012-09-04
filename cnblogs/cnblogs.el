@@ -72,37 +72,37 @@
     "cnblogs博客客户端菜单")
 
   (define-key cnblogs-mode-map [tags-getUsersBlogs]
-    '(menu-item "用户信息" cnblogs-get-users-blogs
+    '(menu-item "User information" cnblogs-get-users-blogs
 		:help "获取用户的博客信息"))
 
   (define-key cnblogs-mode-map [tags-getRecentPosts]
-    '(menu-item "获取最近发布" cnblogs-get-recent-posts
+    '(menu-item "Get recent posts" cnblogs-get-recent-posts
 		:help "获取最近发布的N篇博客"))
 
   (define-key cnblogs-mode-map [tags-getCategories]
-    '(menu-item "获取（更新）分类" cnblogs-get-categories
+    '(menu-item "Get(Update) categories" cnblogs-get-categories
 		:help "获取并更新本地博客分类"))
 
   (define-key cnblogs-mode-map [tags-getPost]
-    '(menu-item "获取博客" cnblogs-get-post
+    '(menu-item "Get post" cnblogs-get-post
 		:help "获取并更新本地指定的博客"))
   (define-key cnblogs-mode-map [separator-cnblogs-tags]
     '(menu-item "--"))
 
   (define-key cnblogs-mode-map [tags-editPost]
-    '(menu-item "更新" cnblogs-edit-post
+    '(menu-item "Update post" cnblogs-edit-post
 		:help "更新已发布的博客"))
 
   (define-key cnblogs-mode-map [tags-deletePost]
-    '(menu-item "删除" cnblogs-delete-post
+    '(menu-item "Delete post" cnblogs-delete-post
 		:help "将当前缓冲区对应的博客删除"))
 
   (define-key cnblogs-mode-map [tags-saveDraft]
-    '(menu-item "存稿" cnblogs-save-draft
+    '(menu-item "Save draft" cnblogs-save-draft
 		:help "将草稿保存到服务器，但状态为“未发布”"))
 
   (define-key cnblogs-mode-map [tags-newPost]
-    '(menu-item "发布" cnblogs-new-post
+    '(menu-item "Publish post" cnblogs-new-post
 		:help "发布当前缓冲区"))
 
   (define-key cnblogs-mode-map [C-S-mouse-1]
