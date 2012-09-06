@@ -1,7 +1,7 @@
 ;;; entry type
 ;;
-;; (id title postid categories src-file state)
-
+;; (id   title   postid      categories src-file state)
+;; (int  string  int(string) list       string   string)
 (defgroup cnblogs nil
   "博客园客户端分组"
   :group 'emacs)
@@ -45,7 +45,7 @@
     (concat cnblogs-file-root-path "entry-list-file")
     "博文项列表文件")
   (defvar cnblogs-file-post-path
-    (concat cnblogs-file-root-path "post/")
+    (concat cnblogs-file-root-path "posts/")
     "博文内容文件根目录，其中的博文内容文件以博文ｉｄ命名")
   (defvar cnblogs-category-list nil
     "博文分类列表")
@@ -149,7 +149,7 @@
 	cnblogs-category-list)
   )
 
-;(cnblogs-load-entry-list) ;; todo: 放在初始化中，但就将定义函数放在前面
+;(cnblogs-load-entry-list) ;; todo: 放在初始化中
 (defun cnblogs-load-entry-list ()
   (setq cnblogs-entry-list
 	(condition-case ()
@@ -183,6 +183,78 @@
     (print cnblogs-category-list
 	   (current-buffer))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;tmpFunc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun cnblogs-gen-id ()
+  "给entry产生一个id，从１开始"
+  (let ((id 0)
+	(flag t))
+    (while flag
+      (progn
+	(setq flag nil id (1+ id))
+	
+	(mapc (lambda (entry)
+		(and (equal id 
+			    (car entry))
+		     (setq flag t)))
+	      cnblogs-entry-list)))
+    id))
+
+
+(defun cnblogs-push-post-to-entry-list (post)
+  "将博文保存到cnblogs-entry-list变量中，但并不立即保存到文件中"
+
+  (let ((title (cdr (assoc "title" post)))
+	(postid (cdr (assoc "postid" post)))
+	(categories (cdr (assoc "categories" post)))
+	(done nil)
+	(index 0))
+    (progn 
+      ;;保存博文
+      (with-temp-file (concat cnblogs-file-post-path postid)
+	(print post (current-buffer)))
+      ;;如果有相同标题的博文项，则提示是否合并到同一项中去，如果有已经存在多个相同的项，对每个都询问，直到回答是或者完
+      (mapc (lambda (entry)
+	      (progn
+		(or done
+		    (not (equal title (nth 1 entry)))
+		    (not (y-or-n-p (format "merge the post %s with entry %S" postid entry)))
+					;下面是将该博文合并到该项中
+		    (progn 
+		      (setq done t)
+		      (setcar (nthcdr index cnblogs-entry-list)
+					;id
+			      (list (nth 0 entry)
+					;title
+				    title
+					;postid
+				    postid
+					;categories
+				    categories
+					;src-file
+				    (nth 4 entry)
+					;state
+				    "PUBLISHED"))))
+		(setq index (1+ index))))
+	    cnblogs-entry-list)
+      
+					;还没有插入则新建项
+      (or done
+	  (push 
+					;id
+	   (list (cnblogs-gen-id)        
+					;title
+		 title
+					;postid
+		 postid
+					;categories
+		 categories
+					;src-file
+		 nil
+					;state
+		 "PUBLISHED")
+
+	   cnblogs-entry-list))))) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mainFunc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun cnblogs-setup-blog ()
   (interactive)
@@ -206,10 +278,19 @@
 	(customize-save-variable 'cnblogs-user-name cnblogs-user-name)
 	(customize-save-variable 'cnblogs-user-passwd cnblogs-user-passwd)
 	(customize-save-variable 'cnblogs-server-url cnblogs-server-url)
-	;; 如果没有.Cnblogs目录，则新建这个目录
-	(or (file-directory-p "~/.Cnblogs")
-	    (make-directory "~/.Cnblogs"))
+	;; 如果没有根目录，则新建这个目录
+	(or (file-directory-p cnblogs-file-root-path)
+	    (make-directory cnblogs-file-root-path))
+	;; 如果没有posts目录，则新建这个目录
+	(or (file-directory-p cnblogs-file-post-path)
+	    (make-directory cnblogs-file-post-path))
 	(cnblogs-save-category-list)
+	(and (yes-or-no-p "Should I pull all your posts now, it may talk a long time?")
+	     (let ((posts (cnblogs-metaweblog-get-recent-posts 4)))
+	       (mapc (lambda (post)
+		       (cnblogs-push-post-to-entry-list post))
+		     posts))
+	     (cnblogs-save-entry-list))
 	(message "设置成功"))
     (message "设置失败")))
 
@@ -452,6 +533,7 @@
     (cnblogs-save-entry-list))
   (message "保存草稿成功！"))
 
+;todo 要修改
 (defun cnblogs-delete-post-from-entry-list (blog-id) 
   "POST-ID是string类型"
   (condition-case ()
@@ -543,7 +625,6 @@
 
 
 
-
 (defun cnblogs-get-recent-posts ()
   (interactive)
   (let* ((num (read-number "输入要获取的随笔篇数："
@@ -555,17 +636,11 @@
 	(message "获取失败！")
       (progn
 	(mapc (lambda (post)
-		(let ((post-id (cdr 
-				(assoc "postid"
-				       post))))
-		  (and post-id
-		       (cnblogs-delete-post-from-entry-list post-id))
-		  (setq cnblogs-entry-list
-			(cons post
-			      cnblogs-entry-list))))
+		(cnblogs-push-post-to-entry-list post))
 	      posts)
 	(cnblogs-save-entry-list)
 	(message "获取成功！")))))
+
 
 (defun cnblogs-get-users-blogs ()
   (interactive)
@@ -587,6 +662,7 @@
   (cnblogs-load-variables)
   )
 
+;todo 添加到hook中
 (cnblogs-init)
 
 (define-key cnblogs-mode-map [menu-bar menu-bar-cnblogs-menu]
