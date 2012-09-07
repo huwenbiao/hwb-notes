@@ -149,7 +149,8 @@
 	cnblogs-category-list)
   )
 
-;(cnblogs-load-entry-list) ;; todo: 放在初始化中
+					;(cnblogs-load-entry-list) ;; todo: 放在初始化中
+
 (defun cnblogs-load-entry-list ()
   (setq cnblogs-entry-list
 	(condition-case ()
@@ -256,9 +257,45 @@
 	   cnblogs-entry-list))))) 
 
 (defun cnblogs-push-src-file-to-entry-list (src-file)
-  
-)
+  "将一个源文件加入到博文项中，但并不立即保存博文项到文件中。默认认为文件是合法的并且不在博文项中"
+  (let ((title 
+	 (with-temp-buffer
+	   (insert-file-contents src-file)
+	   (cnblogs-fetch-field "TITLE")))
+	(done nil)
+	(index 0))
+    (progn (mapc (lambda (entry)
+		   (progn
+		     (or done
+			 (not (equal title (nth 1 entry)))
+			 (not (y-or-n-p (format "merge the file %s with entry %S" src-file entry)))
+					;下面是将该文件合并到该项中
+			 (progn 
+			   (setq done t)
+			   (setcar (nthcdr 4 (nth index cnblogs-entry-list)) 
+				   src-file)))
+		     (setq index (1+ index))))
+		 cnblogs-entry-list)
+	   
+					;还没有插入则新建项
+	   (or done
+	       (push 
+					;id
+		(list (cnblogs-gen-id)        
+					;title
+		      title
+					;postid
+		      nil
+					;categories
+		      nil
+					;src-file
+		      src-file
+					;state
+		      "UNPUBLISHED")
+		
+		cnblogs-entry-list)))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mainFunc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (defun cnblogs-setup-blog ()
   (interactive)
@@ -672,7 +709,7 @@
   (cnblogs-load-variables)
   )
 
-;todo 添加到hook中
+					;todo 添加到hook中
 (cnblogs-init)
 
 (define-key cnblogs-mode-map [menu-bar menu-bar-cnblogs-menu]
