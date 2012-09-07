@@ -254,6 +254,10 @@
 		 "PUBLISHED")
 
 	   cnblogs-entry-list))))) 
+
+(defun cnblogs-push-src-file-to-entry-list (src-file)
+  
+)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mainFunc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun cnblogs-setup-blog ()
@@ -533,27 +537,24 @@
     (cnblogs-save-entry-list))
   (message "保存草稿成功！"))
 
-;todo 要修改
-(defun cnblogs-delete-post-from-entry-list (blog-id) 
-  "POST-ID是string类型"
+
+(defun cnblogs-delete-post-from-entry-list (postid) 
+  "通过postid删除博文项posts目录下相应的文件，POSTID是string类型"
   (condition-case ()
       (progn
 	(setq cnblogs-entry-list
-	      (remove-if (lambda (post)
-			   (let ((item (assoc "postid"
-					      post)))
-			     (and item
-				  (equal blog-id
-					 (if (stringp (cdr item))
-					     (cdr item)
-					   (int-to-string(cdr item)))))))
+	      (remove-if (lambda (entry)
+			   (equal postid
+				  (nth 2 entry)))
 			 cnblogs-entry-list))
+	(cnblogs-save-entry-list)
+	(and (file-exists-p (concat cnblogs-file-post-path postid))
+	     (delete-file (concat cnblogs-file-post-path postid)))
 	t)
     (error nil)))
 
 
-
-(defun cnblogs-get-blog-id-by-title (title)
+(defun cnblogs-get-post-id-by-title (title)
   (and (stringp title)
        (let ((post-id nil))
 	 (mapc (lambda (post)
@@ -568,15 +569,23 @@
 	 (and post-id
 	      (int-to-string post-id)))))
 
-(defun cnblogs-delete-post ();todo:本地保存
+(defun cnblogs-get-post-id-by-src-file-name (filename)
+  "在cnblogs-entry-list中查找src-file为filename的项的博文id，找不到返回\"0\""
+  (let ((postid "0"))
+    (mapc (lambda (entry)
+	    (if (equal filename (nth 4 entry))
+		(setq postid (nth 2 entry))))
+	  cnblogs-entry-list)
+    postid))
+
+(defun cnblogs-delete-post ()
   (interactive)
-  (let ((blog-id
-	 (cnblogs-get-blog-id-by-title
-	  (cnblogs-fetch-field "title"))))
+  (let ((postid
+	 (cnblogs-get-post-id-by-src-file-name (buffer-file-name))))
     (if (and blog-id
-	     (yes-or-no-p "如果删除，本地信息也会删除。确定要删除吗？")
-	     (cnblogs-metaweblog-delete-post blog-id t)
-	     (cnblogs-delete-post-from-entry-list blog-id))
+	     (yes-or-no-p "Are you sure?")
+	     (cnblogs-metaweblog-delete-post postid t)
+	     (cnblogs-delete-post-from-entry-list postid))
 	(message "删除成功！")
       (message "删除失败！"))))
 
@@ -584,7 +593,7 @@
 (defun cnblogs-edit-post ();;todo:更新本地
   (interactive)
   (let ((blog-id
-	 (cnblogs-get-blog-id-by-title
+	 (cnblogs-get-post-id-by-title
 	  (cnblogs-fetch-field "title"))))
     (if (and blog-id
 	     (yes-or-no-p "确定要更新吗？")
@@ -640,6 +649,7 @@
 	      posts)
 	(cnblogs-save-entry-list)
 	(message "获取成功！")))))
+
 
 
 (defun cnblogs-get-users-blogs ()
