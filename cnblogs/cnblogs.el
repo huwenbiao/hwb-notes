@@ -1,3 +1,5 @@
+;todo检查所有的底层函数，正常运行返回t，否则返回nil
+;给所有的操作加上反馈信息
 ;;; entry type
 ;;
 ;; (id   title   postid      categories src-file state)
@@ -25,6 +27,10 @@
     :group 'cnblogs
     :type 'string)
   (defcustom cnblogs-media-object-suffix-list '("jpg" "jpeg" "png" "gif" "mp4")
+    "希望处理的媒体文件类型"
+    :group 'cnblogs
+    :type 'list)
+  (defcustom cnblogs-src-file-extension-list '("org" "html")
     "希望处理的媒体文件类型"
     :group 'cnblogs
     :type 'list)
@@ -160,9 +166,12 @@
 	  (error nil))))
 
 (defun cnblogs-save-entry-list () 
-  (with-temp-file cnblogs-entry-list-file
-    (print cnblogs-entry-list
-	   (current-buffer))))
+  "保存cnblogs-entry-list，成功返回t，否则返回nil"
+  (condition-case ()
+      (with-temp-file cnblogs-entry-list-file
+	(print cnblogs-entry-list
+	       (current-buffer)))
+    (error nil)))
 
 
 (defun cnblogs-load-category-list ()
@@ -185,6 +194,64 @@
 	   (current-buffer))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;tmpFunc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun cnblogs-check-legal-for-publish (src-file)
+  "检查文件是否可以发布"
+  (and
+   (if (member (file-name-extension src-file)
+	       cnblogs-src-file-extension-list)
+       t
+     (progn
+       (message "Failed: UNSUPPORTED file!")
+       nil))
+   
+   (if (equal (cnblogs-check-src-file-state (buffer-file-name))
+	      "PUBLISHED")
+       (progn
+	 (message "This post has been published, you can update it, using M-x cnblogs-edit-post")
+	 nil)
+     t)))
+
+(defun cnblogs-check-legal-for-delete (src-file)
+  "检查文件是否可以删除相应的博文"
+  (and 
+   (if (member (file-name-extension src-file)
+	       cnblogs-src-file-extension-list)
+       t
+     (progn
+       (message "Failed: UNSUPPORTED file!")
+       nil))
+   (if (equal (cnblogs-check-src-file-state (buffer-file-name))
+	      "PUBLISHED")
+       t
+     (progn
+       (message "This post has not been published, so you cann't delete it!")
+       nil))))
+
+(defun cnblogs-check-legal-for-edit (src-file)
+  "检查文件是否可以更新"
+  (and
+   (if (member (file-name-extension src-file)
+	       cnblogs-src-file-extension-list)
+       t
+     (progn
+       (message "Failed: UNSUPPORTED file!")
+       nil))
+   
+   (if (equal (cnblogs-check-src-file-state (buffer-file-name))
+	      "PUBLISHED")
+       t
+     (progn
+       (message "This post has not been published, you can't update it. You can publish it using M-x cnblogs-new-post")
+       nil))))
+
+(defun cnblogs-check-src-file-state (src-file)
+  (let ((state nil))
+    (mapc (lambda (entry)
+	    (if (equal src-file (nth 4 entry))
+		(setq state (nth 5 entry))))
+	  cnblogs-entry-list)
+    state))
+
 (defun cnblogs-gen-id ()
   "给entry产生一个id，从１开始"
   (let ((id 0)
@@ -202,7 +269,7 @@
 
 
 (defun cnblogs-push-post-to-entry-list (post)
-  "将博文保存到cnblogs-entry-list变量中，但并不立即保存到文件中"
+  "将博文保存到cnblogs-entry-list变量中。但并不立即保存到文件中"
 
   (let ((title (cdr (assoc "title" post)))
 	(postid (cdr (assoc "postid" post)))
@@ -210,6 +277,9 @@
 	(done nil)
 	(index 0))
     (progn 
+      (if (integerp postid)
+	  (setq postid (int-to-string postid)))
+
       ;;保存博文
       (with-temp-file (concat cnblogs-file-post-path postid)
 	(print post (current-buffer)))
@@ -294,8 +364,43 @@
 		      "UNPUBLISHED")
 		
 		cnblogs-entry-list)))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mainFunc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun cnblogs-assign-post-to-file (post src-file)
+  "将post合并到一个指定源文件的列表项中，成功返回t"
+  (condition-case()
+      (progn
+	(setq cnblogs-entry-list
+	      (mapcar (lambda (entry)
+			(if (equal src-file
+				   (nth 4 entry))
+					;id
+			    (list (nth 0 entry)
+					;title
+				  (cdr (assoc "title" post))
+					;postid
+				  (cdr (assoc "postid" post))
+					;categories
+				  (cdr (assoc "categories" post))
+					;src-file
+				  src-file
+				  "PUBLISHED")
+			  entry))
+		      cnblogs-entry-list))
+	t)
+    (error nil)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mainFunc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun cnblogs-import-file ()
+  "将当前文件加入到库中（增加到博文项cnblogs-entry-list中）"
+  (interactive)
+  (let ((src-file (buffer-file-name)))
+    (if (member (file-name-extension src-file)
+		cnblogs-src-file-extension-list)
+	(progn 
+	  (cnblogs-push-src-file-to-entry-list src-file)
+	  (cnblogs-save-entry-list)
+	  (message "Succeed!"))
+      (message "Failed: UNSUPPORTED file!"))))
 
 (defun cnblogs-setup-blog ()
   (interactive)
@@ -518,7 +623,6 @@
 		 (cnblogs-point-template-head-end)
 		 (point-max)))))))
 
-
 (defun cnblogs-point-template-head-end ()
   (print  (save-excursion
 	    (goto-char (point-min))
@@ -536,47 +640,97 @@
     (cnblogs-other-mode-buffer-to-post))))
 
 
+(defun cnblogs-check-file-in-entry-list (src-file)
+  "检查文件是否已经在列表项中"
+  (let ((res nil))
+    (mapc (lambda (entry)
+	    (or res
+		(setq res 
+		      (equal src-file (nth 4 entry)))))
+	  cnblogs-entry-list)
+    res))
 
 
 (defun cnblogs-new-post ()
   (interactive)
-  
-  (let ((post-id  ;得到博文ｉｄ
-	 (cnblogs-metaweblog-new-post (cnblogs-current-buffer-to-post)
-				      t))
+
+  (if (cnblogs-check-legal-for-publish (buffer-file-name))
+      ;; 下面发布处理
+      (let* ((postid  ;得到博文ｉｄ
+	      (cnblogs-metaweblog-new-post (cnblogs-current-buffer-to-post)
+					   t))
 					;得到博文内容
-	(post-content
-	 (cnblogs-metaweblog-get-post post-id)))
-					;生成新的博文项列表
+	     (post
+	      (cnblogs-metaweblog-get-post postid)))
+	
 					;todo:这里要刷新列表
-    (setq cnblogs-entry-list
-	  (cons (cnblogs-make-entry post-content)
-		cnblogs-entry-list))
-					;保存博文内容，文件名为博文ｉｄ
-    (with-temp-file (concat cnblogs-file-post-path post-id)
-      (print post-content
-	     (current-buffer)))
+	;;保存博文项和博文内容
+	(if (integerp postid)
+	    (setq postid (int-to-string postid)))
+	;;保存博文
+	(with-temp-file (concat cnblogs-file-post-path postid)
+	  (print post (current-buffer)))
+
+	(if (cnblogs-check-file-in-entry-list (buffer-file-name))
+	    (cnblogs-assign-post-to-file post (buffer-file-name))
+	  (push 
+					;id
+	   (list (cnblogs-gen-id)
+					;title
+		 (cdr (assoc "title" post))
+					;postid
+		 postid
+					;categories
+		 (cdr (assoc "categories" post))
+		 (buffer-file-name)
+		 "PUBLISHED")
+	   cnblogs-entry-list))
 					;保存博文项列表
-    (cnblogs-save-entry-list))
-  (message "发布随笔成功！"))
+	(cnblogs-save-entry-list)
+	(message "Post published！"))))
 
 
 
 (defun cnblogs-save-draft ()
   (interactive)
-  (let ((post-id  
+  (let ((postid  
 	 (cnblogs-metaweblog-new-post (cnblogs-current-buffer-to-post)
 				      nil)))
     (setq cnblogs-entry-list
 	  (cons
-	   (cnblogs-metaweblog-get-post post-id)
+	   (cnblogs-metaweblog-get-post postid)
 	   cnblogs-entry-list))
     (cnblogs-save-entry-list))
   (message "保存草稿成功！"))
 
 
 (defun cnblogs-delete-post-from-entry-list (postid) 
-  "通过postid删除博文项posts目录下相应的文件，POSTID是string类型"
+  "通过postid将相应的entry的postid设置为nil并删除posts目录下相应的文件，成功返回t.POSTID是string类型或者int类型"
+  (if (integerp postid)
+      (setq postid (int-to-string postid)))
+
+  (condition-case ()
+      (progn
+	(setq cnblogs-entry-list
+	      (mapcar (lambda (entry)
+			(if (equal postid 
+				   (if (integerp (nth 2 entry))
+				       (int-to-string (nth 2 entry))
+				     (nth 2 entry)))
+			    (progn
+			     (setcar (nthcdr 2 entry) nil)
+			     (setcar (nthcdr 3 entry) nil)
+			     (setcar (nthcdr 5 entry) "UNPUBLISHED")))
+			entry)
+		      cnblogs-entry-list))
+	(cnblogs-save-entry-list)
+	(and (file-exists-p (concat cnblogs-file-post-path postid))
+	     (delete-file (concat cnblogs-file-post-path postid)))
+	t)
+    (error nil)))
+
+(defun cnblogs-delete-entry-from-entry-list (postid) 
+  "通过postid删除博文项及posts目录下相应的文件，POSTID是string类型"
   (condition-case ()
       (progn
 	(setq cnblogs-entry-list
@@ -591,65 +745,80 @@
     (error nil)))
 
 
-(defun cnblogs-get-post-id-by-title (title)
+(defun cnblogs-get-postid-by-title (title)
   (and (stringp title)
-       (let ((post-id nil))
-	 (mapc (lambda (post)
-		 (or post-id
+       (let ((postid nil))
+	 (mapc (lambda (entry)
+		 (or postid
 		     (and (equal title
-				 (cdr (assoc "title"
-					     post)))
-			  (setq post-id 
-				(cdr (assoc "postid"
-					    post))))))
+				 (nth 4 cnblogs-entry-list))
+			  (setq postid 
+				(nth 2 cnblogs-entry-list)))))
 	       cnblogs-entry-list)
-	 (and post-id
-	      (int-to-string post-id)))))
+	 (and postid
+	      (integerp postid)
+	      (int-to-string postid))
+	 (or postid
+	     (setq postid "0"))))
+  postid)
 
-(defun cnblogs-get-post-id-by-src-file-name (filename)
+
+(defun cnblogs-get-postid-by-src-file-name (filename)
   "在cnblogs-entry-list中查找src-file为filename的项的博文id，找不到返回\"0\""
-  (let ((postid "0"))
+  (let ((postid nil))
     (mapc (lambda (entry)
 	    (if (equal filename (nth 4 entry))
 		(setq postid (nth 2 entry))))
 	  cnblogs-entry-list)
+    (or postid
+	(setq postid "0"))
     postid))
+
+
+
 
 (defun cnblogs-delete-post ()
   (interactive)
-  (let ((postid
-	 (cnblogs-get-post-id-by-src-file-name (buffer-file-name))))
-    (if (and blog-id
-	     (yes-or-no-p "Are you sure?")
-	     (cnblogs-metaweblog-delete-post postid t)
-	     (cnblogs-delete-post-from-entry-list postid))
-	(message "删除成功！")
-      (message "删除失败！"))))
+  (if (cnblogs-check-legal-for-delete (buffer-file-name))
+      (let ((postid
+	     (cnblogs-get-postid-by-src-file-name (buffer-file-name))))
+	(if (and postid
+		 (yes-or-no-p "Are you sure?")
+		 (cnblogs-metaweblog-delete-post postid t)
+		 (cnblogs-delete-post-from-entry-list postid)
+		 (cnblogs-save-entry-list))
+	    
+	    (message "Succeed！")
+	  (message "Failed！")))))
 
 
 (defun cnblogs-edit-post ();;todo:更新本地
   (interactive)
-  (let ((blog-id
-	 (cnblogs-get-post-id-by-title
-	  (cnblogs-fetch-field "title"))))
-    (if (and blog-id
-	     (yes-or-no-p "确定要更新吗？")
-	     (cnblogs-metaweblog-edit-post blog-id
-					   (cnblogs-current-buffer-to-post)
-					   t))
-	(message "更新成功！")
-      (message "更新失败！"))))
+  (if (cnblogs-check-legal-for-update (buffer-file-name))
+      (let ((postid
+	     (cnblogs-get-postid-by-src-file-name
+	      (buffer-file-name))))
+	(if (and postid
+		 (yes-or-no-p "Are you sure to update?")
+		 (cnblogs-metaweblog-edit-post postid
+					       (cnblogs-current-buffer-to-post)
+					       t)
+		 (cnblogs-assign-post-to-file (cnblogs-metaweblog-get-post postid)
+					      (buffer-file-name)))
+	    
+	      (message "Succeed!")
+	  (message "Failed!")))))
 
 (defun cnblogs-get-post ()
   (interactive)
-  (let* ((post-id
+  (let* ((postid
 	  (read-string "输入要获取的随笔ID："))
 	 (post
 	  (condition-case ()
-	      (cnblogs-metaweblog-get-post post-id)
+	      (cnblogs-metaweblog-get-post postid)
 	    (error nil))))
-    (if (and post-id
-	     (cnblogs-delete-post-from-entry-list post-id)
+    (if (and postid
+	     (cnblogs-delete-post-from-entry-list postid)
 	     post
 	     (setq cnblogs-entry-list
 		   (cons post cnblogs-entry-list)))
