@@ -34,7 +34,9 @@
 (defun cnblogs-metaweblog-get-post (cnblogs-post-id)
   (xml-rpc-method-call cnblogs-server-url
 		       "metaWeblog.getPost"
-		       cnblogs-post-id
+		       (if (integerp cnblogs-post-id)
+			   (int-to-string cnblogs-post-id)
+			 cnblogs-post-id)
 		       cnblogs-user-name
 		       cnblogs-user-passwd))
 
@@ -52,7 +54,9 @@
 (defun cnblogs-metaweblog-edit-post (cnblogs-post-id post publishp)
   (xml-rpc-method-call cnblogs-server-url
 		       "metaWeblog.editPost"
-		       cnblogs-post-id
+		       (if (integerp cnblogs-post-id)
+			   (int-to-string cnblogs-post-id)
+			 cnblogs-post-id)
 		       cnblogs-user-name
 		       cnblogs-user-passwd
 		       post
@@ -71,7 +75,9 @@
   (xml-rpc-method-call cnblogs-server-url
 		       "blogger.deletePost"
 		       "appkey"
-		       cnblogs-post-id
+		       (if (integerp cnblogs-post-id)
+			   (int-to-string cnblogs-post-id)
+			 cnblogs-post-id)
 		       cnblogs-user-name
 		       cnblogs-user-passwd
 		       publish))
