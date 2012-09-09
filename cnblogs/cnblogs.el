@@ -193,7 +193,7 @@
     (print cnblogs-category-list
 	   (current-buffer))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;tmpFunc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;底层函数;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun cnblogs-check-legal-for-publish (src-file)
   "检查文件是否可以发布"
   (and
@@ -389,7 +389,293 @@
 	t)
     (error nil)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mainFunc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun cnblogs-categories-string-to-list (categories-string)
+  "将分类字符串按空白符分成字符串列表"
+  (if (or (eq categories-string nil)
+	  (eq categories-string ""))
+      nil
+    (let ((idx1
+	   (string-match "[^　 \t]+"    ;圆角半角空格
+			 categories-string)))
+      (if (not idx1)
+	  nil
+	(setq categories-string         ;圆角半角空格
+	      (substring categories-string idx1))
+	(let ((idx2 
+	       (string-match "[　 \t]+"
+			     categories-string)))
+	  (if idx2
+	      (cons (concat "[随笔分类]"
+			    (substring categories-string 
+				       0
+				       idx2))
+		    (cnblogs-categories-string-to-list (substring categories-string
+								  idx2)))
+	    (cons (concat "[随笔分类]"
+			  categories-string)
+		  nil)))))))
+
+
+(defun cnblogs-fetch-field (field)
+  (let* ((regexp
+	  (concat "^[ \t]*[#]+[\\+]?"
+		  field
+		  ":[^\n]*"))
+	 (idx (string-match regexp 
+			    (buffer-substring-no-properties (point-min)
+							    (point-max)))))
+    (if idx
+	(let* ((field-val (match-string  0 
+					 (buffer-substring-no-properties (point-min) 
+									 (point-max))))
+	       (val (substring field-val
+			       (1+ (string-match  ":"  field-val))))
+	       (idx2 (string-match "[^ \t]+"
+				   val)))
+	  (and idx2
+	       (substring val
+			  idx2)))
+      nil)))
+
+(defun cnblogs-make-media-object-file-data (media-path) ;todo: type以后加上
+  "根据给出的文件路径返回相应的FileData，文件不存在返回nil"
+  (and (file-exists-p media-path)
+       (list
+	;;media-path name
+	(cons "name" 
+	      (file-name-nondirectory media-path))
+	
+	;; bits
+	(cons "bits"
+	      (base64-encode-string
+	       (with-temp-buffer
+		 (insert-file-contents-literally media-path)
+		 (buffer-string)))))))
+
+
+(defun cnblogs-org-mode-buffer-to-post ()
+  (delq nil(list
+	    ;; title
+	    (cons "title"
+		  (or (cnblogs-fetch-field "TITLE")
+		      "新随笔"))
+
+	    ;; categories
+	    (cons "categories"
+		  (let ((categories-list
+			 (cnblogs-categories-string-to-list
+			  (cnblogs-fetch-field "KEYWORDS"))))
+		    (or
+		     categories-list
+		     '("[随笔分类]未分类"))))
+
+	    ;; dateCreated
+	    (cons "dateCreated"
+		  (list 
+		   :datetime
+		   (condition-case ()
+		       (date-to-time (cnblogs-fetch-field "DATE")) ;todo: 要转化
+		     (error (progn
+			      (message "时间格式不支持，使用默认时间:1989-05-17 00:00")
+			      (date-to-time "1989-05-17 00:00"))))))
+
+	    ;; description
+	    (cons "description"
+		  (with-current-buffer  (org-export-as-html-to-buffer 3)
+		    (let ((buf-str 
+			   (cnblogs-replace-media-object-location
+			    (buffer-substring-no-properties 
+			     (point-min)
+			     (point-max)))))
+		      (kill-buffer)
+		      buf-str))))))
+
+
+(defun cnblogs-other-mode-buffer-to-post () ;todo: post还不完全
+  (delq nil
+	(list
+	 ;; title
+	 (cons "title"
+	       (or (cnblogs-fetch-field "TITLE")
+		   "新随笔"))
+	 
+	 
+	 ;; categories
+	 (cons "categories"
+	       (let ((categories-list
+		      (cnblogs-categories-string-to-list
+		       (cnblogs-fetch-field "KEYWORDS"))))
+		 (or
+		  categories-list
+		  '("[随笔分类]未分类"))))
+
+	 
+	 ;; dateCreated
+	 (cons "dateCreated"
+	       (list 
+		:datetime
+		(condition-case ()
+		    (date-to-time (cnblogs-fetch-field "DATE")) ;todo: 要转化
+		  (error (progn
+			   (message "时间格式不支持，使用默认时间:1989-05-17 00:00")
+			   (date-to-time "1989-05-17 00:00"))))))
+	 ;; description
+	 (cons "description"
+	       (cnblogs-replace-media-object-location
+		(buffer-substring-no-properties
+		 (cnblogs-point-template-head-end)
+		 (point-max)))))))
+
+
+(defun cnblogs-insert-template-head ()
+  "插入头模板"
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (insert cnblogs-template-head)))
+
+
+(defun cnblogs-delete-entry-from-entry-list (postid) 
+  "通过postid删除博文项及posts目录下相应的文件，POSTID是string类型"
+  (condition-case ()
+      (progn
+	(setq cnblogs-entry-list
+	      (remove-if (lambda (entry)
+			   (equal postid
+				  (nth 2 entry)))
+			 cnblogs-entry-list))
+	(cnblogs-save-entry-list)
+	(and (file-exists-p (concat cnblogs-file-post-path postid))
+	     (delete-file (concat cnblogs-file-post-path postid)))
+	t)
+    (error nil)))
+
+
+(defun cnblogs-get-postid-by-title (title)
+  (and (stringp title)
+       (let ((postid nil))
+	 (mapc (lambda (entry)
+		 (or postid
+		     (and (equal title
+				 (nth 4 cnblogs-entry-list))
+			  (setq postid 
+				(nth 2 cnblogs-entry-list)))))
+	       cnblogs-entry-list)
+	 (and postid
+	      (integerp postid)
+	      (int-to-string postid))
+	 (or postid
+	     (setq postid "0"))))
+  postid)
+
+
+(defun cnblogs-get-postid-by-src-file-name (filename)
+  "在cnblogs-entry-list中查找src-file为filename的项的博文id，找不到返回\"0\""
+  (let ((postid nil))
+    (mapc (lambda (entry)
+	    (if (equal filename (nth 4 entry))
+		(setq postid (nth 2 entry))))
+	  cnblogs-entry-list)
+    (or postid
+	(setq postid "0"))
+    postid))
+
+
+(defun cnblogs-replace-media-object-location (buf-str)
+  "处理BUF-STR中的媒体文件，返回处理后的字符串"
+  (mapc (lambda (suffix)
+	  (let ((regexp 
+		 (concat "[a-z]?[:]?[^:*\"?<>|]+."
+			 suffix))
+		(current 0))
+	    (while (string-match regexp
+				 buf-str
+				 current)
+	      (let* ((media-path (match-string 0
+					       buf-str))
+		     (media-url
+		      (save-match-data
+			(or
+			 (and (file-exists-p media-path)
+			      (cnblogs-metaweblog-new-media-object 
+			       (cnblogs-make-media-object-file-data
+				media-path)))
+			 (and (file-exists-p (substring media-path 1))
+			      (cnblogs-metaweblog-new-media-object 
+			       (cnblogs-make-media-object-file-data (substring
+								     media-path 1))))))))
+		
+		(if media-url
+		    (progn
+		      (setq current
+			    (+ (match-beginning 0)
+			       (length media-url)))
+		      (setq buf-str
+			    (replace-match media-url
+					   t
+					   t
+					   buf-str)))
+		  (setq current
+			(match-end 0)))))))
+	cnblogs-media-object-suffix-list)
+  buf-str)
+
+(defun cnblogs-point-template-head-end ()
+  (print  (save-excursion
+	    (goto-char (point-min))
+	    (forward-paragraph)
+	    (point))))
+
+
+(defun cnblogs-current-buffer-to-post ()
+  (cond
+   ((equal mode-name
+	   "Org")
+    (cnblogs-org-mode-buffer-to-post))
+   
+   (t
+    (cnblogs-other-mode-buffer-to-post))))
+
+
+(defun cnblogs-check-file-in-entry-list (src-file)
+  "检查文件是否已经在列表项中"
+  (let ((res nil))
+    (mapc (lambda (entry)
+	    (or res
+		(setq res 
+		      (equal src-file (nth 4 entry)))))
+	  cnblogs-entry-list)
+    res))
+
+
+
+(defun cnblogs-delete-post-from-entry-list (postid) 
+  "通过postid将相应的entry的postid设置为nil并删除posts目录下相应的文件，成功返回t.POSTID是string类型或者int类型"
+  (if (integerp postid)
+      (setq postid (int-to-string postid)))
+
+  (condition-case ()
+      (progn
+	(setq cnblogs-entry-list
+	      (mapcar (lambda (entry)
+			(if (equal postid 
+				   (if (integerp (nth 2 entry))
+				       (int-to-string (nth 2 entry))
+				     (nth 2 entry)))
+			    (progn
+			     (setcar (nthcdr 2 entry) nil)
+			     (setcar (nthcdr 3 entry) nil)
+			     (setcar (nthcdr 5 entry) "UNPUBLISHED")))
+			entry)
+		      cnblogs-entry-list))
+	(cnblogs-save-entry-list)
+	(and (file-exists-p (concat cnblogs-file-post-path postid))
+	     (delete-file (concat cnblogs-file-post-path postid)))
+	t)
+    (error nil)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;功能函数;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun cnblogs-import-file ()
   "将当前文件加入到库中（增加到博文项cnblogs-entry-list中）"
   (interactive)
@@ -439,216 +725,6 @@
 	     (cnblogs-save-entry-list))
 	(message "设置成功"))
     (message "设置失败")))
-
-(defun cnblogs-fetch-field (field)
-  (let* ((regexp
-	  (concat "^[ \t]*[#]+[\\+]?"
-		  field
-		  ":[^\n]*"))
-	 (idx (string-match regexp 
-			    (buffer-substring-no-properties (point-min)
-							    (point-max)))))
-    (if idx
-	(let* ((field-val (match-string  0 
-					 (buffer-substring-no-properties (point-min) 
-									 (point-max))))
-	       (val (substring field-val
-			       (1+ (string-match  ":"  field-val))))
-	       (idx2 (string-match "[^ \t]+"
-				   val)))
-	  (and idx2
-	       (substring val
-			  idx2)))
-      nil)))
-
-
-(defun cnblogs-categories-string-to-list (categories-string)
-  "将分类字符串按空白符分成字符串列表"
-  (if (or (eq categories-string nil)
-	  (eq categories-string ""))
-      nil
-    (let ((idx1
-	   (string-match "[^　 \t]+"    ;圆角半角空格
-			 categories-string)))
-      (if (not idx1)
-	  nil
-	(setq categories-string         ;圆角半角空格
-	      (substring categories-string idx1))
-	(let ((idx2 
-	       (string-match "[　 \t]+"
-			     categories-string)))
-	  (if idx2
-	      (cons (concat "[随笔分类]"
-			    (substring categories-string 
-				       0
-				       idx2))
-		    (cnblogs-categories-string-to-list (substring categories-string
-								  idx2)))
-	    (cons (concat "[随笔分类]"
-			  categories-string)
-		  nil)))))))
-
-(defun cnblogs-insert-template-head ()
-  "插入头模板"
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (insert cnblogs-template-head)))
-
-(defun cnblogs-make-media-object-file-data (media-path) ;todo: type以后加上
-  "根据给出的文件路径返回相应的FileData，文件不存在返回nil"
-  (and (file-exists-p media-path)
-       (list
-	;;media-path name
-	(cons "name" 
-	      (file-name-nondirectory media-path))
-	
-	;; bits
-	(cons "bits"
-	      (base64-encode-string
-	       (with-temp-buffer
-		 (insert-file-contents-literally media-path)
-		 (buffer-string)))))))
-
-
-
-(defun cnblogs-replace-media-object-location (buf-str)
-  "处理BUF-STR中的媒体文件，返回处理后的字符串"
-  (mapc (lambda (suffix)
-	  (let ((regexp 
-		 (concat "[a-z]?[:]?[^:*\"?<>|]+."
-			 suffix))
-		(current 0))
-	    (while (string-match regexp
-				 buf-str
-				 current)
-	      (let* ((media-path (match-string 0
-					       buf-str))
-		     (media-url
-		      (save-match-data
-			(or
-			 (and (file-exists-p media-path)
-			      (cnblogs-metaweblog-new-media-object 
-			       (cnblogs-make-media-object-file-data
-				media-path)))
-			 (and (file-exists-p (substring media-path 1))
-			      (cnblogs-metaweblog-new-media-object 
-			       (cnblogs-make-media-object-file-data (substring
-								     media-path 1))))))))
-		
-		(if media-url
-		    (progn
-		      (setq current
-			    (+ (match-beginning 0)
-			       (length media-url)))
-		      (setq buf-str
-			    (replace-match media-url
-					   t
-					   t
-					   buf-str)))
-		  (setq current
-			(match-end 0)))))))
-	cnblogs-media-object-suffix-list)
-  buf-str)
-
-(defun cnblogs-org-mode-buffer-to-post ()
-  (delq nil(list
-	    ;; title
-	    (cons "title"
-		  (or (cnblogs-fetch-field "TITLE")
-		      "新随笔"))
-
-	    ;; categories
-	    (cons "categories"
-		  (let ((categories-list
-			 (cnblogs-categories-string-to-list
-			  (cnblogs-fetch-field "KEYWORDS"))))
-		    (or
-		     categories-list
-		     '("[随笔分类]未分类"))))
-
-	    ;; dateCreated
-	    (cons "dateCreated"
-		  (list 
-		   :datetime
-		   (condition-case ()
-		       (date-to-time (cnblogs-fetch-field "DATE")) ;todo: 要转化
-		     (error (progn
-			      (message "时间格式不支持，使用默认时间:1989-05-17 00:00")
-			      (date-to-time "1989-05-17 00:00"))))))
-
-	    ;; description
-	    (cons "description"
-		  (with-current-buffer  (org-export-as-html-to-buffer 3)
-		    (let ((buf-str 
-			   (cnblogs-replace-media-object-location
-			    (buffer-substring-no-properties 
-			     (point-min)
-			     (point-max)))))
-		      (kill-buffer)
-		      buf-str))))))
-
-(defun cnblogs-other-mode-buffer-to-post () ;todo: post还不完全
-  (delq nil
-	(list
-	 ;; title
-	 (cons "title"
-	       (or (cnblogs-fetch-field "TITLE")
-		   "新随笔"))
-	 
-	 
-	 ;; categories
-	 (cons "categories"
-	       (let ((categories-list
-		      (cnblogs-categories-string-to-list
-		       (cnblogs-fetch-field "KEYWORDS"))))
-		 (or
-		  categories-list
-		  '("[随笔分类]未分类"))))
-
-	 
-	 ;; dateCreated
-	 (cons "dateCreated"
-	       (list 
-		:datetime
-		(condition-case ()
-		    (date-to-time (cnblogs-fetch-field "DATE")) ;todo: 要转化
-		  (error (progn
-			   (message "时间格式不支持，使用默认时间:1989-05-17 00:00")
-			   (date-to-time "1989-05-17 00:00"))))))
-	 ;; description
-	 (cons "description"
-	       (cnblogs-replace-media-object-location
-		(buffer-substring-no-properties
-		 (cnblogs-point-template-head-end)
-		 (point-max)))))))
-
-(defun cnblogs-point-template-head-end ()
-  (print  (save-excursion
-	    (goto-char (point-min))
-	    (forward-paragraph)
-	    (point))))
-
-
-(defun cnblogs-current-buffer-to-post ()
-  (cond
-   ((equal mode-name
-	   "Org")
-    (cnblogs-org-mode-buffer-to-post))
-   
-   (t
-    (cnblogs-other-mode-buffer-to-post))))
-
-
-(defun cnblogs-check-file-in-entry-list (src-file)
-  "检查文件是否已经在列表项中"
-  (let ((res nil))
-    (mapc (lambda (entry)
-	    (or res
-		(setq res 
-		      (equal src-file (nth 4 entry)))))
-	  cnblogs-entry-list)
-    res))
 
 
 (defun cnblogs-new-post ()
@@ -702,77 +778,6 @@
 	   cnblogs-entry-list))
     (cnblogs-save-entry-list))
   (message "保存草稿成功！"))
-
-
-(defun cnblogs-delete-post-from-entry-list (postid) 
-  "通过postid将相应的entry的postid设置为nil并删除posts目录下相应的文件，成功返回t.POSTID是string类型或者int类型"
-  (if (integerp postid)
-      (setq postid (int-to-string postid)))
-
-  (condition-case ()
-      (progn
-	(setq cnblogs-entry-list
-	      (mapcar (lambda (entry)
-			(if (equal postid 
-				   (if (integerp (nth 2 entry))
-				       (int-to-string (nth 2 entry))
-				     (nth 2 entry)))
-			    (progn
-			     (setcar (nthcdr 2 entry) nil)
-			     (setcar (nthcdr 3 entry) nil)
-			     (setcar (nthcdr 5 entry) "UNPUBLISHED")))
-			entry)
-		      cnblogs-entry-list))
-	(cnblogs-save-entry-list)
-	(and (file-exists-p (concat cnblogs-file-post-path postid))
-	     (delete-file (concat cnblogs-file-post-path postid)))
-	t)
-    (error nil)))
-
-(defun cnblogs-delete-entry-from-entry-list (postid) 
-  "通过postid删除博文项及posts目录下相应的文件，POSTID是string类型"
-  (condition-case ()
-      (progn
-	(setq cnblogs-entry-list
-	      (remove-if (lambda (entry)
-			   (equal postid
-				  (nth 2 entry)))
-			 cnblogs-entry-list))
-	(cnblogs-save-entry-list)
-	(and (file-exists-p (concat cnblogs-file-post-path postid))
-	     (delete-file (concat cnblogs-file-post-path postid)))
-	t)
-    (error nil)))
-
-
-(defun cnblogs-get-postid-by-title (title)
-  (and (stringp title)
-       (let ((postid nil))
-	 (mapc (lambda (entry)
-		 (or postid
-		     (and (equal title
-				 (nth 4 cnblogs-entry-list))
-			  (setq postid 
-				(nth 2 cnblogs-entry-list)))))
-	       cnblogs-entry-list)
-	 (and postid
-	      (integerp postid)
-	      (int-to-string postid))
-	 (or postid
-	     (setq postid "0"))))
-  postid)
-
-
-(defun cnblogs-get-postid-by-src-file-name (filename)
-  "在cnblogs-entry-list中查找src-file为filename的项的博文id，找不到返回\"0\""
-  (let ((postid nil))
-    (mapc (lambda (entry)
-	    (if (equal filename (nth 4 entry))
-		(setq postid (nth 2 entry))))
-	  cnblogs-entry-list)
-    (or postid
-	(setq postid "0"))
-    postid))
 
 
 
@@ -867,8 +872,7 @@
 	      (message "获取用户博客信息成功！"))
 	  (error cnblogs-blog-info))))
 
-
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mode设置;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;; 下面是关于minor mode的内容
