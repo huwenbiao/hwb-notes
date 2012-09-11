@@ -1,5 +1,5 @@
-;todo检查所有的底层函数，正常运行返回t，否则返回nil
-;给所有的操作加上反馈信息
+;;todo检查所有的底层函数，正常运行返回t，否则返回nil
+;;给所有的操作加上反馈信息
 ;;; entry type
 ;;
 ;; (id   title   postid      categories src-file state)
@@ -327,46 +327,49 @@
 	   cnblogs-entry-list))))) 
 
 (defun cnblogs-push-src-file-to-entry-list (src-file)
-  "将一个源文件加入到博文项中，但并不立即保存博文项到文件中。默认认为文件是合法的并且不在博文项中"
-  (let ((title 
-	 (with-temp-buffer
-	   (insert-file-contents src-file)
-	   (cnblogs-fetch-field "TITLE")))
-	(done nil)
-	(index 0))
-    (progn (mapc (lambda (entry)
-		   (progn
-		     (or done
-			 (not (equal title (nth 1 entry)))
-			 (not (y-or-n-p (format "merge the file %s with entry %S" src-file entry)))
+  "将一个源文件加入到博文项中，但并不立即保存博文项到文件中。"
+  (if (cnblogs-check-file-in-entry-list src-file)
+      t
+    (let ((title 
+	   (with-temp-buffer
+	     (insert-file-contents src-file)
+	     (cnblogs-fetch-field "TITLE")))
+	  (done nil)
+	  (index 0))
+      (progn (mapc (lambda (entry)
+		     (progn
+		       (or done
+			   (not title)
+			   (not (equal title (nth 1 entry)))
+			   (not (y-or-n-p (format "merge the file %s with entry %S" src-file entry)))
 					;下面是将该文件合并到该项中
-			 (progn 
-			   (setq done t)
-			   (setcar (nthcdr 4 (nth index cnblogs-entry-list)) 
-				   src-file)))
-		     (setq index (1+ index))))
-		 cnblogs-entry-list)
-	   
+			   (progn 
+			     (setq done t)
+			     (setcar (nthcdr 4 (nth index cnblogs-entry-list)) 
+				     src-file)))
+		       (setq index (1+ index))))
+		   cnblogs-entry-list)
+	     
 					;还没有插入则新建项
-	   (or done
-	       (push 
+	     (or done
+		 (push 
 					;id
-		(list (cnblogs-gen-id)        
+		  (list (cnblogs-gen-id)        
 					;title
-		      title
+			title
 					;postid
-		      nil
+			nil
 					;categories
-		      nil
+			nil
 					;src-file
-		      src-file
+			src-file
 					;state
-		      "UNPUBLISHED")
-		
-		cnblogs-entry-list)))))
+			"UNPUBLISHED")
+		  
+		  cnblogs-entry-list))))))
 
 (defun cnblogs-assign-post-to-file (post src-file)
-  "将post合并到一个指定源文件的列表项中，成功返回t"
+  "将post合并到一个指定源文件的列表项中，成功返回t，不立即保存列表项"
   (condition-case()
       (progn
 	(setq cnblogs-entry-list
@@ -482,7 +485,7 @@
 
 	    ;; description
 	    (cons "description"
-		  (with-current-buffer  (org-export-as-html-to-buffer 3)
+		  (with-current-buffer (org-export-as-html 3 nil nil "*Org HTML Export*")
 		    (let ((buf-str 
 			   (cnblogs-replace-media-object-location
 			    (buffer-substring-no-properties 
@@ -664,9 +667,9 @@
 				       (int-to-string (nth 2 entry))
 				     (nth 2 entry)))
 			    (progn
-			     (setcar (nthcdr 2 entry) nil)
-			     (setcar (nthcdr 3 entry) nil)
-			     (setcar (nthcdr 5 entry) "UNPUBLISHED")))
+			      (setcar (nthcdr 2 entry) nil)
+			      (setcar (nthcdr 3 entry) nil)
+			      (setcar (nthcdr 5 entry) "UNPUBLISHED")))
 			entry)
 		      cnblogs-entry-list))
 	(cnblogs-save-entry-list)
@@ -674,6 +677,20 @@
 	     (delete-file (concat cnblogs-file-post-path postid)))
 	t)
     (error nil)))
+
+(defun cnblogs-import-directory (directory)
+  ;;滤掉所有以.开关的文件，这样就没有了..和.以及所有的隐藏文件
+  (let ((files (directory-files directoryn t "^[^\.].*" t)))
+    (mapc (lambda (file)
+					;目录
+	    (cond ((file-directory-p file)
+		   (cnblogs-import-directory file))
+					;合法文件
+		  ((member (file-name-extension file) cnblogs-src-file-extension-list)
+		   (cnblogs-push-src-file-to-entry-list file))))
+	  files)))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;功能函数;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun cnblogs-import-file ()
@@ -687,6 +704,13 @@
 	  (cnblogs-save-entry-list)
 	  (message "Succeed!"))
       (message "Failed: UNSUPPORTED file!"))))
+
+(defun cnblogs-import-folder ()
+  "递归添加一个目录中的所有合法文件到库中，这个是给用户用的，主要是调用cnblogs-import-directory"
+  (interactive)
+  (let ((directory (read-string "Input the folder: " "~/")))
+    (cnblogs-import-directory directory)
+    (cnblogs-save-entry-list)))
 
 (defun cnblogs-setup-blog ()
   (interactive)
@@ -718,7 +742,7 @@
 	    (make-directory cnblogs-file-post-path))
 	(cnblogs-save-category-list)
 	(and (yes-or-no-p "Should I pull all your posts now, it may talk a long time?")
-	     (let ((posts (cnblogs-metaweblog-get-recent-posts 4)))
+	     (let ((posts (cnblogs-metaweblog-get-recent-posts 0)))
 	       (mapc (lambda (post)
 		       (cnblogs-push-post-to-entry-list post))
 		     posts))
@@ -799,7 +823,7 @@
 
 (defun cnblogs-edit-post ();;todo:更新本地
   (interactive)
-  (if (cnblogs-check-legal-for-update (buffer-file-name))
+  (if (cnblogs-check-legal-for-edit (buffer-file-name))
       (let ((postid
 	     (cnblogs-get-postid-by-src-file-name
 	      (buffer-file-name))))
@@ -809,9 +833,10 @@
 					       (cnblogs-current-buffer-to-post)
 					       t)
 		 (cnblogs-assign-post-to-file (cnblogs-metaweblog-get-post postid)
-					      (buffer-file-name)))
+					      (buffer-file-name))
+		 (cnblogs-save-entry-list))
 	    
-	      (message "Succeed!")
+	    (message "Succeed!")
 	  (message "Failed!")))))
 
 (defun cnblogs-get-post ()
@@ -894,3 +919,4 @@
   :lighter " Cnblogs"
   :keymap cnblogs-mode-map
   :group Cnblogs)
+
