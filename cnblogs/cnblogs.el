@@ -4,6 +4,9 @@
 ;;
 ;; (id   title   postid      categories src-file state)
 ;; (int  string  int(string) list       string   string)
+
+(require 'metaweblog)
+
 (defgroup cnblogs nil
   "博客园客户端分组"
   :group 'emacs)
@@ -899,17 +902,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mode设置;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+(cnblogs-define-variables)		;定义变量，可以不用定义成函数
 ;; 下面是关于minor mode的内容
 (defun cnblogs-init ()
   "Cnblogs的所有初始化工作"
-  (cnblogs-define-variables)
   (cnblogs-load-variables)
   )
 
-					;todo 添加到hook中
-(cnblogs-init)
-
+;; 定义菜单
 (define-key cnblogs-mode-map [menu-bar menu-bar-cnblogs-menu]
   (cons "Cnblogs" cnblogs-mode-map))
 
@@ -920,3 +920,6 @@
   :keymap cnblogs-mode-map
   :group Cnblogs)
 
+(add-hook 'cnblogs-minor-mode-hook 'cnblogs-init) ;打开cnblogs-minor-mode时再加载数据等初始化
+
+(provide 'cnblogs)
