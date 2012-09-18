@@ -696,7 +696,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;功能函数;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun cnblogs-import-file ()
+(defun cnblogs-import-current-file ()
   "将当前文件加入到库中（增加到博文项cnblogs-entry-list中）"
   (interactive)
   (let ((src-file (buffer-file-name)))
@@ -708,21 +708,34 @@
 	  (message "Succeed!"))
       (message "Failed: UNSUPPORTED file!"))))
 
+(defun cnblogs-import-file ()
+  "添加一个文件加入到库中（增加到博文项cnblogs-entry-list中）"
+  (interactive)
+  (let ((src-file (read-file-name "Import file: ")))
+    (if (member (file-name-extension src-file)
+		cnblogs-src-file-extension-list)
+	(progn 
+	  (cnblogs-push-src-file-to-entry-list src-file)
+	  (cnblogs-save-entry-list)
+	  (message "Succeed!"))
+      (message "Failed: UNSUPPORTED file!"))))
+
+
 (defun cnblogs-import-folder ()
   "递归添加一个目录中的所有合法文件到库中，这个是给用户用的，主要是调用cnblogs-import-directory"
   (interactive)
-  (let ((directory (read-string "Input the folder: " "~/")))
+  (let ((directory (read-directory-name "Import folder: ")))
     (cnblogs-import-directory directory)
     (cnblogs-save-entry-list)))
 
 (defun cnblogs-setup-blog ()
   (interactive)
   (setq cnblogs-blog-id
-	(read-string "输入你的博客ID：" nil nil))
+	(read-string "Your blog ID:" nil nil))
   (setq cnblogs-user-name
-	(read-string "输入你的用户名：" nil nil))
+	(read-string "Your username:" nil nil))
   (setq cnblogs-user-passwd
-	(read-passwd "输入你的密码：" nil ))
+	(read-passwd "Your password:" nil ))
   (setq cnblogs-server-url
 	(concat "http://www.cnblogs.com/"
 		cnblogs-blog-id
@@ -845,7 +858,7 @@
 (defun cnblogs-get-post ()
   (interactive)
   (let* ((postid
-	  (read-string "输入要获取的随笔ID："))
+	  (read-string "Post ID："))
 	 (post
 	  (condition-case ()
 	      (cnblogs-metaweblog-get-post postid)
@@ -923,3 +936,5 @@
 (add-hook 'cnblogs-minor-mode-hook 'cnblogs-init) ;打开cnblogs-minor-mode时再加载数据等初始化
 
 (provide 'cnblogs)
+
+ 
