@@ -1,4 +1,19 @@
 #+TITLE: Org-mode 简明手册
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-09-26 Wed
+#+DESCRIPTION:
+#+KEYWORDS: Emacs
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   /Open_Source
+#+LINK_HOME: /Open_Source
+#+XSLT:
+
 
 * 简介[fn:22]
 
@@ -18,10 +33,10 @@
 #+end_src
 
 为了提高速度可以用下面的 shell 命令将 Lisp 文件编译一下：
-#srcname 1_2
-#begin_src sh
+#+srcname 1_2
+#+begin_src sh
 : make
-#end_src
+#+end_src
 
 再把下面一行加到 .emacs 文件里。它可以使文件中的函数自动加载，而不是启动 Org 模式时立即加载。
 #+srcname 1_3
@@ -170,7 +185,7 @@ Sacha Chua's tutorial
   Org 能够很容易地处理 ASCII 文本表格。任何以‘|’为首个非空字符的行都会被认为是表格的一部分。’|‘也是列分隔符。一个表格是下面的样子：
 #+srcname 3_1
 #+begin_src org
-,| Name  | Pone | Age |
+,| Name  | Phone | Age |
 ,|-------+------+-----|
 ,| Peter | 1234 | 17  |
 ,| Anna  | 4321 | 25  |
@@ -378,7 +393,7 @@ Eric’s plotting tutoria
 | S-Down | 增加/减少当前标题的优先级。                                                   | 
   
 ** 任务细分
-   很多时候将一个大的任务分成几个的易于完成的小任务是明智的。你可以通过在TODO项目下新建一个大纲树，并在子树上标记子任务来实现这个功能。为了能对已经完成的任务有个大致的了解，你可以在标题的任何地方插入‘[/]’或者‘[%]’。当每个子任务的状态变化时，或者当你在标记上按 C-c C-时，这些标记状态也会随之更新。例如：
+   很多时候将一个大的任务分成几个的易于完成的小任务是明智的。你可以通过在TODO项目下新建一个大纲树，并在子树上标记子任务来实现这个功能。为了能对已经完成的任务有个大致的了解，你可以在标题的任何地方插入‘[/]’或者‘[%]’。当每个子任务的状态变化时，或者当你在标记上按 C-c C-c时，这些标记状态也会随之更新。例如：
 #+begin_src org
   ,* Organize Party [33%]
   ,** TODO Call people [1/2]
@@ -1137,13 +1152,13 @@ The Babel site on Worg
 
 -----
 
-<<说明>> 本文的英文原文是 Org 主页上的一篇简短手册（ [[http://orgmode.org/guide/index.html][The compact Org-mode Guide]] ）。另外：
+<<note>> 本文的英文原文是 Org 主页上的一篇简短手册（ [[http://orgmode.org/guide/index.html][The compact Org-mode Guide]] ）。另外：
         - 本文的脚注是双向链接的，你可以大胆地查看脚注而不用担心如何再定位到原文。
         - 我不知道如何在引用的源代码中加脚注，如果你知道，希望你能告诉我。
         - 我不知道如果在表格中正确显示‘|’，如果你知道，希望你能告诉我。
-        - 本文可能有错误，如果发现错误（不管是什么错误），请在评论中给出。
+        - 本文可能有错误，如果发现错误，请在评论中给出。
           
-[[fnr.1][返回]]
+[[fnr-.1][返回]]
 
 * Footnotes
 
@@ -1187,4 +1202,5 @@ The Babel site on Worg
 
 [fn:21] 这个表格实在翻译不通，以后再说吧。
 
-[fn:22] 见[[说明]]。
+[fn:22] 见[[note][说明]]。
+
