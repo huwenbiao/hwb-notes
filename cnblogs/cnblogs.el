@@ -467,6 +467,11 @@
 		  (or (cnblogs-fetch-field "TITLE")
 		      "新随笔"))
 
+	    ;; excerpt
+	    (cons "mt_excerpt"
+		  (or (cnblogs-fetch-field "DESCRIPTION")
+		      ""))
+	    
 	    ;; categories
 	    (cons "categories"
 		  (let ((categories-list
@@ -477,7 +482,9 @@
 		     '("[随笔分类]未分类"))))
 	    ;; tags
 	    (cons "mt_keywords"
-		  (cnblogs-fetch-field "KEYWORDS"))
+		  (or 
+		   (cnblogs-fetch-field "KEYWORDS")
+		   ""))
 
 	    ;; dateCreated
 	    (cons "dateCreated"
@@ -616,7 +623,12 @@
 			 (and (file-exists-p (substring media-path 1))
 			      (cnblogs-metaweblog-new-media-object 
 			       (cnblogs-make-media-object-file-data (substring
-								     media-path 1))))))))
+								     media-path 1))))
+			 ;;下面这段代码是最近加的，但没有解决问题，因此替换代码出了问题
+			 (and (file-exists-p (substring media-path 4))
+			      (cnblogs-metaweblog-new-media-object
+			       (cnblogs-make-media-object-file-data (substring
+								     media-path 4))))))))
 
 		(if media-url
 		    (progn
