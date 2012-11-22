@@ -1,3 +1,19 @@
+#+TITLE:     这是一篇测试文章
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-09-09 Sun
+#+DESCRIPTION: 这是测试摘要
+#+CATEGORIES: Emacs
+#+KEYWORDS: emacs,cnblogs, linux
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:
 * sym
 ‣1
 •
@@ -5,3 +21,16 @@
 ⦿
 ☺
 •
+cn
+* TODO stag					  :@home:@tennisclub:pc:file:
+* TODO man						     :file:home:work:
+  fjdslajfdlsa
+
+  fjdsalfj
+** test
+  
+  
+#+TAGS: @work(w) @home(h) @tennisclub(t) laptop(l) pc(p)
+
+* test					   :@work:@home:@tennisclub:@os:home:
+
