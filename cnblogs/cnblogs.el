@@ -528,7 +528,9 @@
 
 	 ;; tags
 	 (cons "mt_keywords"
-	       (cnblogs-fetch-field "KEYWORDS"))
+	       (or
+		(cnblogs-fetch-field "KEYWORDS")
+		""))
 
 	 ;; dateCreated
 	 (cons "dateCreated"
