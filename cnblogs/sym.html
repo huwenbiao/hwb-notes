@@ -3,14 +3,14 @@
                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>sym</title>
+<title>这是一篇测试文章</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-<meta name="title" content="sym"/>
+<meta name="title" content="这是一篇测试文章"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-07-16 22:09:19 CST"/>
+<meta name="generated" content="2012-09-09 Sun"/>
 <meta name="author" content="Hu Wenbiao"/>
-<meta name="description" content=""/>
-<meta name="keywords" content=""/>
+<meta name="description" content="这只是一篇用来测试Emacs扩展的文章，对你没有用处。"/>
+<meta name="keywords" content="emacs,cnblogs, linux"/>
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   html { font-family: Times, serif; font-size: 12pt; }
@@ -82,7 +82,47 @@
  }
 /*]]>*///-->
 </script>
+<script type="text/javascript" src="/MathJax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+            config: ["MMLorHTML.js"], jax: ["input/TeX"],
+        //  jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "left",
+        displayIndent: "2em",
 
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
 </head>
 <body>
 
@@ -91,14 +131,29 @@
 </div>
 
 <div id="org-content">
-<h1 class="title">sym</h1>
+<h1 class="title">这是一篇测试文章</h1>
 
-
+<p>很长很长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长的一句话。
+</p>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#sec-1">1 sym</a></li>
+<li><a href="#sec-2">2 tags&nbsp;&nbsp;&nbsp;<span class="tag">file:home:work</span></a>
+<ul>
+<li><a href="#sec-2-1">2.1 test</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 images</a></li>
+<li><a href="#sec-4">4 math</a></li>
+<li><a href="#sec-5">5 graph</a>
+<ul>
+<li><a href="#sec-5-1">5.1 ditaa画图</a></li>
+<li><a href="#sec-5-2">5.2 graphviz作图</a></li>
+<li><a href="#sec-5-3">5.3 plantuml作图</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -107,17 +162,109 @@
 <h2 id="sec-1"><span class="section-number-2">1</span> sym</h2>
 <div class="outline-text-2" id="text-1">
 
-<p>‣
-•
-◦
-⦿
-☺
+<p>‣1•◦⦿☺•⌨
 </p></div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> tags :<a href="home:work">home:work</a>:</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>  fjdslajfdlsa
+</p>
+<p>
+  fjdsalfj
+</p>
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> test</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> images</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>  <img src="a.png"  alt="a.png" />
+  <a href="a.png">Knuth</a>
+</p>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> math</h2>
+<div class="outline-text-2" id="text-4">
+
+<p>  \(\sum_{i=0}^{n}i = n*(n+1)/2\)
+</p></div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> graph</h2>
+<div class="outline-text-2" id="text-5">
+
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> ditaa画图</h3>
+<div class="outline-text-3" id="text-5-1">
+
+
+
+
+<p>
+<img src="ditaa_filename.png"  alt="ditaa_filename.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> graphviz作图</h3>
+<div class="outline-text-3" id="text-5-2">
+
+
+
+<p>
+<img src="graphviz_filename.png"  alt="graphviz_filename.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5-3" class="outline-3">
+<h3 id="sec-5-3"><span class="section-number-3">5.3</span> plantuml作图</h3>
+<div class="outline-text-3" id="text-5-3">
+
+
+
+<p>
+<img src="plantuml_file.png"  alt="plantuml_file.png" />
+</p>
+<p>
+这里是配置方法：<a href="http://doc.norang.ca/org-mode.html">Org Mode - Organize Your Life In Plain Text!</a>
+</p></div>
+</div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-07-16 22:09:19 CST</p>
+<p class="date">Date: 2012-09-09 Sun</p>
 <p class="author">Author: Hu Wenbiao</p>
 <p class="creator">Org version 7.8.11 with Emacs version 24</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>

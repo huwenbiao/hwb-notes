@@ -1,5 +1,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; metaWeblog.newPost
+
+(require 'xml-rpc)
+
 (defun cnblogs-metaweblog-new-post (post publishp)
   (xml-rpc-method-call cnblogs-server-url
 		       "metaWeblog.newPost"
@@ -132,3 +135,4 @@ called with the result as parameter."
 					   (setcar (nth 2 (nth 3 member)) 'base64)))
 				       member)
 				     inter-val)))))))
+(provide 'metaweblog)

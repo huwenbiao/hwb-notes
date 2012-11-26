@@ -2,7 +2,7 @@
 #+AUTHOR:    Hu Wenbiao
 #+EMAIL:     huwenbiao1989@gmail.com
 #+DATE:      2012-09-09 Sun
-#+DESCRIPTION: 这是测试摘要
+#+DESCRIPTION: 这只是一篇用来测试Emacs扩展的文章，对你没有用处。
 #+CATEGORIES: Emacs
 #+KEYWORDS: emacs,cnblogs, linux
 #+LANGUAGE:  en
@@ -14,16 +14,12 @@
 #+LINK_UP:   
 #+LINK_HOME: 
 #+XSLT:
+#+MATHJAX: align:"left" mathml:t path:"/MathJax/MathJax.js"
+
+很长很长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长的一句话。
 * sym
-‣1
-•
-◦
-⦿
-☺
-•
-cn
-* TODO stag					  :@home:@tennisclub:pc:file:
-* TODO man						     :file:home:work:
+‣1•◦⦿☺•⌨
+* TODO tags 						     :file:home:work:
   fjdslajfdlsa
 
   fjdsalfj
@@ -32,5 +28,109 @@ cn
   
 #+TAGS: @work(w) @home(h) @tennisclub(t) laptop(l) pc(p)
 
-* test					   :@work:@home:@tennisclub:@os:home:
+* images
+  [[file:a.png]]
+  [[file:a.png][Knuth]]
+  
 
+  
+* math
+  $$\sum_{p\rm\;prime}f(p) = \int_{t>1}f(t)d\pi(t).$$
+  $$2\uparrow\uparrow k 
+  \mathrel{\mathop=^{\rm def}} 
+  2^{2^{\cdot^{\cdot^{\cdot^2}}}} 
+  \vbox{\hbox{$\Big\}\scriptstyle k$}\kern0pt}.$$
+  $$\bigstar\boxminus\blacksquare\boxplus\spadesuit$$
+  $$\overbrace{\mathbb{ABC}}$$
+  $$\underline{\mathcal{ABC}}$$
+  $$\mathfrak{ABC}$$
+  $$\mathfrak{A}\xleftarrow{n+\mu -1}\mathfrak{B}\xrightarrow[T]{n\pm i-1}\mathfrak{C}$$
+
+  $$\begin{pmatrix}
+  \alpha& \beta^{*}\\
+  \gamma^{*}& \delta
+  \end{pmatrix}$$
+
+* graph
+** ditaa作图
+
+#+begin_src ditaa :file ditaa_filename.png :cmdline -r -s 0.8
+
+    +-----------+        +---------+  
+    |    PLC    |        |         |                
+    |  Network  +<------>+   PLC   +<---=---------+ 
+    |    cRED   |        |  c707   |              | 
+    +-----------+        +----+----+              | 
+                              ^                   | 
+                              |                   | 
+                              |  +----------------|-----------------+
+                              |  |                |                 |
+                              v  v                v                 v
+      +----------+       +----+--+--+      +-------+---+      +-----+-----+       Windows clients
+      |          |       |          |      |           |      |           |      +----+      +----+
+      | Database +<----->+  Shared  +<---->+ Executive +<-=-->+ Operator  +<---->|cYEL| . . .|cYEL|
+      |   c707   |       |  Memory  |      |   c707    |      | Server    |      |    |      |    |
+      +--+----+--+       |{d} cGRE  |      +------+----+      |   c707    |      +----+      +----+
+         ^    ^          +----------+             ^           +-------+---+
+         |    |                                   |                        
+         |    +--------=--------------------------+                    
+         v                                                             
++--------+--------+                                                         
+|                 |                                                         
+| Millwide System |            -------- Data ---------                      
+| cBLU            |            --=----- Signals ---=--                      
++-----------------+                                                         
+
+#+end_src
+** graphviz作图
+#+begin_src dot :file graphviz_filename.png :cmdline -Kdot -Tpng
+digraph G {
+  size="8,6"
+  ratio=expand
+  edge [dir=both]
+  plcnet [shape=box, label="PLC Network"]
+  subgraph cluster_wrapline {
+    label="Wrapline Control System"
+    color=purple
+    subgraph {
+    rank=same
+    exec
+    sharedmem [style=filled, fillcolor=lightgrey, shape=box]
+    }
+    edge[style=dotted, dir=none]
+    exec -> opserver
+    exec -> db
+    plc -> exec
+    edge [style=line, dir=both]
+    exec -> sharedmem
+    sharedmem -> db
+    plc -> sharedmem
+    sharedmem -> opserver
+  }
+  plcnet -> plc [constraint=false]
+  millwide [shape=box, label="Millwide System"]
+  db -> millwide
+
+  subgraph cluster_opclients {
+    color=blue
+    label="Operator Clients"
+    rankdir=LR
+    labelloc=b
+    node[label=client]
+    opserver -> client1
+    opserver -> client2
+    opserver -> client3
+  }
+}
+#+end_src
+** plantuml作图
+#+begin_src plantuml :file plantuml_file.png
+Object1 <|-- Object2
+Object1: someVar
+Object1: execute()
+Object2: getState()
+Object2: setState()
+Object2: state
+#+end_src
+
+这里是配置方法：[[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text!]]

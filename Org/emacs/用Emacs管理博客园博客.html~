@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>用Emacs管理博客园博客</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="用Emacs管理博客园博客"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-09-13 Thu"/>
+<meta name="author" content="Hu Wenbiao"/>
+<meta name="description" content=""/>
+<meta name="keywords" content="emacs, org-mode, cnblogs"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="/Open_Source"> UP </a>
+ |
+ <a accesskey="H" href="/Open_Source"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="org-content">
+<h1 class="title">用Emacs管理博客园博客</h1>
+
+<p>大概一年前就找各种Emacs扩展，希望可以直接将博客发布到博客园。但很无奈，各种失败。自学着Elisp写了个扩展，如果有人需要（估计也没几个人），可以到<a href="https://github.com/huwenbiao/cnblogs/zipball/master">这里</a>下载。
+</p>
+<p>
+本扩展提供一个用来管理博客的cnblogs-minor-mode副模式。可以用来发布org文件或者html文件。由于作者使用的是org-mode来写博客，所以直接发布html可能会有很多问题。
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 已经实现的功能</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<ul>
+<li>发布博文
+
+</li>
+<li>删除博文
+
+</li>
+<li>更新博文
+
+</li>
+<li>包含图片
+
+<p>    
+    博文中包含的本地图片自动上传，并在发布时自动替换地址
+</p>
+</li>
+<li><font color=red> <b>支持标签</b> </font>
+
+<p>
+    <font color=red>标签写在 KEYWORDS 后面，多个标签之间用","分开。</font>
+</p>
+</li>
+<li>支持分类
+
+<p>
+    <font color=red>分类写在 CATEGORIES 后面</font>，多个分类之间用空格隔开，这个关键字org-mode的模板里面没有,自己加上去，以后会完善分类的输入方式，像org-mode输入tag那样输入，但这个太难了，寒假里再搞。
+</p></li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 使用方法</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 配置</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>   下载之后将其中的el文件放到一个目录中（如~/.emacs.d/misc/），然后将这个目录加入到load-path中：
+</p>
+
+
+<pre class="src src-elisp">(add-to-list 'load-path
+             <span style="color: #8b2252;">"~/.emacs.d/misc/"</span>)
+</pre>
+
+<p>
+  然后再：
+</p>
+
+
+<pre class="src src-elisp">(<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">cnblogs</span>)
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 使用</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>   先设置博客M-x cnblogs-setup-blog，其中blog ID就是博客地址中的那个博客名称（如我的就是 <code>Open_Source</code> ）。之后询问是否将网上的博客同步到本地，如果博客较多，可能需要很长时间。然后可以M-x cnblogs-import-file或者cnblogs-import-folder将本地的博客文件（即你的org源文件或者html源文件）导入，导入过程中遇到同名的博客会问是否将这个源文件与网络上的博客关联起来。
+</p>
+<p>
+   启动cnblogs副模式可以M-x cnblogs-minor-mode，也可以自动启动：
+</p>
+
+
+<pre class="src src-elisp">(add-hook 'org-mode-hook (<span style="color: #a020f0;">lambda</span> ()
+                           (cnblogs-minor-mode)))
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> 功能</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">快捷键</th><th scope="col" class="left">命令</th><th scope="col" class="left">功能</th><th scope="col" class="left">备注</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">C-c c c</td><td class="left">cnblogs-get-categories</td><td class="left">将分类获取到本地</td><td class="left">目前没什么实际用处</td></tr>
+<tr><td class="left">C-c c d</td><td class="left">cnblogs-delete-post</td><td class="left">删除博文</td><td class="left">常用</td></tr>
+<tr><td class="left">C-c c e</td><td class="left">cnblogs-edit-post</td><td class="left">更新博文</td><td class="left">常用</td></tr>
+<tr><td class="left">C-c c g</td><td class="left">cnblogs-get-post</td><td class="left">获取指定ID的博文</td><td class="left">估计用户不会用到</td></tr>
+<tr><td class="left">C-c c p</td><td class="left">cnblogs-new-post</td><td class="left">发布博文</td><td class="left">常用</td></tr>
+<tr><td class="left">C-c c r</td><td class="left">cnblogs-get-recent-posts</td><td class="left">获取最近N篇博文</td><td class="left">一般只在配置扩展时使用</td></tr>
+<tr><td class="left">C-c c s</td><td class="left">cnblogs-save-draft</td><td class="left">将草稿保存到服务器</td><td class="left">不知道有什么实际用途</td></tr>
+<tr><td class="left">C-c c u</td><td class="left">cnblogs-get-users-blogs</td><td class="left">获取用户信息</td><td class="left">对用户没什么用处</td></tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 更多细节</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>  这里是一些细节问题，可能你会感兴趣。
+</p>
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 账户配置</h3>
+<div class="outline-text-3" id="text-3-1">
+
+<p>   可以通过M-x customize来配置一些用户信息。也可以在.emacs中直接修改。其中 cnblogs-media-object-suffix-list 是博客园支持的媒体文件类型，基本上只支持图片，视频什么的好像不支持。而 cnblogs-src-file-extension-list 是本扩展支持的源文件类型，目前只支持html和org文件。变量cnblogs-file-root-path默认是家目录下的".Cnblogs/"，可以修改成任意的目录，这里主要是存放一些扩展要用到的东西，对于用户来说基本上没用。另外， <b>密码是明文存放的</b> 。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 使用细节</h3>
+<div class="outline-text-3" id="text-3-2">
+
+<p>   扩展可以解析org文件的一些信息，比如文章题目，时间，分类， <del>并将Keywords后面的信息作为博文分类，</del> 多个分类之间可以有一个或者多个空白符，也可以是中文格式的空白符。 <del>目前不支持标签（tags）功能，以后可能会将keywords改为标签，再另定义分类关键字。</del> 另外如果是中文环境，发布时间可能出问题，比如英文环境中时间格式是"2012-09-13 Thu"，这个没问题，但在中文环境中是"2012-09-13 六"，这就会出问题，可以手动修改它，也可以不修改，因为博客园的发布时间服务器端决定的，不是由用户决定的。
+</p>
+<p>
+   建议建个“未分类”分类，这样忘记分类的随笔都会归到这个分类中去，方便查看。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> TODOs</h2>
+<div class="outline-text-2" id="text-4">
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 编辑细节及功能 [28%]</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+</div>
+
+<div id="outline-container-4-1-1" class="outline-4">
+<h4 id="sec-4-1-1"><span class="section-number-4">4.1.1</span> <span class="todo TODO">TODO</span> 自动补全分类</h4>
+<div class="outline-text-4" id="text-4-1-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-4-1-2" class="outline-4">
+<h4 id="sec-4-1-2"><span class="section-number-4">4.1.2</span> <span class="done DONE">DONE</span> <del>导入文件或者目录时自动补全功能</del></h4>
+<div class="outline-text-4" id="text-4-1-2">
+
+</div>
+
+</div>
+
+<div id="outline-container-4-1-3" class="outline-4">
+<h4 id="sec-4-1-3"><span class="section-number-4">4.1.3</span> <span class="done DONE">DONE</span> <del>支持tags</del></h4>
+<div class="outline-text-4" id="text-4-1-3">
+
+</div>
+
+</div>
+
+<div id="outline-container-4-1-4" class="outline-4">
+<h4 id="sec-4-1-4"><span class="section-number-4">4.1.4</span> <span class="todo TODO">TODO</span> 支持w3m预览</h4>
+<div class="outline-text-4" id="text-4-1-4">
+
+</div>
+
+</div>
+
+<div id="outline-container-4-1-5" class="outline-4">
+<h4 id="sec-4-1-5"><span class="section-number-4">4.1.5</span> <span class="todo TODO">TODO</span> 修改账户名和密码的提供方式，使之更优美</h4>
+<div class="outline-text-4" id="text-4-1-5">
+
+</div>
+
+</div>
+
+<div id="outline-container-4-1-6" class="outline-4">
+<h4 id="sec-4-1-6"><span class="section-number-4">4.1.6</span> <span class="todo TODO">TODO</span> 关联twitter</h4>
+<div class="outline-text-4" id="text-4-1-6">
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-1-7" class="outline-4">
+<h4 id="sec-4-1-7"><span class="section-number-4">4.1.7</span> <span class="todo TODO">TODO</span> 关联slideshare</h4>
+<div class="outline-text-4" id="text-4-1-7">
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> IDE [0%]</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+</div>
+
+<div id="outline-container-4-2-1" class="outline-4">
+<h4 id="sec-4-2-1"><span class="section-number-4">4.2.1</span> <span class="todo TODO">TODO</span> cnblogs-manager 主模式</h4>
+<div class="outline-text-4" id="text-4-2-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-4-2-2" class="outline-4">
+<h4 id="sec-4-2-2"><span class="section-number-4">4.2.2</span> <span class="todo TODO">TODO</span> 状态标识</h4>
+<div class="outline-text-4" id="text-4-2-2">
+
+</div>
+
+</div>
+
+<div id="outline-container-4-2-3" class="outline-4">
+<h4 id="sec-4-2-3"><span class="section-number-4">4.2.3</span> <span class="todo TODO">TODO</span> toolbar</h4>
+<div class="outline-text-4" id="text-4-2-3">
+
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 一些技巧</h2>
+<div class="outline-text-2" id="text-5">
+
+<ul>
+<li>up and home
+   设置为 <code>/blogid</code> 或者 <code>../../../</code> 就可以指向自己的博客根目录。
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-09-13 Thu</p>
+<p class="author">Author: Hu Wenbiao</p>
+<p class="creator">Org version 7.8.11 with Emacs version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

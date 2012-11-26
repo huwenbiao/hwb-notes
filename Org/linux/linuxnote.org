@@ -1,4 +1,20 @@
 #+TITLE:软件笔记
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-11-20 二
+#+DESCRIPTION:
+#+CATEGORIES: Linux应用
+#+KEYWORDS:  linux,notes
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   /Open_Source
+#+LINK_HOME: /Open_Source
+#+XSLT:
+
 * 说明
   这里是使用 linux 过程中记的一些东西，内容比较杂，希望对他人有所帮助。对于使用非 linux 系统的用户基本上是没用的。
 * Shell命令无法补全：
@@ -264,3 +280,15 @@ env DISPLAY=:0.0 notify-send "该睡觉了，洗洗睡吧。五分钟后关机�
   
 * fcitx创造编码
   Ctr+8．
+* Fedora上安装latex
+  http://fedoraproject.org/wiki/Features/TeXLive
+* 将当前目录下的图片打包到一个pdf文件中
+#+begin_src sh
+  convert * des.pdf
+#+end_src
+* 交换Ctrl和Caps Lock
+  Gnome3键盘设置中有改键选项。这比xmodmap的方法要好些。
+* cd -
+  返回原来目录。
+* evolution显示图片
+  一直以来凡是带图片的邮件，都是一片红叉，还以为是evolution做得不好，原来是默认不显示图片。这个可以在“查看”里面选择显示图片，也可以在配置里面设置。

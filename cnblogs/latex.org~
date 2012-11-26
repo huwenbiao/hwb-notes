@@ -1,0 +1,26 @@
+ #+LATEX_CLASS: article
+ #+LaTeX_HEADER: \usepackage{minted}
+ #+LaTeX_HEADER: \usemintedstyle{emacs}
+ #+LaTeX_HEADER: \newminted{common-lisp}{fontsize=\footnotesize}
+
+ #+name: setup-minted
+ #+begin_src emacs-lisp :exports both :results silent
+     (setq org-export-latex-listings 'minted)
+     (setq org-export-latex-custom-lang-environments
+           '(
+            (emacs-lisp "common-lispcode")
+             ))
+     (setq org-export-latex-minted-options
+           '(("frame" "lines")
+             ("fontsize" "\\scriptsize")
+             ("linenos" "")))
+     (setq org-latex-to-pdf-process
+           '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+             "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+             "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+ #+end_src
+
+ #+name: another-listing
+ #+begin_src python :exports code
+   x = str(y)
+ #+end_src

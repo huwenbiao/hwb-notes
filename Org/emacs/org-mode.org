@@ -35,7 +35,7 @@
 为了提高速度可以用下面的 shell 命令将 Lisp 文件编译一下：
 #+srcname 1_2
 #+begin_src sh
-: make
+  make
 #+end_src
 
 再把下面一行加到 .emacs 文件里。它可以使文件中的函数自动加载，而不是启动 Org 模式时立即加载。
@@ -48,12 +48,12 @@
    把下面几行加到 .emacs 文件里。后三行是为命令定义全局快捷键――请改成适合你自己的。
 #+srcname 1_4
 #+begin_src emacs-lisp
-;; The following lines are always needed. Choose your own keys.
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
+  ;; The following lines are always needed. Choose your own keys.
+  (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+  (add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cb" 'org-iswitchb)
 #+end_src
 
 设置之后，打开 .org 扩展的文件会自动进入 org 模式。
