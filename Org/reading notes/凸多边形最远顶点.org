@@ -1,0 +1,27 @@
+#+TITLE:     凸多边形最远顶点
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-12-03 一
+#+DESCRIPTION: 在线性时间内计算凸多边形最远两点之间的距离
+#+CATEGORIES:算法 读书笔记
+#+KEYWORDS: Algorithm,notes
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   /Open_Source
+#+LINK_HOME: /Open_Source
+#+XSLT:
+
+让作一条直线l_1与一条边重合，找到离它最远的顶点v，过点v作l_1的平行线l_2。
+计算v到l_1上两顶点的距离保留较大的值Max。
+顺时针旋转l_1和l_2，设l_x先与一条边重合，记另一条边为l_y，l_y上的顶点为u。
+计算u到l_x上两顶点的距离，将较大的再与Max比较，保留较大值在Max中。
+再旋转两条平行线...
+n次旋转之后Max就是所求。
+
+#+begin_src asy
+  this is code for img
+#+end_src
