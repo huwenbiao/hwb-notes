@@ -1,0 +1,47 @@
+#+TITLE:     欧拉回路
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-12-03 一
+#+DESCRIPTION:一个线性时间内求解欧拉回路和算法
+#+CATEGORIES:算法 读书笔记
+#+KEYWORDS:Algorithm,notes,Algorithms
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   /Open_Source
+#+LINK_HOME: /Open_Source
+#+XSLT:
+
+存在欧拉回路$\left$连通，各占度数为偶数。
+代码：
+#+begin_src c
+  int path (Graph G, int v)
+  {
+    int w;
+    for (; G-adj[v] != NULL; v = w)
+      {
+        STACKpush(v);
+        w = G -> adj[v] -> v;
+        GRAPHremove (G, EDGE(v, w));
+      }
+    return v;
+  }
+  
+  void pathShow (Graph G, int v, int w)
+  {
+    STACKinit (G->E);
+    printf ("%d", w);
+    while ((path (G, v) == v) && !STACKempty())
+      {
+        v = STACKpop();
+        printf("-%d", v);
+      }
+    printf ("\n");
+  }
+  
+#+end_src
+
+由于所有点的度数都是偶数，path(G, v)的返回值一定等于传入的v，每次走不下去时，倒序输出路径上的顶点，如果某顶点所有的边都访问过则path()中的循环不会执行，更不会再次将该顶点入桟。若某顶点还有未访问的边，则一定可以找到一个环，会在原来的环中插入该环。每一个环从v开始，结束于v。但v只会在开始时入桟，因为结束时G -> adj[v] == NULL，故不会再次入桟。
