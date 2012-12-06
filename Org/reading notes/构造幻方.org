@@ -1,0 +1,49 @@
+#+TITLE:     各阶幻方的构造算法
+#+AUTHOR:    Hu Wenbiao
+#+EMAIL:     huwenbiao1989@gmail.com
+#+DATE:      2012-12-06 四
+#+DESCRIPTION: 介绍各阶幻方的构造算法，算法来自《神奇方阵》一书。
+#+CATEGORIES: 数学 读书笔记
+#+KEYWORDS: 幻方,趣味,数学
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   /Open_Source
+#+LINK_HOME: /Open_Source
+#+XSLT:
+
+* 奇数阶幻方
+** 
+
+* 单偶数阶幻方
+
+* 双偶数阶幻方
+
+#+begin_src asymptote
+
+  size(10cm,10cm);
+  
+  void drawMatrix(int n, int arr[][])
+  {
+    for(int i=0; i<n; ++i)
+      for(int j=0; j<n; ++j)
+        {
+          label(string(abs(arr[i][j])),(j+0.5,n-1-i+0.5));
+          draw(box((j+0.05,n-1-i+0.05),(j+0.95,n-1-i+0.95)),dotted);
+          
+          if(arr[i][j]<0)
+            fill(box((j+0.05,n-1-i+0.05),(j+0.95,n-1-i+0.95)),1.5*gray);
+        }
+    draw(box((0,0),(n, n)),dotted);
+  }
+  int[][] Matrix={{-1,2,3,4,1},
+                  {5,6,7,8,1},
+                  {9,-10,11,12,1},
+                  {13,14,15,16,1},
+                  {1,1,1,1,1}};
+  drawMatrix(5,Matrix);
+  
+#+end_src
